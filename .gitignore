@@ -1,0 +1,5 @@
+mode_modules
+.env
+build
+.Ds_Store
+*.db
