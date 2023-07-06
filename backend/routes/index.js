@@ -1,10 +1,16 @@
-/// create a test route, and export the router at the bottom of the file.
+/// 1-create a test route, and export the router at the bottom of the file.
 const express = require('express');
 const router = express.Router();
 
+///3- Import api-index file into the routes/index.js
 
+const apiRouter = require('./api');
 
-// Add a XSRF-TOKEN cookie
+//4- connect api-index to the router
+
+router.use('/api', apiRouter);
+
+// 2-Add a XSRF-TOKEN cookie
 router.get("/api/csrf/restore", (req, res) => {
     const csrfToken = req.csrfToken();
     res.cookie("XSRF-TOKEN", csrfToken);
@@ -17,5 +23,5 @@ router.get("/api/csrf/restore", (req, res) => {
 
 
 
-/// export the router at the bottom of the file.
+/// 3-export the router at the bottom of the file.
 module.exports = router;
