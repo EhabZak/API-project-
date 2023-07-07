@@ -37,7 +37,7 @@ const validateLogin = [
 // Log in ///////////////////////////////////////////////////////////////////
 router.post(
   '/',
-  validateLogin, /// added this from above 
+  validateLogin, /// added this from above
   async (req, res, next) => {
     const { credential, password } = req.body;
 
@@ -60,8 +60,11 @@ router.post(
 
     const safeUser = {
       id: user.id,
+      firstName: user.firstName,
+      lastName: user.lastName,
       email: user.email,
-      username: user.username,
+      username: user.username
+
     };
 
     await setTokenCookie(res, safeUser);
@@ -74,34 +77,36 @@ router.post(
 /// log out  /////////////////////////////////////////////////
 
 router.delete(
-    '/',
-    (_req, res) => {
-      res.clearCookie('token');
-      return res.json({ message: 'success' });
-    }
-  );
+  '/',
+  (_req, res) => {
+    res.clearCookie('token');
+    return res.json({ message: 'success' });
+  }
+);
 
 
 // Restore session user ////////////////////////////////////
 router.get(
-    '/',
-    (req, res) => {
-      const { user } = req;
+  '/',
+  (req, res) => {
+    const { user } = req;
 
-      if (user) {
-        const safeUser = {
-          id: user.id,
-          email: user.email,
-          username: user.username,
-        };
-        return res.json({
-          user: safeUser
-        });
-      } else return res.json({ user: null });
-    }
-  );
+    if (user) {
+      const safeUser = {
+        id: user.id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        username: user.username,
+      };
+      return res.json({
+        user: safeUser
+      });
+    } else return res.json({ user: null });
+  }
+);
 
-  // ...
+// ...
 
 
 
