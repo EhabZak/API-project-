@@ -2,6 +2,9 @@
 const express = require('express');
 const router = express.Router();
 
+
+
+
 ///3- Import api-index file into the routes/index.js
 
 const apiRouter = require('./api');
@@ -22,6 +25,5 @@ router.get("/api/csrf/restore", (req, res) => {
 
 
 
-
-/// 3-export the router at the bottom of the file.
+/// 5-export the router at the bottom of the file.
 module.exports = router;
