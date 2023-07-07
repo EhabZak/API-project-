@@ -18,6 +18,6 @@ router.post('/test', function(req, res) {
 
 
 
-  router.use(restoreUser);
+router.use(restoreUser);
 
 module.exports = router;
