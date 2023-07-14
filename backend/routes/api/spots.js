@@ -1,14 +1,14 @@
-/// 1- Create and export an Express router from this file
+/// 0- Create and export an Express router from this file
 
 const express = require('express')
 const bcrypt = require('bcryptjs');
 
 const { setTokenCookie, requireAuth } = require('../../utils/auth');
-const { Spot, SpotImage, Review, User } = require('../../db/models');
+const { Spot, SpotImage, Review, User, ReviewImage } = require('../../db/models');
 
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
-const spotimage = require('../../db/models/spotimage');
+// const spotimage = require('../../db/models/spotimage');
 
 
 
@@ -321,12 +321,14 @@ router.post('/:id/images', requireAuth, validateNewImg, async (req, res) => {
     if (!spots) {
         return res.status(404).json({ message: "Spot couldn't be found" });
     }
+
+    ///check if a spot belongs to current user //////
+
     if (spots.ownerId !== userId) {
         return res.status(403).json({ message: "Unauthorized user" });
     }
-    ///check if a spot belongs to current user //////
 
-    if (spotId) { }
+
 
     /// create the attributes to be added
     const newImg = {
@@ -338,7 +340,7 @@ router.post('/:id/images', requireAuth, validateNewImg, async (req, res) => {
 
     // Create a new image object
     const CreateImg = await SpotImage.create(newImg)
-    //////////////////////////
+    ///destructure  to get required attributes ///////////////////////
     const result = {
         id: CreateImg.id,
         url: CreateImg.url,
@@ -377,20 +379,20 @@ router.put('/:spotId', requireAuth, validateCreatePost,
         /// update the attributes //////////////////////////////////////////////////////
 
 
-            currSpot.address = address;
-            currSpot.city = city;
-            currSpot.state = state;
-            currSpot.country = country;
-            currSpot.lat = lat;
-            currSpot.lng = lng;
-            currSpot.name = name;
-            currSpot.description = description;
-            currSpot.price = price;
+        currSpot.address = address;
+        currSpot.city = city;
+        currSpot.state = state;
+        currSpot.country = country;
+        currSpot.lat = lat;
+        currSpot.lng = lng;
+        currSpot.name = name;
+        currSpot.description = description;
+        currSpot.price = price;
 
-            // to update a new Spot record
-            // const createdSpot = await Spot.update(spot);
-            const updatedSpot = await currSpot.save();
-            return res.status(200).json(updatedSpot);
+        // to update a new Spot record
+        // const createdSpot = await Spot.update(spot);
+        const updatedSpot = await currSpot.save();
+        return res.status(200).json(updatedSpot);
 
 
     });
@@ -419,13 +421,113 @@ router.delete('/:spotId', requireAuth,
         }
 
 
-        const deletedSpot = await Spot.findOne({where:{id: spotId}})
+        const deletedSpot = await Spot.findOne({ where: { id: spotId } })
         await deletedSpot.destroy()
 
         // const updatedSpot = await currSpot.save();
         return res.status(200).json({ message: 'Successfully deleted' });
 
     });
+
+
+
+/// 8-Get all Reviews by a Spot's id//////////////////////////
+
+router.get('/:spotId/reviews', requireAuth, async (req, res) => {
+    const thisUserId = req.user.id
+    const spotId = req.params.spotId;
+
+    const currReviews = await Review.findByPk(spotId, {
+        include: [
+            {
+                model: User,
+                attributes: ["id", "firstName", "lastName"]
+            },
+            {
+                model: ReviewImage,
+                attributes: ["id", "url"]
+            }
+
+
+        ]
+    });
+    // Check if the spot exists
+    const spots = await Spot.findByPk(spotId);
+    /////////////////////////////////
+
+    if (!spots) {
+        res.status(404).json({ message: "Spot couldn't be found" });
+    }
+
+    //////////////////////////////////////
+
+    res.status(200)
+    res.json({ Reviews: currReviews })
+})
+
+
+/// 9-Create a Review for a Spot based on the Spot's id /////////////////
+const validateReview = [
+    check('review')
+    .exists({ checkFalsy: true })
+    .withMessage('Review text is required'),
+    check('stars')
+    .exists({ checkFalsy: true })
+    .isInt({ min: 1, max: 5 })
+    .withMessage('Stars must be an integer from 1 to 5'),
+
+
+
+    handleValidationErrors
+]
+
+
+router.post('/:spotId/reviews', requireAuth,validateReview,
+
+    async (req, res) => {
+
+        const userId = req.user.id;
+        const spotId = parseInt(req.params.spotId);
+        const { review, stars } = req.body;
+
+// Check if the spot exists ////////////////
+const spots = await Spot.findByPk(spotId);
+if (!spots) {
+    return res.status(404).json({ message: "Spot couldn't be found" });
+}
+
+// Check if the user already has a review for this spot ///////////
+const existingReview = await Review.findOne({
+    where: {
+      userId: userId,
+      spotId: spotId,
+    },
+  });
+  if (existingReview) {
+    return res.status(500).json({ message: 'User already has a review for this spot' });
+  }
+
+///////////////////////////////////////////////
+const newReview = {
+    userId: userId,
+    spotId: spotId,
+    review: review,
+    stars: stars
+
+}
+
+// Create a new review object ///
+const CreateReview = await Review.create(newReview)
+//////////////////////////
+
+res.status(200).json(CreateReview);
+});
+
+
+
+
+
+
 
 
 
