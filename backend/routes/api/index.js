@@ -6,8 +6,10 @@ const { restoreUser } = require("../../utils/auth.js");
 const spotsRouter = require ('./spots.js');
 ////////////////////////////////////////////
 
+///import reviews ////////////////////
 
-
+const ReviewsRouter = require ('./reviews.js')
+/////////////////////////////////////
 
 
 
@@ -20,6 +22,11 @@ router.use(restoreUser);
 ///////////////////////////////
 router.use('/spots', spotsRouter);
 ///////////////////
+
+/////////////////////
+
+router.use('/reviews', ReviewsRouter);  
+////////////////////////
 
 router.use('/session', sessionRouter);
 
