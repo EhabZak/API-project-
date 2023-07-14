@@ -56,7 +56,7 @@ router.get('/current', requireAuth, async (req, res) => {
     // console.log(reviewList)
     reviewList.forEach(review => {
         const spot = review.Spot
-        console.log(spot)
+        // console.log(spot)
 
         spot.SpotImages.forEach(image => {
             if (image.preview === true) {
@@ -150,7 +150,7 @@ const reviewEx = await Review.findByPk(reviewId);
 if (!reviewEx) {
     return res.status(404).json({ message: "Review couldn't be found" });
 }
-///check if a spot belongs to current user //////
+///check if a review belongs to current user //////
 
 if (reviewEx.userId !== userId) {
     return res.status(403).json({ message: "Unauthorized user" });

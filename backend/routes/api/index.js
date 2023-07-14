@@ -20,10 +20,16 @@ const reviewImagesRouter = require('./review-images.js')
 const spotImagesRouter = require ('./spot-images.js')
 ///////////////////////////////////////////////
 
+const bookingsRouter = require('./bookings.js')
+
+///////////////////////////////////////////////////
+
+
 
 
 router.use(restoreUser);
-
+/////////////////////////////////
+router.use('/bookings',bookingsRouter )
 ///////////////////////////////
 router.use('/spot-images', spotImagesRouter);
 

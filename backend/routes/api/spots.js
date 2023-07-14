@@ -4,12 +4,12 @@ const express = require('express')
 const bcrypt = require('bcryptjs');
 
 const { setTokenCookie, requireAuth } = require('../../utils/auth');
-const { Spot, SpotImage, Review, User, ReviewImage } = require('../../db/models');
+const { Spot, SpotImage, Review, User, ReviewImage, Booking } = require('../../db/models');
 
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 // const spotimage = require('../../db/models/spotimage');
-
+const { Op } = require("sequelize");
 
 
 
@@ -18,10 +18,81 @@ const router = express.Router();
 /// 1-Get all spots ///////////////////////////////////////////
 
 
+
+////////////////////////////////////////////////////////////////
+
 router.get('/', async (req, res) => {
 
+    /// filters ///////////////////////////////////////////////
+
+    let { page, size, minLat, maxLat, minLng, maxLng, minPrice, maxPrice } = req.query;
+    const errors = {};
+    const where = {};
+    // Validate query parameters
+    if (page < 1 || page > 10) {
+        errors.page = 'Page must be between 1 and 10';
+    }
+    if (size < 1 || size > 20) {
+        errors.size = 'Size must be between 1 and 20';
+    }
+
+    if (minLat && (isNaN(minLat) || minLat < -90 || minLat > 90)) {
+        errors.minLat = 'Minimum latitude is invalid';
+    } else if (minLat) {
+        where.lat = {[Op.gte]: minLat}
+    }
+    if (maxLat && (isNaN(maxLat) || maxLat < -90 || maxLat > 90)) {
+        errors.maxLat = 'Maximum latitude is invalid';
+    }else if (maxLat){
+        where.lat = {...where.lat,[Op.lte]: maxLat } ////////////////////////////////////////////
+    }
+    // console.log('*********************',where.lat)
+    if (minLng && (isNaN(minLng) || minLng < -180 || minLng > 180)) {
+        errors.minLng = 'Minimum longitude is invalid';
+    }else if (minLng) {
+        where.lng = {[Op.gte]: minLng}
+    }
+    if (maxLng && (isNaN(maxLng) || maxLng < -180 || maxLng > 180)) {
+        errors.maxLng = 'Maximum longitude is invalid';
+    }else if (maxLng) {
+        where.lng = {...where.lng,[Op.lte]: maxLng }
+    }
+
+    if (minPrice && (isNaN(minPrice) || minPrice < 0)) {
+        errors.minPrice = 'Minimum price must be greater than or equal to 0';
+    }else if (minPrice) {
+        where.price = {[Op.gte]: minPrice}
+    }
+    if (maxPrice && (isNaN(maxPrice) || maxPrice < 0)) {
+        errors.maxPrice = 'Maximum price must be greater than or equal to 0';
+    }else if (maxPrice) {
+        where.price = {...where.price, [Op.lte]:maxPrice}
+    }
+
+    if (Object.keys(errors).length > 0) {
+        return res.status(400).json({
+            message: 'Bad Request',
+            errors: errors
+        });
+    }
+    /// pagination //////////////////////////
+
+    let pagination = {}
+
+    page = parseInt(page);
+    size = parseInt(size);
+
+    if (Number.isNaN(page) || page < 0) page = 1;
+    if (Number.isNaN(size) || size < 0) size = 20;
+    if (size > 10) size = 10;
+
+    pagination.limit = size;
+    pagination.offset = (page - 1) * size
+    //////////////////////////////////////////////////////////////////
 
     const spots = await Spot.findAll({
+        where,
+        ...pagination,
 
         include: [
             { model: SpotImage },
@@ -84,7 +155,7 @@ router.get('/', async (req, res) => {
     ///////////////////////////////////
 
     res.status(200)
-    res.json({ Spots: spotsList });
+    res.json({ Spots: spotsList, page, size });
 
 });
 
@@ -469,20 +540,17 @@ router.get('/:spotId/reviews', requireAuth, async (req, res) => {
 /// 9-Create a Review for a Spot based on the Spot's id /////////////////
 const validateReview = [
     check('review')
-    .exists({ checkFalsy: true })
-    .withMessage('Review text is required'),
+        .exists({ checkFalsy: true })
+        .withMessage('Review text is required'),
     check('stars')
-    .exists({ checkFalsy: true })
-    .isInt({ min: 1, max: 5 })
-    .withMessage('Stars must be an integer from 1 to 5'),
-
-
-
+        .exists({ checkFalsy: true })
+        .isInt({ min: 1, max: 5 })
+        .withMessage('Stars must be an integer from 1 to 5'),
     handleValidationErrors
 ]
 
 
-router.post('/:spotId/reviews', requireAuth,validateReview,
+router.post('/:spotId/reviews', requireAuth, validateReview,
 
     async (req, res) => {
 
@@ -490,58 +558,270 @@ router.post('/:spotId/reviews', requireAuth,validateReview,
         const spotId = parseInt(req.params.spotId);
         const { review, stars } = req.body;
 
-// Check if the spot exists ////////////////
-const spots = await Spot.findByPk(spotId);
-if (!spots) {
-    return res.status(404).json({ message: "Spot couldn't be found" });
-}
+        // Check if the spot exists ////////////////
+        const spots = await Spot.findByPk(spotId);
+        if (!spots) {
+            return res.status(404).json({ message: "Spot couldn't be found" });
+        }
 
-// Check if the user already has a review for this spot ///////////
-const existingReview = await Review.findOne({
-    where: {
-      userId: userId,
-      spotId: spotId,
-    },
-  });
-  if (existingReview) {
-    return res.status(500).json({ message: 'User already has a review for this spot' });
-  }
+        // Check if the user already has a review for this spot ///////////
+        const existingReview = await Review.findOne({
+            where: {
+                userId: userId,
+                spotId: spotId,
+            },
+        });
+        if (existingReview) {
+            return res.status(500).json({ message: 'User already has a review for this spot' });
+        }
 
-///////////////////////////////////////////////
-const newReview = {
-    userId: userId,
-    spotId: spotId,
-    review: review,
-    stars: stars
+        ///////////////////////////////////////////////
+        const newReview = {
+            userId: userId,
+            spotId: spotId,
+            review: review,
+            stars: stars
 
-}
+        }
 
-// Create a new review object ///
-const CreateReview = await Review.create(newReview)
-
-//////////////////////////
+        // Create a new review object ///
+        const CreateReview = await Review.create(newReview)
 
 
+        res.status(200).json(CreateReview);
+    });
+
+
+///10- Get all Bookings for a Spot based on the Spot's id ///////////////////////
+
+router.get('/:spotId/bookings', requireAuth, async (req, res) => {
+    const thisUserId = req.user.id
+    const spotId = req.params.spotId;
+
+    // Check if the spot exists //////////////////////
+    const spots = await Spot.findByPk(spotId);
+    /////////////////////////////////
+
+    if (!spots) {
+        res.status(404).json({ message: "Spot couldn't be found" });
+    }
+    //////////////////////////////////////
+
+    const currBookings = await Booking.findByPk(spotId, {
+        include: [
+            {
+                model: User,
+                attributes: ["id", "firstName", "lastName"]
+            }
+
+        ]
+    });
+
+
+    if (currBookings.userId === thisUserId) {
+        const formattedBooking = {
+            User: {
+                id: currBookings.User.id,
+                firstName: currBookings.User.firstName,
+                lastName: currBookings.User.lastName
+            },
+            id: currBookings.id,
+            spotId: currBookings.spotId,
+            userId: currBookings.userId,
+            startDate: new Date(currBookings.startDate).toISOString().split('T')[0],
+            endDate: new Date(currBookings.endDate).toISOString().split('T')[0],
+            createdAt: new Date(currBookings.createdAt),
+            updatedAt: new Date(currBookings.updatedAt)
+        };
+
+
+        res.status(200)
+        res.json({ Bookings: [formattedBooking] })
+    } else {
+
+        const startDate = new Date(currBookings.startDate).toISOString().split('T')[0];
+        const endDate = new Date(currBookings.endDate).toISOString().split('T')[0];
+
+        const results = {
+            spotId: currBookings.spotId,
+            startDate: startDate,
+            endDate: endDate
+        }
+        res.status(200)
+        res.json({ Bookings: results })
+    }
 
 
 
-res.status(200).json(CreateReview);
-});
+
+})
+
+const ValidateDate = [
+    check('startDate')
+        .exists({ checkFalsy: true })
+        .withMessage('startDate is required'),
+    check('endDate')
+        .exists({ checkFalsy: true })
+        .withMessage('endDate is required'),
+
+
+]
+
+
+
+///11-Create a Booking from a Spot based on the Spot's id //////////////////////////
+
+router.post('/:spotId/bookings', requireAuth, ValidateDate,
+    async (req, res) => {
+        const userId = req.user.id;
+        const spotId = req.params.spotId;
+
+        const { startDate, endDate } = req.body;
+
+        // Check if the spot exists ////////////////
+        const spots = await Spot.findByPk(spotId);
+        if (!spots) {
+            return res.status(404).json({ message: "Spot couldn't be found" });
+        }
+        /// check if the spot belongs to the current user ///////////////////
+
+        if (spots.ownerId === userId) {
+            return res.status(404).json({ message: "Own Spot can not be booked" });
+        }
+
+        ///check end date before start date ///////////////////////////
+        if (endDate <= startDate) {
+            return res.status(400).json({
+                "message": "Bad Request",
+                "errors": {
+                    "endDate": "endDate cannot be on or before startDate"
+                }
+            });
+        }
+        //////////////////////////////////////////////////////////////
+        const existingBooking = await Booking.findOne({
+            where: {
+                spotId: spotId,
+                [Op.or]: [
+
+                    {
+                        startDate: {
+                            [Op.between]: [startDate, endDate],
+
+                        }
+                    },
+                    {
+                        endDate: {
+                            [Op.between]: [startDate, endDate],
+
+                        }
+                    }
+
+                ]
+            },
+        });
+
+        if (existingBooking) {
+            return res.status(403).json({
+
+                message: 'Sorry, this spot is already booked for the specified dates',
+                errors: {
+                    startDate: 'Start date conflicts with an existing booking',
+                    endDate: 'End date conflicts with an existing booking'
+                }
+
+            });
+        }
+
+        ////////////////////////////////////////////////////////
+        const newBooking = {
+            spotId: spotId,
+            userId: userId,
+            startDate: startDate,
+            endDate: endDate
+        }
+
+        // Create a new booking (replace this with your actual logic)
+        const booking = await Booking.create(newBooking)
+
+        // Return the created booking
+        return res.status(200).json(booking);
+    });
+// Add Query Filters to Get All Spots /////////////////////////
+
+// router.get('/', async (req, res) => {
+// /// filters ///////////////////////////////////////////////
+//     let { page, size, minLat, maxLat, minLng, maxLng, minPrice, maxPrice } = req.query;
+//     const errors = {};
+//     const where = {};
+//     // Validate query parameters
+//     if (page < 1 || page > 10) {
+//         errors.page = 'Page must be between 1 and 10';
+//     }
+//     if (size < 1 || size > 20) {
+//         errors.size = 'Size must be between 1 and 20';
+//     }
+
+//     if (minLat && (isNaN(minLat) || minLat < -90 || minLat > 90)) {
+//         errors.minLat = 'Minimum latitude is invalid';
+//     } else {
+//         where.minLat = minLat
+//     }
+
+//     if (maxLat && (isNaN(maxLat) || maxLat < -90 || maxLat > 90)) {
+//         errors.maxLat = 'Maximum latitude is invalid';
+//     } else {
+//         where.maxLat = maxLat
+//     }
+//     if (minLng && (isNaN(minLng) || minLng < -180 || minLng > 180)) {
+//         errors.minLng = 'Minimum longitude is invalid';
+//     } else {
+//         where.minLng = minLng
+//     }
+//     if (maxLng && (isNaN(maxLng) || maxLng < -180 || maxLng > 180)) {
+//         errors.maxLng = 'Maximum longitude is invalid';
+//     } else {
+//         where.maxLng = maxLng
+//     }
+//     if (minPrice && (isNaN(minPrice) || minPrice < 0)) {
+//         errors.minPrice = 'Minimum price must be greater than or equal to 0';
+//     } else {
+//         where.minPrice = minPrice
+//     }
+//     if (maxPrice && (isNaN(maxPrice) || maxPrice < 0)) {
+//         errors.maxPrice = 'Maximum price must be greater than or equal to 0';
+//       }else {
+//         where.maxPrice = maxPrice
+//       }
+
+//       if (errors) {
+//         return res.status(400).json({
+//           message: 'Bad Request',
+//           errors: errors
+//         });
+//       }
+// /// pagination //////////////////////////
+
+// let pagination = {}
+
+// page = parseInt(page);
+// size = parseInt(size);
+
+// if (Number.isNaN(page) || page < 0)  page = 1;
+// if (Number.isNaN(size) || size < 0)  size = 20;
+// if (size > 10) size = 10;
+
+// pagination.limit = size;
+// pagination.offset = (page-1) * size
+
+
+
+
+// })
 
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
+////////////////////////////////////////////////////////////////////
 module.exports = router;
