@@ -30,13 +30,13 @@ module.exports = {
       },
       startDate: {
         type: Sequelize.DATE,
-        unique: true,
+        // unique: true,
         allowNull: false,
 
       },
       endDate: {
         type: Sequelize.DATE,
-        unique: true,
+        // unique: true,
         allowNull: false,
 
       },
