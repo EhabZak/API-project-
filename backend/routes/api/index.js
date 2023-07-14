@@ -11,21 +11,30 @@ const spotsRouter = require ('./spots.js');
 const ReviewsRouter = require ('./reviews.js')
 /////////////////////////////////////
 
+///import review-images //////////////////
 
+const reviewImagesRouter = require('./review-images.js')
 
+/////////////////////////////////////////////
 
+const spotImagesRouter = require ('./spot-images.js')
+///////////////////////////////////////////////
 
 
 
 router.use(restoreUser);
 
 ///////////////////////////////
+router.use('/spot-images', spotImagesRouter);
+
+///////////////////////////////
 router.use('/spots', spotsRouter);
 ///////////////////
 
+router.use('/review-images', reviewImagesRouter);
 /////////////////////
 
-router.use('/reviews', ReviewsRouter);  
+router.use('/reviews', ReviewsRouter);
 ////////////////////////
 
 router.use('/session', sessionRouter);
