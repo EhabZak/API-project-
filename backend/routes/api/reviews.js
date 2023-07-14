@@ -91,7 +91,7 @@ const reviewEx = await Review.findByPk(reviewId);
 if (!reviewEx) {
     return res.status(404).json({ message: "Review couldn't be found" });
 }
-///check if a spot belongs to current user //////
+///check if a review belongs to current user //////
 
 if (reviewEx.userId !== userId) {
     return res.status(403).json({ message: "Unauthorized user" });
