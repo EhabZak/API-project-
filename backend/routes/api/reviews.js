@@ -56,7 +56,7 @@ router.get('/current', requireAuth, async (req, res) => {
     // console.log(reviewList)
     reviewList.forEach(review => {
         const spot = review.Spot
-        console.log(spot)
+        // console.log(spot)
 
         spot.SpotImages.forEach(image => {
             if (image.preview === true) {

@@ -4,7 +4,7 @@ const express = require('express')
 const bcrypt = require('bcryptjs');
 
 const { setTokenCookie, requireAuth } = require('../../utils/auth');
-const { Spot, SpotImage, Review, User, ReviewImage } = require('../../db/models');
+const { Spot, SpotImage, Review, User, ReviewImage, Booking } = require('../../db/models');
 
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
@@ -469,20 +469,17 @@ router.get('/:spotId/reviews', requireAuth, async (req, res) => {
 /// 9-Create a Review for a Spot based on the Spot's id /////////////////
 const validateReview = [
     check('review')
-    .exists({ checkFalsy: true })
-    .withMessage('Review text is required'),
+        .exists({ checkFalsy: true })
+        .withMessage('Review text is required'),
     check('stars')
-    .exists({ checkFalsy: true })
-    .isInt({ min: 1, max: 5 })
-    .withMessage('Stars must be an integer from 1 to 5'),
-
-
-
+        .exists({ checkFalsy: true })
+        .isInt({ min: 1, max: 5 })
+        .withMessage('Stars must be an integer from 1 to 5'),
     handleValidationErrors
 ]
 
 
-router.post('/:spotId/reviews', requireAuth,validateReview,
+router.post('/:spotId/reviews', requireAuth, validateReview,
 
     async (req, res) => {
 
@@ -490,43 +487,103 @@ router.post('/:spotId/reviews', requireAuth,validateReview,
         const spotId = parseInt(req.params.spotId);
         const { review, stars } = req.body;
 
-// Check if the spot exists ////////////////
-const spots = await Spot.findByPk(spotId);
-if (!spots) {
-    return res.status(404).json({ message: "Spot couldn't be found" });
-}
+        // Check if the spot exists ////////////////
+        const spots = await Spot.findByPk(spotId);
+        if (!spots) {
+            return res.status(404).json({ message: "Spot couldn't be found" });
+        }
 
-// Check if the user already has a review for this spot ///////////
-const existingReview = await Review.findOne({
-    where: {
-      userId: userId,
-      spotId: spotId,
-    },
-  });
-  if (existingReview) {
-    return res.status(500).json({ message: 'User already has a review for this spot' });
-  }
+        // Check if the user already has a review for this spot ///////////
+        const existingReview = await Review.findOne({
+            where: {
+                userId: userId,
+                spotId: spotId,
+            },
+        });
+        if (existingReview) {
+            return res.status(500).json({ message: 'User already has a review for this spot' });
+        }
 
-///////////////////////////////////////////////
-const newReview = {
-    userId: userId,
-    spotId: spotId,
-    review: review,
-    stars: stars
+        ///////////////////////////////////////////////
+        const newReview = {
+            userId: userId,
+            spotId: spotId,
+            review: review,
+            stars: stars
 
-}
+        }
 
-// Create a new review object ///
-const CreateReview = await Review.create(newReview)
-
-//////////////////////////
+        // Create a new review object ///
+        const CreateReview = await Review.create(newReview)
 
 
+        res.status(200).json(CreateReview);
+    });
+
+
+///10- Get all Bookings for a Spot based on the Spot's id ///////////////////////
+
+router.get('/:spotId/bookings', requireAuth, async (req, res) => {
+    const thisUserId = req.user.id
+    const spotId = req.params.spotId;
+
+    // Check if the spot exists //////////////////////
+    const spots = await Spot.findByPk(spotId);
+    /////////////////////////////////
+
+    if (!spots) {
+        res.status(404).json({ message: "Spot couldn't be found" });
+    }
+//////////////////////////////////////
+
+    const currBookings = await Booking.findByPk(spotId, {
+        include: [
+            {
+                model: User,
+                attributes: ["id", "firstName", "lastName"]
+            }
+
+        ]
+    });
+
+    
+    if (currBookings.userId === thisUserId) {
+        const formattedBooking = {
+            User: {
+              id: currBookings.User.id,
+              firstName: currBookings.User.firstName,
+              lastName: currBookings.User.lastName
+            },
+            id: currBookings.id,
+            spotId: currBookings.spotId,
+            userId: currBookings.userId,
+            startDate: new Date(currBookings.startDate).toISOString().split('T')[0],
+            endDate: new Date(currBookings.endDate).toISOString().split('T')[0],
+            createdAt: new Date(currBookings.createdAt),
+            updatedAt: new Date(currBookings.updatedAt)
+          };
+
+
+        res.status(200)
+        res.json({ Bookings: [formattedBooking]  })
+    } else {
+
+        const startDate = new Date(currBookings.startDate).toISOString().split('T')[0];
+        const endDate = new Date(currBookings.endDate).toISOString().split('T')[0];
+
+        const results = {
+            spotId: currBookings.spotId,
+            startDate : startDate,
+            endDate: endDate
+        }
+        res.status(200)
+        res.json({ Bookings: results})
+    }
 
 
 
-res.status(200).json(CreateReview);
-});
+
+})
 
 
 
@@ -536,12 +593,5 @@ res.status(200).json(CreateReview);
 
 
 
-
-
-
-
-
-
-
-
+////////////////////////////////////////////////////////////////////
 module.exports = router;
