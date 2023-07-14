@@ -18,10 +18,81 @@ const router = express.Router();
 /// 1-Get all spots ///////////////////////////////////////////
 
 
+
+////////////////////////////////////////////////////////////////
+
 router.get('/', async (req, res) => {
 
+    /// filters ///////////////////////////////////////////////
+
+    let { page, size, minLat, maxLat, minLng, maxLng, minPrice, maxPrice } = req.query;
+    const errors = {};
+    const where = {};
+    // Validate query parameters
+    if (page < 1 || page > 10) {
+        errors.page = 'Page must be between 1 and 10';
+    }
+    if (size < 1 || size > 20) {
+        errors.size = 'Size must be between 1 and 20';
+    }
+
+    if (minLat && (isNaN(minLat) || minLat < -90 || minLat > 90)) {
+        errors.minLat = 'Minimum latitude is invalid';
+    } else if (minLat) {
+        where.lat = {[Op.gte]: minLat}
+    }
+    if (maxLat && (isNaN(maxLat) || maxLat < -90 || maxLat > 90)) {
+        errors.maxLat = 'Maximum latitude is invalid';
+    }else if (maxLat){
+        where.lat = {...where.lat,[Op.lte]: maxLat } ////////////////////////////////////////////
+    }
+    // console.log('*********************',where.lat)
+    if (minLng && (isNaN(minLng) || minLng < -180 || minLng > 180)) {
+        errors.minLng = 'Minimum longitude is invalid';
+    }else if (minLng) {
+        where.lng = {[Op.gte]: minLng}
+    }
+    if (maxLng && (isNaN(maxLng) || maxLng < -180 || maxLng > 180)) {
+        errors.maxLng = 'Maximum longitude is invalid';
+    }else if (maxLng) {
+        where.lng = {...where.lng,[Op.lte]: maxLng }
+    }
+
+    if (minPrice && (isNaN(minPrice) || minPrice < 0)) {
+        errors.minPrice = 'Minimum price must be greater than or equal to 0';
+    }else if (minPrice) {
+        where.price = {[Op.gte]: minPrice}
+    }
+    if (maxPrice && (isNaN(maxPrice) || maxPrice < 0)) {
+        errors.maxPrice = 'Maximum price must be greater than or equal to 0';
+    }else if (maxPrice) {
+        where.price = {...where.price, [Op.lte]:maxPrice}
+    }
+
+    if (Object.keys(errors).length > 0) {
+        return res.status(400).json({
+            message: 'Bad Request',
+            errors: errors
+        });
+    }
+    /// pagination //////////////////////////
+
+    let pagination = {}
+
+    page = parseInt(page);
+    size = parseInt(size);
+
+    if (Number.isNaN(page) || page < 0) page = 1;
+    if (Number.isNaN(size) || size < 0) size = 20;
+    if (size > 10) size = 10;
+
+    pagination.limit = size;
+    pagination.offset = (page - 1) * size
+    //////////////////////////////////////////////////////////////////
 
     const spots = await Spot.findAll({
+        where,
+        ...pagination,
 
         include: [
             { model: SpotImage },
@@ -84,7 +155,7 @@ router.get('/', async (req, res) => {
     ///////////////////////////////////
 
     res.status(200)
-    res.json({ Spots: spotsList });
+    res.json({ Spots: spotsList, page, size });
 
 });
 
@@ -612,22 +683,22 @@ router.post('/:spotId/bookings', requireAuth, ValidateDate,
         if (!spots) {
             return res.status(404).json({ message: "Spot couldn't be found" });
         }
-/// check if the spot belongs to the current user ///////////////////
+        /// check if the spot belongs to the current user ///////////////////
 
-if( spots.ownerId === userId){
-    return res.status(404).json({ message: "Own Spot can not be booked" });
-}
+        if (spots.ownerId === userId) {
+            return res.status(404).json({ message: "Own Spot can not be booked" });
+        }
 
-///check end date before start date ///////////////////////////
-if ( endDate <= startDate) {
-    return res.status(400).json({
-        "message": "Bad Request",
-  "errors": {
-    "endDate": "endDate cannot be on or before startDate"
-  }
-    });
-}
-//////////////////////////////////////////////////////////////
+        ///check end date before start date ///////////////////////////
+        if (endDate <= startDate) {
+            return res.status(400).json({
+                "message": "Bad Request",
+                "errors": {
+                    "endDate": "endDate cannot be on or before startDate"
+                }
+            });
+        }
+        //////////////////////////////////////////////////////////////
         const existingBooking = await Booking.findOne({
             where: {
                 spotId: spotId,
@@ -662,10 +733,10 @@ if ( endDate <= startDate) {
             });
         }
 
-////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////
         const newBooking = {
             spotId: spotId,
-            userId:userId,
+            userId: userId,
             startDate: startDate,
             endDate: endDate
         }
@@ -676,9 +747,77 @@ if ( endDate <= startDate) {
         // Return the created booking
         return res.status(200).json(booking);
     });
+// Add Query Filters to Get All Spots /////////////////////////
+
+// router.get('/', async (req, res) => {
+// /// filters ///////////////////////////////////////////////
+//     let { page, size, minLat, maxLat, minLng, maxLng, minPrice, maxPrice } = req.query;
+//     const errors = {};
+//     const where = {};
+//     // Validate query parameters
+//     if (page < 1 || page > 10) {
+//         errors.page = 'Page must be between 1 and 10';
+//     }
+//     if (size < 1 || size > 20) {
+//         errors.size = 'Size must be between 1 and 20';
+//     }
+
+//     if (minLat && (isNaN(minLat) || minLat < -90 || minLat > 90)) {
+//         errors.minLat = 'Minimum latitude is invalid';
+//     } else {
+//         where.minLat = minLat
+//     }
+
+//     if (maxLat && (isNaN(maxLat) || maxLat < -90 || maxLat > 90)) {
+//         errors.maxLat = 'Maximum latitude is invalid';
+//     } else {
+//         where.maxLat = maxLat
+//     }
+//     if (minLng && (isNaN(minLng) || minLng < -180 || minLng > 180)) {
+//         errors.minLng = 'Minimum longitude is invalid';
+//     } else {
+//         where.minLng = minLng
+//     }
+//     if (maxLng && (isNaN(maxLng) || maxLng < -180 || maxLng > 180)) {
+//         errors.maxLng = 'Maximum longitude is invalid';
+//     } else {
+//         where.maxLng = maxLng
+//     }
+//     if (minPrice && (isNaN(minPrice) || minPrice < 0)) {
+//         errors.minPrice = 'Minimum price must be greater than or equal to 0';
+//     } else {
+//         where.minPrice = minPrice
+//     }
+//     if (maxPrice && (isNaN(maxPrice) || maxPrice < 0)) {
+//         errors.maxPrice = 'Maximum price must be greater than or equal to 0';
+//       }else {
+//         where.maxPrice = maxPrice
+//       }
+
+//       if (errors) {
+//         return res.status(400).json({
+//           message: 'Bad Request',
+//           errors: errors
+//         });
+//       }
+// /// pagination //////////////////////////
+
+// let pagination = {}
+
+// page = parseInt(page);
+// size = parseInt(size);
+
+// if (Number.isNaN(page) || page < 0)  page = 1;
+// if (Number.isNaN(size) || size < 0)  size = 20;
+// if (size > 10) size = 10;
+
+// pagination.limit = size;
+// pagination.offset = (page-1) * size
 
 
 
+
+// })
 
 
 
