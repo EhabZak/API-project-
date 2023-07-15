@@ -32,7 +32,7 @@ router.delete('/:imageId', requireAuth,
         // console.log('******************************', spotImageEx)
 
         if (theSpot.ownerId !== userId) {
-            return res.status(403).json({ message: "Unauthorized user" });
+            return res.status(403).json({ message: "Forbidden" });
         }
 
 

@@ -31,7 +31,7 @@ router.delete('/:imageId', requireAuth,
         // console.log('******************************', reviewImageEx)
 
         if (theReview.userId !== userId) {
-            return res.status(403).json({ message: "Unauthorized user" });
+            return res.status(403).json({ message: "Forbidden" });
         }
 
 

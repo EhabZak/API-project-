@@ -107,7 +107,7 @@ router.put('/:bookingId', requireAuth,
         ///check if a booking belongs to current user //////
 
         if (bookingEx.userId !== userId) {
-            return res.status(403).json({ message: "Unauthorized user" });
+            return res.status(403).json({ message: "Forbidden" });
         }
 
         ///check end date before start date ///////////////////////////
@@ -125,7 +125,7 @@ router.put('/:bookingId', requireAuth,
         // console.log('=====================', bookingEx.endDate)
         // Check if the booking has already ended
 
-        const currentStartDate = new Date(startDate);
+        const currentStartDate = new Date();
         const bookingEndDate = new Date(bookingEx.endDate);
 
         if (bookingEndDate < currentStartDate) {
@@ -213,7 +213,7 @@ const bookingEx = await Booking.findByPk(bookingId);
  ///check if a booking belongs to current user //////
 
  if (bookingEx.userId !== userId) {
-     return res.status(403).json({ message: "Unauthorized user" });
+     return res.status(403).json({ message: "Forbidden" });
  }
 
 

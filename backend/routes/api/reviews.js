@@ -94,7 +94,7 @@ if (!reviewEx) {
 ///check if a review belongs to current user //////
 
 if (reviewEx.userId !== userId) {
-    return res.status(403).json({ message: "Unauthorized user" });
+    return res.status(403).json({ message: "Forbidden" });
 }
 
 // Check the number of existing images for the review
@@ -153,7 +153,7 @@ if (!reviewEx) {
 ///check if a review belongs to current user //////
 
 if (reviewEx.userId !== userId) {
-    return res.status(403).json({ message: "Unauthorized user" });
+    return res.status(403).json({ message: "Forbidden" });
 }
 
 reviewEx.review = review;
@@ -183,7 +183,7 @@ if (!reviewEx) {
 ///check if a spot belongs to current user //////
 
 if (reviewEx.userId !== userId) {
-    return res.status(403).json({ message: "Unauthorized user" });
+    return res.status(403).json({ message: "Forbidden" });
 }
 
 const deletedReview = await Review.findOne({ where: { id: reviewId } })

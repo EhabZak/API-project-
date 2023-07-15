@@ -84,7 +84,7 @@ router.get('/', async (req, res) => {
 
     if (Number.isNaN(page) || page < 0) page = 1;
     if (Number.isNaN(size) || size < 0) size = 20;
-    if (size > 10) size = 10;
+
 
     pagination.limit = size;
     pagination.offset = (page - 1) * size
@@ -295,40 +295,49 @@ router.get('/:id', async (req, res) => {
 const validateCreatePost = [
     check('address')
         .exists({ checkFalsy: true })
+        .isLength({min: 4 })
         .withMessage('Street address is required'),
 
     check('city')
         .exists({ checkFalsy: true })
+        .isLength({min: 4 })
         .withMessage('City is required'),
     check('state')
         .exists({ checkFalsy: true })
+        .isLength({min: 4 })
         .withMessage('State is required'),
 
     check('country')
         .exists({ checkFalsy: true })
+        .isLength({min: 2 })
         .withMessage('Country is required'),
 
     check('lat')
         .exists({ checkFalsy: true })
         .isDecimal()
+        .isLength({min: 2 })
         .withMessage('Latitude is not valid'),
 
     check('lng')
         .exists({ checkFalsy: true })
         .isDecimal()
+        .isLength({min: 2 })
         .withMessage('Longitude is not valid'),
 
     check('name')
         .exists({ checkFalsy: true })
         .isLength({ max: 50 })
+        .isLength({min: 4 })
         .withMessage('Name must be less than 50 characters'),
 
     check('description')
         .exists({ checkFalsy: true })
+        .isLength({min: 4 })
         .withMessage('Description is required'),
 
     check('price')
         .exists({ checkFalsy: true })
+        .isDecimal()
         .withMessage('Price per day is required'),
     handleValidationErrors
 
@@ -371,9 +380,11 @@ router.post('/', requireAuth, validateCreatePost,
 const validateNewImg = [
     check('url')
         .exists({ checkFalsy: true })
+        .isLength({min: 4 })
         .withMessage('url is required'),
     check('preview')
         .exists({ checkFalsy: true })
+        .isLength({min: 4 })
         .withMessage('preview is required'),
     handleValidationErrors
 ]
@@ -398,7 +409,7 @@ router.post('/:id/images', requireAuth, validateNewImg, async (req, res) => {
     ///check if a spot belongs to current user //////
 
     if (spots.ownerId !== userId) {
-        return res.status(403).json({ message: "Unauthorized user" });
+        return res.status(403).json({ message: "Forbidden" });
     }
 
 
@@ -446,7 +457,7 @@ router.put('/:spotId', requireAuth, validateCreatePost,
             return res.status(404).json({ message: "Spot couldn't be found" });
         }
         if (currSpot.ownerId !== userId) {
-            return res.status(403).json({ message: "Unauthorized user" });
+            return res.status(403).json({ message: "Forbidden" });
         }
 
         /// update the attributes //////////////////////////////////////////////////////
@@ -490,7 +501,7 @@ router.delete('/:spotId', requireAuth,
             return res.status(404).json({ message: "Spot couldn't be found" });
         }
         if (currSpot.ownerId !== userId) {
-            return res.status(403).json({ message: "Unauthorized user" });
+            return res.status(403).json({ message: "Forbidden" });
         }
 
 
@@ -543,6 +554,7 @@ router.get('/:spotId/reviews', requireAuth, async (req, res) => {
 const validateReview = [
     check('review')
         .exists({ checkFalsy: true })
+        .isLength({min: 4 })
         .withMessage('Review text is required'),
     check('stars')
         .exists({ checkFalsy: true })
@@ -661,11 +673,13 @@ router.get('/:spotId/bookings', requireAuth, async (req, res) => {
 const ValidateDate = [
     check('startDate')
         .exists({ checkFalsy: true })
+        .isDate()
         .withMessage('startDate is required'),
     check('endDate')
         .exists({ checkFalsy: true })
+        .isDate()
         .withMessage('endDate is required'),
-
+        handleValidationErrors
 
 ]
 
