@@ -39,34 +39,34 @@ router.get('/', async (req, res) => {
     if (minLat && (isNaN(minLat) || minLat < -90 || minLat > 90)) {
         errors.minLat = 'Minimum latitude is invalid';
     } else if (minLat) {
-        where.lat = {[Op.gte]: minLat}
+        where.lat = { [Op.gte]: minLat }
     }
     if (maxLat && (isNaN(maxLat) || maxLat < -90 || maxLat > 90)) {
         errors.maxLat = 'Maximum latitude is invalid';
-    }else if (maxLat){
-        where.lat = {...where.lat,[Op.lte]: maxLat } ////////////////////////////////////////////
+    } else if (maxLat) {
+        where.lat = { ...where.lat, [Op.lte]: maxLat } ////////////////////////////////////////////
     }
     // console.log('*********************',where.lat)
     if (minLng && (isNaN(minLng) || minLng < -180 || minLng > 180)) {
         errors.minLng = 'Minimum longitude is invalid';
-    }else if (minLng) {
-        where.lng = {[Op.gte]: minLng}
+    } else if (minLng) {
+        where.lng = { [Op.gte]: minLng }
     }
     if (maxLng && (isNaN(maxLng) || maxLng < -180 || maxLng > 180)) {
         errors.maxLng = 'Maximum longitude is invalid';
-    }else if (maxLng) {
-        where.lng = {...where.lng,[Op.lte]: maxLng }
+    } else if (maxLng) {
+        where.lng = { ...where.lng, [Op.lte]: maxLng }
     }
 
     if (minPrice && (isNaN(minPrice) || minPrice < 0)) {
         errors.minPrice = 'Minimum price must be greater than or equal to 0';
-    }else if (minPrice) {
-        where.price = {[Op.gte]: minPrice}
+    } else if (minPrice) {
+        where.price = { [Op.gte]: minPrice }
     }
     if (maxPrice && (isNaN(maxPrice) || maxPrice < 0)) {
         errors.maxPrice = 'Maximum price must be greater than or equal to 0';
-    }else if (maxPrice) {
-        where.price = {...where.price, [Op.lte]:maxPrice}
+    } else if (maxPrice) {
+        where.price = { ...where.price, [Op.lte]: maxPrice }
     }
 
     if (Object.keys(errors).length > 0) {
@@ -295,44 +295,44 @@ router.get('/:id', async (req, res) => {
 const validateCreatePost = [
     check('address')
         .exists({ checkFalsy: true })
-        .isLength({min: 4 })
+        .isLength({ min: 4 })
         .withMessage('Street address is required'),
 
     check('city')
         .exists({ checkFalsy: true })
-        .isLength({min: 4 })
+        .isLength({ min: 4 })
         .withMessage('City is required'),
     check('state')
         .exists({ checkFalsy: true })
-        .isLength({min: 4 })
+        .isLength({ min: 4 })
         .withMessage('State is required'),
 
     check('country')
         .exists({ checkFalsy: true })
-        .isLength({min: 2 })
+        .isLength({ min: 2 })
         .withMessage('Country is required'),
 
     check('lat')
         .exists({ checkFalsy: true })
         .isDecimal()
-        .isLength({min: 2 })
+        .isLength({ min: 2 })
         .withMessage('Latitude is not valid'),
 
     check('lng')
         .exists({ checkFalsy: true })
         .isDecimal()
-        .isLength({min: 2 })
+        .isLength({ min: 2 })
         .withMessage('Longitude is not valid'),
 
     check('name')
         .exists({ checkFalsy: true })
         .isLength({ max: 50 })
-        .isLength({min: 4 })
+        .isLength({ min: 4 })
         .withMessage('Name must be less than 50 characters'),
 
     check('description')
         .exists({ checkFalsy: true })
-        .isLength({min: 4 })
+        .isLength({ min: 4 })
         .withMessage('Description is required'),
 
     check('price')
@@ -380,11 +380,11 @@ router.post('/', requireAuth, validateCreatePost,
 const validateNewImg = [
     check('url')
         .exists({ checkFalsy: true })
-        .isLength({min: 4 })
+        .isLength({ min: 4 })
         .withMessage('url is required'),
     check('preview')
         .exists({ checkFalsy: true })
-        .isLength({min: 4 })
+        .isLength({ min: 4 })
         .withMessage('preview is required'),
     handleValidationErrors
 ]
@@ -393,7 +393,7 @@ router.post('/:id/images', requireAuth, validateNewImg, async (req, res) => {
     const userId = req.user.id;
 
     const spotId = req.params.id;
-    console.log('*******************',spotId)
+    console.log('*******************', spotId)
     const { url, preview } = req.body;
 
     // Check if the spot exists
@@ -517,11 +517,12 @@ router.delete('/:spotId', requireAuth,
 
 /// 8-Get all Reviews by a Spot's id//////////////////////////
 
-router.get('/:spotId/reviews', requireAuth, async (req, res) => {
+router.get('/:spotId/reviews', async (req, res) => {
     const thisUserId = req.user.id
     const spotId = req.params.spotId;
 
-    const currReviews = await Review.findByPk(spotId, {
+    const currReviews = await Review.findAll({
+        where: { spotId },
         include: [
             {
                 model: User,
@@ -535,15 +536,25 @@ router.get('/:spotId/reviews', requireAuth, async (req, res) => {
 
         ]
     });
+
+    // console.log('**********************' , spotId)
+    // console.log('**********************' , currReviews)
+
     // Check if the spot exists
     const spots = await Spot.findByPk(spotId);
     /////////////////////////////////
 
     if (!spots) {
-        res.status(404).json({ message: "Spot couldn't be found" });
+        return res.status(404).json({ message: "Spot couldn't be found" });
     }
 
     //////////////////////////////////////
+    if (currReviews.length === 0) {
+        return res.status(404).json({ message: "There are no reviews for this spot" });
+    }
+
+
+    //////////////////////////////////////////////
 
     res.status(200)
     res.json({ Reviews: currReviews })
@@ -554,7 +565,7 @@ router.get('/:spotId/reviews', requireAuth, async (req, res) => {
 const validateReview = [
     check('review')
         .exists({ checkFalsy: true })
-        .isLength({min: 4 })
+        .isLength({ min: 4 })
         .withMessage('Review text is required'),
     check('stars')
         .exists({ checkFalsy: true })
@@ -617,11 +628,12 @@ router.get('/:spotId/bookings', requireAuth, async (req, res) => {
     /////////////////////////////////
 
     if (!spots) {
-        res.status(404).json({ message: "Spot couldn't be found" });
+      return  res.status(404).json({ message: "Spot couldn't be found" });
     }
     //////////////////////////////////////
 
-    const currBookings = await Booking.findByPk(spotId, {
+    const currBookings = await Booking.findAll({
+        where: { spotId },
         include: [
             {
                 model: User,
@@ -630,45 +642,55 @@ router.get('/:spotId/bookings', requireAuth, async (req, res) => {
 
         ]
     });
-
-
-    if (currBookings.userId === thisUserId) {
-        const formattedBooking = {
-            User: {
-                id: currBookings.User.id,
-                firstName: currBookings.User.firstName,
-                lastName: currBookings.User.lastName
-            },
-            id: currBookings.id,
-            spotId: currBookings.spotId,
-            userId: currBookings.userId,
-            startDate: new Date(currBookings.startDate).toISOString().split('T')[0],
-            endDate: new Date(currBookings.endDate).toISOString().split('T')[0],
-            createdAt: new Date(currBookings.createdAt),
-            updatedAt: new Date(currBookings.updatedAt)
-        };
-
-
-        res.status(200)
-        res.json({ Bookings: [formattedBooking] })
-    } else {
-
-        const startDate = new Date(currBookings.startDate).toISOString().split('T')[0];
-        const endDate = new Date(currBookings.endDate).toISOString().split('T')[0];
-
-        const results = {
-            spotId: currBookings.spotId,
-            startDate: startDate,
-            endDate: endDate
-        }
-        res.status(200)
-        res.json({ Bookings: results })
+    // console.log('**********************************' ,currBookings)
+    if (currBookings.length === 0) {
+        return res.status(404).json({ message: "There are no bookings for this spot" });
     }
+    ////////////////////////////////////////////////////////////////////////////
+
+
+    const formattedBookings = currBookings.map((booking) => {
+        if (spots.ownerId === thisUserId) {
+            return {
+                User: {
+                    id: booking.User.id,
+                    firstName: booking.User.firstName,
+                    lastName: booking.User.lastName
+                },
+                id: booking.id,
+                spotId: booking.spotId,
+                userId: booking.userId,
+                startDate: new Date(booking.startDate).toISOString().split('T')[0],
+                endDate: new Date(booking.endDate).toISOString().split('T')[0],
+                createdAt: new Date(booking.createdAt),
+                updatedAt: new Date(booking.updatedAt)
+            };
 
 
 
+        } else {
+
+            const startDate = new Date(booking.startDate).toISOString().split('T')[0];
+            const endDate = new Date(booking.endDate).toISOString().split('T')[0];
+
+            return {
+                spotId: booking.spotId,
+                startDate: startDate,
+                endDate: endDate
+            }
+            // res.status(200)
+            // res.json({ Bookings: results })
+        }
+    });
+
+
+  return  res.status(200).json({ Bookings: formattedBookings })
 
 })
+
+
+///////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////
 
 const ValidateDate = [
     check('startDate')
@@ -679,7 +701,7 @@ const ValidateDate = [
         .exists({ checkFalsy: true })
         .isDate()
         .withMessage('endDate is required'),
-        handleValidationErrors
+    handleValidationErrors
 
 ]
 
