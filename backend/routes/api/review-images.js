@@ -28,7 +28,7 @@ router.delete('/:imageId', requireAuth,
         const theReview = await Review.findOne({ where: { id: reviewImageEx.reviewId } })
 
 
-        // console.log('******************************', reviewImageEx)
+        
 
         if (theReview.userId !== userId) {
             return res.status(403).json({ message: "Forbidden" });

@@ -1,0 +1,26 @@
+
+
+#sign-up-container{
+display: flex;
+flex-direction: column;
+background-color: aqua;
+justify-content: center;
+align-items: center;
+}
+
+#form-container{
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+gap: 04px;
+}
+
+.input-box{
+border-width: 2px;
+
+}
+#sign-up-button{
+    width: 100%;;
+    background-color: lightgray;
+}

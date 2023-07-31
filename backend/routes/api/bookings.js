@@ -121,8 +121,7 @@ router.put('/:bookingId', requireAuth,
             });
         }
 
-        // console.log("********************",startDate )
-        // console.log('=====================', bookingEx.endDate)
+       
         // Check if the booking has already ended
 
         const currentStartDate = new Date();
