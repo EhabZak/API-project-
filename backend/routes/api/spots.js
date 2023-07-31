@@ -393,15 +393,13 @@ router.post('/:id/images', requireAuth, validateNewImg, async (req, res) => {
     const userId = req.user.id;
 
     const spotId = req.params.id;
-    console.log('*******************', spotId)
+   
     const { url, preview } = req.body;
 
     // Check if the spot exists
     const spots = await Spot.findByPk(spotId);
 
-    // console.log('where are the spots======', spots)
-    // console.log('req.spot.ownerId======', spots.ownerId)
-    // console.log("*************************spots", spots)
+
     if (!spots) {
         return res.status(404).json({ message: "Spot couldn't be found" });
     }
