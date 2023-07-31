@@ -1,45 +1,29 @@
-//1-Import Statements:
 import React, { useState } from "react";
-import * as sessionActions from "../../store/session";  // asterisk (*) is a wildcard that means "import all exports."
-import { useDispatch, useSelector } from "react-redux";
-import { Redirect } from "react-router-dom";
+import * as sessionActions from "../../store/session";
+import { useDispatch } from "react-redux";
+import { useModal } from "../../context/Modal";
 import "./LoginForm.css";
 
-//2-Function Declaration:
-function LoginFormPage() {
-
-  //3-Hooks:
+function LoginFormModal() {
   const dispatch = useDispatch();
-  ///
-  const sessionUser = useSelector((state) => state.session.user);
-  ///
-  //5-State Management:
   const [credential, setCredential] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
-
-  //6- Redirect if the user is already logged in:
-  if (sessionUser) return <Redirect to="/" />;
-
-  //7-Form Submission Handling:
+  const { closeModal } = useModal();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    //7-1-clears any existing errors by setting the errors state to an empty object.
     setErrors({});
-    //7-2-dispatches the login action using the Redux dispatch function, passing credential and password as parameters.
-   //! this is where everything starts
-    return dispatch(sessionActions.login({ credential, password })).catch(
-      async (res) => {
+    return dispatch(sessionActions.login({ credential, password }))
+      .then(closeModal)
+      .catch(async (res) => {
         const data = await res.json();
-        //If the login request returns with errors, the catch block handles the errors by extracting the error data,
-        //updating the errors state with the received errors.
-        if (data && data.errors) setErrors(data.errors);
-      }
-    );
+        if (data && data.errors) {
+          setErrors(data.errors);
+        }
+      });
   };
-//The input fields are controlled components,
-//meaning their values are managed by the credential and password state variables.
+
   return (
     <>
       <h1>Log In</h1>
@@ -62,14 +46,16 @@ function LoginFormPage() {
             required
           />
         </label>
-        {errors.credential && <p>{errors.credential}</p>}
+        {errors.credential && (
+          <p>{errors.credential}</p>
+        )}
         <button type="submit">Log In</button>
       </form>
     </>
   );
 }
 
-export default LoginFormPage;
+export default LoginFormModal;
  /*
 
  Overall Flow:
