@@ -32,6 +32,9 @@ function ProfileButton({ user }) {
   };
 
   const ulClassName = "profile-dropdown" + (showMenu ? "" : " hidden");
+// if true the ulClassName = "profile-dropdown"
+// if false the ulClassName = = "profile-dropdown hidden" this way hidden class will be applied
+
 
   return (
     <>
