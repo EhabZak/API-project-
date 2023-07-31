@@ -28,7 +28,9 @@ function Navigation({ isLoaded }){
     <div id= "nav-container">
     <ul id ="header">
       <li>
-        <NavLink exact to="/">Home</NavLink>
+        <NavLink exact to="/">
+        <img id="logo-image" src="images/logo.png" alt="Logo"/>
+        </NavLink>
       </li>
       {isLoaded && sessionLinks}
     </ul>

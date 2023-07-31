@@ -1,26 +1,80 @@
 
 body{
     box-sizing: border-box;
-    background-color: lightblue;
+    /* background-color: lightblue; */
     margin:0px;
+    font-family: "Helvetica", sans-serif;
+}
 
+a,
+button {
+
+    cursor: pointer;
 }
 
 .hidden{
     display: none;
 }
 
-#nav-container {
+/* #nav-container {
 background-color: lightgray;
 border: 1px black solid;
 height: 40px;
-}
+} */
 
 #header{
 display: flex;
-/* border: 1px black solid; */
+border-bottom: solid 2px lightgrey;
 list-style-type: none;
 justify-content: space-between;
-margin: 0;
-padding: 0;
+align-items: center;
+margin-top: 0px;
+padding-left: 20px ;
+padding-right: 20px;
+height: 70px;
+}
+
+#button-container{
+background-color: white;
+size: 14px;
+display: flex;
+justify-content:center;
+align-items: center;
+gap: 5px;
+border-radius: 40% 40% 40% 40%;
+height: 40px;
+width: 80px;
+font-size:  16pt;
+border: 1px solid black;
+position: relative;
+}
+
+#logo-image{
+width: 120px;
+height: 70px;
+
+}
+
+.profile-dropdown{
+border: 1px solid black;
+box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+background-color: white;
+list-style-type: none;
+position:absolute;
+z-index: 1;
+right: 10px;
+font-size: 14pt;
+text-align: center;
+padding-left:10px;
+padding-right: 10px;
+}
+
+#log-out-button{
+background-color: #999999;
+color: white;
+border-radius: 40% 40% 40% 40%;
+height: 40px;
+width: 85px;
+font-size: 14pt;
+margin-bottom: 5px;
 }
