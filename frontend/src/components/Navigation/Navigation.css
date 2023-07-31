@@ -1,0 +1,26 @@
+
+body{
+    box-sizing: border-box;
+    background-color: lightblue;
+    margin:0px;
+
+}
+
+.hidden{
+    display: none;
+}
+
+#nav-container {
+background-color: lightgray;
+border: 1px black solid;
+height: 40px;
+}
+
+#header{
+display: flex;
+/* border: 1px black solid; */
+list-style-type: none;
+justify-content: space-between;
+margin: 0;
+padding: 0;
+}
