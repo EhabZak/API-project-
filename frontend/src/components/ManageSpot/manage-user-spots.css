@@ -1,0 +1,12 @@
+#spot-edit-buttons{
+display: flex;
+width: 100%;
+justify-content: flex-start;
+gap:10px;
+}
+
+#spot-edit-buttons  button{
+    background-color: #FF5A5F;
+    border: solid black 1px;
+box-shadow: 2px 2px;
+    }

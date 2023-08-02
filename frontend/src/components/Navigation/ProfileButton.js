@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useDispatch } from 'react-redux';
 import * as sessionActions from '../../store/session';
+import { Link } from 'react-router-dom';
+import ManageSpot from "../ManageSpot";
 
 function ProfileButton({ user }) {
   const dispatch = useDispatch();
@@ -39,16 +41,26 @@ function ProfileButton({ user }) {
   return (
     <>
       <button id = "button-container" onClick={openMenu}>
-      <i class="fa-solid fa-bars"></i>
+      <i className="fa-solid fa-bars"></i>
         <i className="fas fa-user-circle" />
       </button>
       <ul className={ulClassName} ref={ulRef}>
         <li>Hello, {user.username}</li>
         <li>{user.firstName} {user.lastName}</li>
         <li>{user.email}</li>
+        <li>________________</li>
+        <div id="manage-link">
+        <li>
+          <Link to ={"/manage-spots"} id="custom-link">
+          Manage Spots
+          </Link>
+          </li>
+          </div>
+          <li>________________</li>
         <li>
           <button id="log-out-button" onClick={logout}>Log Out</button>
         </li>
+
       </ul>
     </>
   );

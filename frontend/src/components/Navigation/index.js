@@ -33,10 +33,10 @@ function Navigation({ isLoaded }) {
   }
 
   return (
-    <ul>
+    <ul id ="header">
       <li>
         <NavLink exact to="/">
-          Home
+        <img id="logo-image" src="images/logo.png" alt="Logo"/>
         </NavLink>
       </li>
       {isLoaded && sessionLinks}
