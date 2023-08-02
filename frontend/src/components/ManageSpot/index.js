@@ -3,7 +3,8 @@ import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteSpot, fetchSpots } from '../../store/spotsReducer';
 import './manage-user-spots.css'
-
+import DeleteModel from '../DeleteModel';
+import OpenModalButton from "../OpenModalButton";
 
 export default function ManageSpot() {
     const dispatch = useDispatch();
@@ -18,11 +19,11 @@ export default function ManageSpot() {
         dispatch(fetchSpots());
     }, [dispatch]);
 
-    const handelDeleteSpot = (spotId) => {
+    // const handelDeleteSpot = (spotId) => {
 
-dispatch(deleteSpot(spotId))
+    //     dispatch(deleteSpot(spotId))
 
-    }
+    // }
 
     return (
 
@@ -48,7 +49,12 @@ dispatch(deleteSpot(spotId))
                             <p id='price'> ${spot.price} night</p>
 
                             <div id='spot-edit-buttons'>
-                                <button onClick={() => handelDeleteSpot(spot.id)}>Delete</button>
+                                <div ><OpenModalButton
+                                    buttonText="Delete"
+                                    modalComponent={<DeleteModel spotId={spot.id} />}
+                                />
+                                </div>
+
                                 <Link to={`spots/${spot.id}/edit`}>
                                     <button>Update</button>
                                 </Link>
@@ -62,3 +68,4 @@ dispatch(deleteSpot(spotId))
     )
 
 }
+//onClick={() => handelDeleteSpot(spot.id)}

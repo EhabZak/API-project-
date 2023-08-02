@@ -5,6 +5,7 @@ import ProfileButton from "./ProfileButton";
 import OpenModalButton from "../OpenModalButton";
 import LoginFormModal from "../LoginFormModal";
 import SignupFormModal from "../SignupFormModal";
+import { Link } from 'react-router-dom';
 import "./Navigation.css";
 
 function Navigation({ isLoaded }) {
@@ -13,9 +14,16 @@ function Navigation({ isLoaded }) {
   let sessionLinks;
   if (sessionUser) {
     sessionLinks = (
+      <div id="header-menu-create">
+      <li>
+      <Link to ={"/create-spot"} id="custom-link">
+        Create a New Spot
+        </Link>
+      </li>
       <li>
         <ProfileButton user={sessionUser} />
       </li>
+      </div>
     );
   } else {
     sessionLinks = (

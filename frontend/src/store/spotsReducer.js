@@ -72,6 +72,18 @@ export const deleteSpot = (spotId) => async (dispatch) => {
     }
 }
 
+export const createSpot = (spot) => async(dispatch)=> {
+const res= await csrfFetch('/api/spots', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(spot),
+} )
+
+}
+
+
+
+
 /// reducer
 
 const initialState = { allSpots: {}, singleSpot: {}, isLoading: true };
