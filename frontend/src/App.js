@@ -6,7 +6,7 @@ import Navigation from "./components/Navigation";
 import AllSpots from "./components/AllSpots";
 import SpotDetails from "./components/SpotDetails";
 import ManageSpot from "./components/ManageSpot";
-import CreateSpot from "./components/CreateSpot";
+import CreateSpotForm from "./components/CreateSpot";
 
 function App() {
   const dispatch = useDispatch();
@@ -25,7 +25,7 @@ function App() {
         <Route exact path="/" component={AllSpots} />
         <Route path= "/spots/:spotId" component= {SpotDetails} />
         <Route exact path="/manage-spots" component={ManageSpot} />
-        <Route exact path="/create-spot" component={CreateSpot}/>
+        <Route exact path="/create-spot" component={CreateSpotForm}/>
         {/* <Route exact path="" /> */}
 
 
