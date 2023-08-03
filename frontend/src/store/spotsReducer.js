@@ -83,10 +83,18 @@ const res= await csrfFetch('/api/spots', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(spot),
+})
+
+if (res.ok) {
+    const spotDetails = await res.json();
+
+    return spotDetails
+} else {
+    const errors = await res.json();
+    return errors;
 }
 
-)
-console.log("*****SPOT", spot)
+
 
 }
 
@@ -188,20 +196,7 @@ const spotReducer = (state = initialState, action) => {
         },
       };
 
-        // case ADD_IMAGE:
-        // const spotId = action.spotId;
-        // const image = action.image;
-        // const spotCopy = { ...state.singleSpot[spotId] };
-        // const updatedImages = [...spotCopy.SpotImages, image];
-        // spotCopy.SpotImages = updatedImages;
-
-        // return {
-        //   ...state,
-        //   singleSpot: {
-        //     ...state.singleSpot,
-        //     [spotId]: spotCopy,
-        //   },
-        // };
+       
 
         default:
             return state;

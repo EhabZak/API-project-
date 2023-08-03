@@ -55,7 +55,7 @@ export default function ManageSpot() {
                                 />
                                 </div>
 
-                                <Link to={`spots/${spot.id}/edit`}>
+                                <Link to ={`/spots/${spot.id}/edit`} >
                                     <button>Update</button>
                                 </Link>
                             </div>

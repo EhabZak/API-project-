@@ -383,7 +383,7 @@ const validateNewImg = [
         .isLength({ min: 4 })
         .withMessage('url is required'),
     check('preview')
-        .exists({ checkFalsy: true })
+        // .exists({ checkFalsy: true })
         .isLength({ min: 4 })
         .withMessage('preview is required'),
     handleValidationErrors
@@ -393,7 +393,7 @@ router.post('/:id/images', requireAuth, validateNewImg, async (req, res) => {
     const userId = req.user.id;
 
     const spotId = req.params.id;
-   
+
     const { url, preview } = req.body;
 
     // Check if the spot exists

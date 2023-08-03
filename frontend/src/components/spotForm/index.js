@@ -64,20 +64,20 @@ export default function SpotForm({ spot, formType }) {
     if (description.length < 30) {
       errorObject.description = "Description needs a minimum of 30 characters";
     }
-    
+
     images.forEach((image) => {
 
       if (image.url.length < 1) {
         errorObject.images = "image is required";
       }
-
+if (image.url.length > 0 ) {
   const validExtensions = [".png", ".jpg", ".jpeg"];
   const imageUrl = image.url;
   const imageExtension = imageUrl.split('.').pop().toLowerCase();
-  if (!validExtensions.includes(imageExtension)) {
-    errorObject.name = "Image URL must end with .png, .jpg, or .jpeg";
+  if (!validExtensions.includes(imageExtension) ) {
+    errorObject.images = "Image URL must end with .png, .jpg, or .jpeg";
   }
-
+}
 
 })
     setValidationObject(errorObject)
@@ -85,14 +85,15 @@ export default function SpotForm({ spot, formType }) {
   }, [country,address,city,state,latitude,longitude ,description,name,price,images[0],images ]);
 
   ///////////////////////////////////////////////////////////////
-
+// console.log( '******', validationObject)
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrors({});
 
     //////////////////////////////////
-    spot = {...spot, country,address,city,state,latitude,longitude,description,name,price }
+    if (spot) {  spot = {...spot, country,address,city,state,lat: latitude,lng: longitude,description,name,price }}
+
     if (formType === 'Update Spot') {
       const editedSpot = await dispatch(updateSpot(spot));
       spot = editedSpot;
@@ -100,6 +101,8 @@ export default function SpotForm({ spot, formType }) {
       const newSpot = await dispatch(createSpot(spot));
       spot = newSpot;
 
+
+      // console.log('22222222222222', spot)
       /////////////////////////////////////
       images.forEach(async (image, index) => {
         if (image.url) {
@@ -122,7 +125,7 @@ export default function SpotForm({ spot, formType }) {
       history.push(`/spots/${spot.id}`);
     }
 
-    // history.push(`/spots/${spot.id}`)
+   
 
   }
 
