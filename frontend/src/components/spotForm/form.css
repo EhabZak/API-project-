@@ -87,3 +87,10 @@ border: 2px solid black;
 color: white;
 
 }
+
+#submit-form-button[disabled]{
+opacity: 0.6;
+cursor: not-allowed;
+
+
+}

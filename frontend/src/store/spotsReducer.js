@@ -31,7 +31,7 @@ export const removeSpot = (spotId) => ({
     spotId
 })
 
-export const addImage = (spotId, image) => ({
+export const addTheImage = (spotId, image) => ({
     type: ADD_IMAGE,
     spotId,
     image,
@@ -83,7 +83,10 @@ const res= await csrfFetch('/api/spots', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(spot),
-} )
+}
+
+)
+console.log("*****SPOT", spot)
 
 }
 
@@ -103,7 +106,37 @@ if (res.ok) {
 }
 
 }
+///////////////////////////////////////////
 
+export const addImage = (spotId, image, preview) => async (dispatch) => {
+    try {
+
+
+      const response = await csrfFetch(`/api/spots/${spotId}/images`, {
+        method: 'POST',
+        body: JSON.stringify({
+            "url": image,
+            "preview": preview
+          })
+      });
+
+    //   if (!response.ok) {
+    //     throw new Error('Failed to upload image');
+    //   }
+
+    //   const imageData = await response.json();
+
+    //   dispatch(addTheImage(imageData));
+    } catch (error) {
+
+      console.error('Error uploading image:', error);
+    }
+  };
+
+
+
+
+/////////////////////////////////////////////
 
 /// reducer
 
@@ -146,7 +179,7 @@ const spotReducer = (state = initialState, action) => {
                 allSpots: newAllSpots,
             };
 
-case UPDATE_SPOT:
+        case UPDATE_SPOT:
     return {
         ...state,
         singleSpot: {
@@ -155,20 +188,20 @@ case UPDATE_SPOT:
         },
       };
 
-      case ADD_IMAGE:
-        const spotId = action.spotId;
-        const image = action.image;
-        const spotCopy = { ...state.singleSpot[spotId] };
-        const updatedImages = [...spotCopy.SpotImages, image];
-        spotCopy.SpotImages = updatedImages;
+        // case ADD_IMAGE:
+        // const spotId = action.spotId;
+        // const image = action.image;
+        // const spotCopy = { ...state.singleSpot[spotId] };
+        // const updatedImages = [...spotCopy.SpotImages, image];
+        // spotCopy.SpotImages = updatedImages;
 
-        return {
-          ...state,
-          singleSpot: {
-            ...state.singleSpot,
-            [spotId]: spotCopy,
-          },
-        };
+        // return {
+        //   ...state,
+        //   singleSpot: {
+        //     ...state.singleSpot,
+        //     [spotId]: spotCopy,
+        //   },
+        // };
 
         default:
             return state;

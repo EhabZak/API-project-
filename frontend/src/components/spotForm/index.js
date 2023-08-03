@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 // import { fetchDetailedSpot } from '../../store/spotsReducer';
 import { createSpot, updateSpot } from '../../store/spotsReducer';
 import './form.css'
+import { addImage } from '../../store/spotsReducer';
 
 export default function SpotForm({ spot, formType }) {
   const { spotId } = useParams();
@@ -14,64 +15,71 @@ export default function SpotForm({ spot, formType }) {
   const [errors, setErrors] = useState({});
 
   //////////////////ehab ////////////////////////////////////////////
-  const [country, setCountry] = useState("");
-  const [address, setAddress] = useState("");
-  const [city, setCity] = useState("");
-  const [state, setState] = useState("");
-  const [latitude, setLatitude] = useState("");
-  const [longitude, setLongitude] = useState("");
-  const [description, setDescription] = useState("");
-  const [name, setName] = useState("");
-  const [price, setPrice] = useState("");
+  const [country, setCountry] = useState(spot?.country);
+  const [address, setAddress] = useState(spot?.address);
+  const [city, setCity] = useState(spot?.city);
+  const [state, setState] = useState(spot?.state);
+  const [latitude, setLatitude] = useState(spot?.latitude);
+  const [longitude, setLongitude] = useState(spot?.longitude);
+  const [description, setDescription] = useState(spot?.description);
+  const [name, setName] = useState(spot?.name);
+  const [price, setPrice] = useState(spot?.price);
   const [validationObject, setValidationObject] = useState({})
 
   const [images, setImages] = useState([
     { url: '', preview: true },
-    { url: '' },
-    { url: '' },
-    { url: '' },
-    { url: '' },
+    { url: '', preview: false},
+    { url: '', preview: false},
+    { url: '', preview: false},
+    { url: '', preview: false},
   ]);
 
   ////////////////////////////////////////////////////////////
   useEffect(() => {
     const errorObject = {}
     if (country.length < 1) {
-      errorObject.name = "Country is required";
+      errorObject.country = "Country is required";
     }
     if (address.length < 1) {
-      errorObject.name = "Address is required";
+      errorObject.address= "Address is required";
     }
     if (city.length < 1) {
-      errorObject.name = "City is required";
+      errorObject.city = "City is required";
     }
     if (state.length < 1) {
-      errorObject.name = "State is required";
+      errorObject.state = "State is required";
     }
     if (latitude.length < 1) {
-      errorObject.name = "Latitude is required";
+      errorObject.latitude = "Latitude is required";
     }
     if (longitude.length < 1) {
-      errorObject.name = "Longitude is required";
+      errorObject.longitude = "Longitude is required";
     }
     if (name.length < 1) {
       errorObject.name = "Name is required";
     }
     if (price.length < 1) {
-      errorObject.name = "Price is required";
+      errorObject.price = "Price is required";
     }
     if (description.length < 30) {
-      errorObject.name = "Description needs a minimum of 30 characters";
+      errorObject.description = "Description needs a minimum of 30 characters";
     }
-    if (images[0].length < 1) {
-      errorObject.name = "Preview image is required";
-    }
+    
+    images.forEach((image) => {
 
-    const validExtensions = [".png", ".jpg", ".jpeg"];
-    const imageExtension = images[0].split('.').pop().toLowerCase();
-    if (!validExtensions.includes(imageExtension)) {
-      errorObject.name = "Image URL must end with .png, .jpg, or .jpeg";
-    }
+      if (image.url.length < 1) {
+        errorObject.images = "image is required";
+      }
+
+  const validExtensions = [".png", ".jpg", ".jpeg"];
+  const imageUrl = image.url;
+  const imageExtension = imageUrl.split('.').pop().toLowerCase();
+  if (!validExtensions.includes(imageExtension)) {
+    errorObject.name = "Image URL must end with .png, .jpg, or .jpeg";
+  }
+
+
+})
     setValidationObject(errorObject)
 
   }, [country,address,city,state,latitude,longitude ,description,name,price,images[0],images ]);
@@ -84,7 +92,7 @@ export default function SpotForm({ spot, formType }) {
     setErrors({});
 
     //////////////////////////////////
-
+    spot = {...spot, country,address,city,state,latitude,longitude,description,name,price }
     if (formType === 'Update Spot') {
       const editedSpot = await dispatch(updateSpot(spot));
       spot = editedSpot;
@@ -96,24 +104,8 @@ export default function SpotForm({ spot, formType }) {
       images.forEach(async (image, index) => {
         if (image.url) {
           try {
-            const imageRequest = {
-              url: image.url,
-              preview: index === 0 ? true : false,
-            };
-            const response = await fetch(`/api/spots/${spot.id}/images`, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify(imageRequest),
-            });
-            if (response.ok) {
-              const imageData = await response.json();
-              console.log('Image added successfully:', imageData);
-            } else {
-              const errorData = await response.json();
-              console.error('Failed to add image:', errorData.message);
-            }
+
+            dispatch(addImage(spot.id, image.url, image.preview));
           } catch (error) {
             console.error('Error adding image:', error);
           }
@@ -129,7 +121,11 @@ export default function SpotForm({ spot, formType }) {
     } else {
       history.push(`/spots/${spot.id}`);
     }
+
+    // history.push(`/spots/${spot.id}`)
+
   }
+
 ////////////////////////////////////////////////////////////////
   return (
     <div id='main-container'>
@@ -215,6 +211,9 @@ export default function SpotForm({ spot, formType }) {
                 onChange={(e) => setLatitude(e.target.value)}
               />
             </label>
+            {validationObject.latitude && <p className= "errors">
+          {validationObject.latitude}
+          </p>}
             <p>,</p>
             <label className='label-container' >
               Longitude
@@ -226,6 +225,9 @@ export default function SpotForm({ spot, formType }) {
                 onChange={(e) => setLongitude(e.target.value)}
               />
             </label>
+            {validationObject.longitude && <p className= "errors">
+          {validationObject.longitude}
+          </p>}
           </div>
         </div>
 
@@ -241,6 +243,9 @@ export default function SpotForm({ spot, formType }) {
               onChange={(e) => setDescription(e.target.value)}
             />
           </label>
+          {validationObject.description && <p className= "errors">
+          {validationObject.description}
+          </p>}
           <div id='text-area-footer'></div>
         </div>
 
@@ -256,6 +261,9 @@ export default function SpotForm({ spot, formType }) {
               onChange={(e) => setName(e.target.value)}
             />
           </label>
+          {validationObject.name && <p className= "errors">
+          {validationObject.name}
+          </p>}
           <div id='text-area-footer'></div>
         </div>
 
@@ -267,13 +275,16 @@ export default function SpotForm({ spot, formType }) {
               <p>$</p>
               <input
                 type="text"
-                placeholder="Price per nigh (USD)"
+                placeholder="Price per night (USD)"
                 name="price"
                 value={price}
                 onChange={(e) => setPrice(e.target.value)}
               />
             </div>
           </label>
+          {validationObject.price && <p className= "errors">
+          {validationObject.price}
+          </p>}
           <div id='text-area-footer'></div>
         </div>
 
@@ -294,6 +305,9 @@ export default function SpotForm({ spot, formType }) {
               }}
             />
           </label>
+          {validationObject.images?.[0]?.url && <p className= "errors">
+          {validationObject.images[0].url}
+          </p>}
         </div>
 
 
@@ -310,6 +324,9 @@ export default function SpotForm({ spot, formType }) {
                 setImages(newImages);
               }}
             />
+          {validationObject.images && <p className= "errors">
+          {validationObject.images}
+          </p>}
           </div>
         ))}
 
@@ -321,7 +338,7 @@ export default function SpotForm({ spot, formType }) {
 
         <button id='submit-form-button'
           type="submit"
-          disabled={Object.keys(validationObject).length > 0}
+          // disabled={Object.keys(validationObject).length > 0}
         >
           Create Spot
         </button>
