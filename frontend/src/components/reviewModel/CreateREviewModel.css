@@ -1,0 +1,12 @@
+.star-container {
+    cursor: pointer;
+  }
+
+  .star-container span {
+    color: gray;
+  }
+
+  .star-container span:hover,
+  .star-container span:hover ~ span {
+    color: black;
+  }

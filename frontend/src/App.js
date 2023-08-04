@@ -8,6 +8,7 @@ import SpotDetails from "./components/SpotDetails";
 import ManageSpot from "./components/ManageSpot";
 import CreateSpotForm from "./components/CreateSpot";
 import UpdateSpotForm from "./components/updateform";
+import SpotReviews from "./components/SpotReviews";
 function App() {
   const dispatch = useDispatch();
   const [isLoaded, setIsLoaded] = useState(false);
@@ -40,3 +41,4 @@ function App() {
 }
 
 export default App;
+///<SpotReviews isLoaded={isLoaded} />

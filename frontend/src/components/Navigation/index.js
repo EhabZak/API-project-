@@ -7,6 +7,7 @@ import LoginFormModal from "../LoginFormModal";
 import SignupFormModal from "../SignupFormModal";
 import { Link } from 'react-router-dom';
 import "./Navigation.css";
+import logo from '../../assets/logo.png'
 
 function Navigation({ isLoaded }) {
   const sessionUser = useSelector((state) => state.session.user);
@@ -44,7 +45,7 @@ function Navigation({ isLoaded }) {
     <ul id ="header">
       <li>
         <NavLink exact to="/">
-        <img id="logo-image" src="images/logo.png" alt="Logo"/>
+        <img id="logo-image" src= {logo}alt="Logo"/>
         </NavLink>
       </li>
       {isLoaded && sessionLinks}

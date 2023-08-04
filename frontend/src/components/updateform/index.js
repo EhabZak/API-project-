@@ -12,9 +12,9 @@ import './updateForm.css'
 const UpdateSpotForm =() => {
 
 const {spotId} = useParams()
-console.log( 'spotId' , spotId)
+// console.log( 'spotId' , spotId)
 const spot= useSelector ((state) => state.spotState.singleSpot[spotId] );
-console.log('SPOT', spot)
+// console.log('SPOT', spot)
 const dispatch = useDispatch();
 
 useEffect(() => {
@@ -25,8 +25,8 @@ useEffect(() => {
 
 if (!spot) return (<></>);
 
-console.log('777777777777777777', Object.keys(spot).length)
-console.log('*****************', spot)
+// console.log('777777777777777777', Object.keys(spot).length)
+// console.log('*****************', spot)
 
 return (
 

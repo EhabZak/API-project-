@@ -150,6 +150,8 @@ export const addImage = (spotId, image, preview) => async (dispatch) => {
 
 const initialState = { allSpots: {}, singleSpot: {}, isLoading: true };
 
+////////////////////////////////////////////
+
 const spotReducer = (state = initialState, action) => {
     switch (action.type) {
 
@@ -196,7 +198,7 @@ const spotReducer = (state = initialState, action) => {
         },
       };
 
-       
+
 
         default:
             return state;

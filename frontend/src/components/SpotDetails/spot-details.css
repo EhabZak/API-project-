@@ -116,3 +116,13 @@
 #spot-city{
     margin-left: 40px;
 }
+
+#spot-details-container{
+
+  border-bottom: solid 1px black;
+}
+
+.init-details-container{
+max-width: 1000px;
+
+}
