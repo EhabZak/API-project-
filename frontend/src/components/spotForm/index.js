@@ -19,8 +19,8 @@ export default function SpotForm({ spot, formType }) {
   const [address, setAddress] = useState(spot?.address);
   const [city, setCity] = useState(spot?.city);
   const [state, setState] = useState(spot?.state);
-  const [latitude, setLatitude] = useState(spot?.latitude);
-  const [longitude, setLongitude] = useState(spot?.longitude);
+  const [lat, setLat] = useState(spot?.lat);
+  const [lng, setLng] = useState(spot?.lng);
   const [description, setDescription] = useState(spot?.description);
   const [name, setName] = useState(spot?.name);
   const [price, setPrice] = useState(spot?.price);
@@ -33,7 +33,7 @@ export default function SpotForm({ spot, formType }) {
     { url: '', preview: false},
     { url: '', preview: false},
   ]);
-
+console.log('*************', spot)
   ////////////////////////////////////////////////////////////
   useEffect(() => {
     const errorObject = {}
@@ -49,11 +49,11 @@ export default function SpotForm({ spot, formType }) {
     if (state.length < 1) {
       errorObject.state = "State is required";
     }
-    if (latitude.length < 1) {
-      errorObject.latitude = "Latitude is required";
+    if (lat.length < 1) {
+      errorObject.lat = "Latitude is required";
     }
-    if (longitude.length < 1) {
-      errorObject.longitude = "Longitude is required";
+    if (lng.length < 1) {
+      errorObject.lng = "Longitude is required";
     }
     if (name.length < 1) {
       errorObject.name = "Name is required";
@@ -82,7 +82,7 @@ if (image.url.length > 0 ) {
 })
     setValidationObject(errorObject)
 
-  }, [country,address,city,state,latitude,longitude ,description,name,price,images[0],images ]);
+  }, [country,address,city,state,lat,lng ,description,name,price,images[0],images ]);
 
   ///////////////////////////////////////////////////////////////
 // console.log( '******', validationObject)
@@ -92,7 +92,7 @@ if (image.url.length > 0 ) {
     setErrors({});
 
     //////////////////////////////////
-    if (spot) {  spot = {...spot, country,address,city,state,lat: latitude,lng: longitude,description,name,price }}
+    if (spot) {  spot = {...spot, country,address,city,state,lat: lat,lng: lng,description,name,price }}
 
     if (formType === 'Update Spot') {
       const editedSpot = await dispatch(updateSpot(spot));
@@ -125,7 +125,7 @@ if (image.url.length > 0 ) {
       history.push(`/spots/${spot.id}`);
     }
 
-   
+
 
   }
 
@@ -134,7 +134,7 @@ if (image.url.length > 0 ) {
     <div id='main-container'>
       <form onSubmit={handleSubmit} id='form-container'>
 
-        <h1 > create a new Spot </h1>
+        
         <h2>Where is your place located?</h2>
         <p>Guests will only get you exact address once they booked a reservation.</p>
         <div className='form-div-container'>
@@ -208,28 +208,28 @@ if (image.url.length > 0 ) {
               Latitude
               <input
                 type="text"
-                placeholder="Latitude"
-                name="latitude"
-                value={latitude}
-                onChange={(e) => setLatitude(e.target.value)}
+                placeholder="lat"
+                name="lat"
+                value={lat}
+                onChange={(e) => setLat(e.target.value)}
               />
             </label>
-            {validationObject.latitude && <p className= "errors">
-          {validationObject.latitude}
+            {validationObject.lat && <p className= "errors">
+          {validationObject.lat}
           </p>}
             <p>,</p>
             <label className='label-container' >
               Longitude
               <input
                 type="text"
-                placeholder="Longitude"
-                name="longitude"
-                value={longitude}
-                onChange={(e) => setLongitude(e.target.value)}
+                placeholder="lng"
+                name="lng"
+                value={lng}
+                onChange={(e) => setLng(e.target.value)}
               />
             </label>
-            {validationObject.longitude && <p className= "errors">
-          {validationObject.longitude}
+            {validationObject.lng && <p className= "errors">
+          {validationObject.lng}
           </p>}
           </div>
         </div>

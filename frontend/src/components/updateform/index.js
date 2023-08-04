@@ -7,6 +7,7 @@ import SpotDetails from '../SpotDetails';
 
 import SpotForm from '../spotForm';
 import { fetchDetailedSpot } from '../../store/spotsReducer';
+import './updateForm.css'
 
 const UpdateSpotForm =() => {
 
@@ -28,8 +29,13 @@ console.log('777777777777777777', Object.keys(spot).length)
 console.log('*****************', spot)
 
 return (
+
+
     Object.keys(spot).length > 1 && (
       <>
+      <div>
+      <h1 class='header'>Update your spot</h1>
+      </div>
         <SpotForm
           spot={spot}
           formType="Update Report"

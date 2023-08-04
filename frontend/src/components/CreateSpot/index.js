@@ -1,5 +1,5 @@
 import SpotForm from "../spotForm"
-
+import "../updateform/updateForm.css"
 
 export default function CreateSpotForm() {
 
@@ -9,8 +9,8 @@ export default function CreateSpotForm() {
         city: '',
         city: '',
         state: '',
-        latitude: '',
-        longitude: '',
+        lat: '',
+        lng: '',
         description: '',
         name: '',
         price: ''
@@ -19,7 +19,7 @@ export default function CreateSpotForm() {
 
     return (
         <>
-
+            <h1 class='header'>Create a new Spot</h1>
 
             <SpotForm
                 spot={spot}
