@@ -14,6 +14,10 @@ export default function SpotForm({ spot, formType }) {
   const history = useHistory();
   const [errors, setErrors] = useState({});
 
+
+
+  //////////////////////////////////////////////////////////////////
+
   //////////////////ehab ////////////////////////////////////////////
   const [country, setCountry] = useState(spot?.country);
   const [address, setAddress] = useState(spot?.address);
@@ -28,20 +32,75 @@ export default function SpotForm({ spot, formType }) {
 
   const [images, setImages] = useState([
     { url: '', preview: true },
-    { url: '', preview: false},
-    { url: '', preview: false},
-    { url: '', preview: false},
-    { url: '', preview: false},
+    { url: '', preview: false },
+    { url: '', preview: false },
+    { url: '', preview: false },
+    { url: '', preview: false },
   ]);
-console.log('*************', spot)
+  // console.log('*************', spot) // if we are updating the spot
   ////////////////////////////////////////////////////////////
-  useEffect(() => {
+  // useEffect(() => {
+  // const errorObject = {}
+  //     if (country.length < 1) {
+  //       errorObject.country = "Country is required";
+  //     }
+  //     if (address.length < 1) {
+  //       errorObject.address= "Address is required";
+  //     }
+  //     if (city.length < 1) {
+  //       errorObject.city = "City is required";
+  //     }
+  //     if (state.length < 1) {
+  //       errorObject.state = "State is required";
+  //     }
+  //     if (lat.length < 1) {
+  //       errorObject.lat = "Latitude is required";
+  //     }
+  //     if (lng.length < 1) {
+  //       errorObject.lng = "Longitude is required";
+  //     }
+  //     if (name.length < 1) {
+  //       errorObject.name = "Name is required";
+  //     }
+  //     if (price.length < 1) {
+  //       errorObject.price = "Price is required";
+  //     }
+  //     if (description.length < 30) {
+  //       errorObject.description = "Description needs a minimum of 30 characters";
+  //     }
+
+  //     images.forEach((image) => {
+
+  //       if (image.url.length < 1) {
+  //         errorObject.images = "image is required";
+  //       }
+  // if (image.url.length > 0 ) {
+  //   const validExtensions = [".png", ".jpg", ".jpeg"];
+  //   const imageUrl = image.url;
+  //   const imageExtension = imageUrl.split('.').pop().toLowerCase();
+  //   if (!validExtensions.includes(imageExtension) ) {
+  //     errorObject.images = "Image URL must end with .png, .jpg, or .jpeg";
+  //   }
+  // }
+
+  // })
+  // setValidationObject(errorObject)
+
+  // }, [country, address, city, state, lat, lng, description, name, price, images[0], images]);
+
+  ///////////////////////////////////////////////////////////////
+  // console.log( '******', validationObject)
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setErrors({});
+    /////////////////////////////////////////////////////////
     const errorObject = {}
     if (country.length < 1) {
       errorObject.country = "Country is required";
     }
     if (address.length < 1) {
-      errorObject.address= "Address is required";
+      errorObject.address = "Address is required";
     }
     if (city.length < 1) {
       errorObject.city = "City is required";
@@ -70,39 +129,43 @@ console.log('*************', spot)
       if (image.url.length < 1) {
         errorObject.images = "image is required";
       }
-if (image.url.length > 0 ) {
-  const validExtensions = [".png", ".jpg", ".jpeg"];
-  const imageUrl = image.url;
-  const imageExtension = imageUrl.split('.').pop().toLowerCase();
-  if (!validExtensions.includes(imageExtension) ) {
-    errorObject.images = "Image URL must end with .png, .jpg, or .jpeg";
-  }
-}
+      if (image.url.length > 0) {
+        const validExtensions = [".png", ".jpg", ".jpeg"];
+        const imageUrl = image.url;
+        const imageExtension = imageUrl.split('.').pop().toLowerCase();
+        if (!validExtensions.includes(imageExtension)) {
+          errorObject.images = "Image URL must end with .png, .jpg, or .jpeg";
+        }
+      }
 
-})
+    })
     setValidationObject(errorObject)
 
-  }, [country,address,city,state,lat,lng ,description,name,price,images[0],images ]);
-
-  ///////////////////////////////////////////////////////////////
-// console.log( '******', validationObject)
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setErrors({});
-
     //////////////////////////////////
-    if (spot) {  spot = {...spot, country,address,city,state,lat: lat,lng: lng,description,name,price }}
-
+    if (spot)
+     { spot = { ...spot, country, address, city, state, lat: lat, lng: lng, description, name, price } }
+     console.log("898988988999888",spot)
     if (formType === 'Update Spot') {
+
       const editedSpot = await dispatch(updateSpot(spot));
       spot = editedSpot;
+
     } else if (formType === 'Create Spot') {
-      const newSpot = await dispatch(createSpot(spot));
-      spot = newSpot;
 
+      try {
+        await dispatch(createSpot(spot));
+console.log("000000000000000",spot)
+      } catch (error) {
+        // console.log('&&&&&&&&&&', error)
+        const data = await error.json();
+        console.log("%%%%%%%%%%%", data.errors)
+        if (data && data.errors) {
+          setErrors(data.errors);
+        }
 
-      // console.log('22222222222222', spot)
+      }
+
+      console.log('22222222222222', errors)
       /////////////////////////////////////
       images.forEach(async (image, index) => {
         if (image.url) {
@@ -119,22 +182,25 @@ if (image.url.length > 0 ) {
     }
 
 
-    if (spot.errors) {
-      setErrors(spot.errors);
-    } else {
-      history.push(`/spots/${spot.id}`);
-    }
+    // if (spot.errors) {
+    //   setErrors(spot.errors);
+    // } else {
+    //   history.push(`/spots/${spot.id}`);
+    // }
 
-
+    history.push(`/spots/${spot.id}`);
 
   }
-
-////////////////////////////////////////////////////////////////
+  useEffect(() => {
+    console.log('errors updated:', errors);
+  }, [errors]);
+  console.log('22222222222222', errors)
+  ////////////////////////////////////////////////////////////////
   return (
     <div id='main-container'>
       <form onSubmit={handleSubmit} id='form-container'>
 
-        
+
         <h2>Where is your place located?</h2>
         <p>Guests will only get you exact address once they booked a reservation.</p>
         <div className='form-div-container'>
@@ -148,8 +214,9 @@ if (image.url.length > 0 ) {
               onChange={(e) => setCountry(e.target.value)}
             />
           </label>
-          {validationObject.country && <p className= "errors">
-          {validationObject.country}
+          {errors.country && <div className="error">{errors.country}</div>}
+          {validationObject.country && <p className="errors">
+            {validationObject.country}
           </p>}
         </div>
 
@@ -164,8 +231,9 @@ if (image.url.length > 0 ) {
               onChange={(e) => setAddress(e.target.value)}
             />
           </label>
-          {validationObject.address && <p className= "errors">
-          {validationObject.address}
+          {errors.address && <div className="error">{errors.address}</div>}
+          {validationObject.address && <p className="errors">
+            {validationObject.address}
           </p>}
         </div>
 
@@ -181,9 +249,10 @@ if (image.url.length > 0 ) {
                 onChange={(e) => setCity(e.target.value)}
               />
             </label>
-            {validationObject.city && <p className= "errors">
-          {validationObject.city}
-          </p>}
+            {errors.city && <div className="error">{errors.city}</div>}
+            {validationObject.city && <p className="errors">
+              {validationObject.city}
+            </p>}
             <p>,</p>
             <label className='label-container' >
               State
@@ -195,9 +264,10 @@ if (image.url.length > 0 ) {
                 onChange={(e) => setState(e.target.value)}
               />
             </label>
-            {validationObject.state && <p className= "errors">
-          {validationObject.state}
-          </p>}
+            {errors.city && <div className="error">{errors.city}</div>}
+            {validationObject.state && <p className="errors">
+              {validationObject.state}
+            </p>}
           </div>
         </div>
 
@@ -214,9 +284,10 @@ if (image.url.length > 0 ) {
                 onChange={(e) => setLat(e.target.value)}
               />
             </label>
-            {validationObject.lat && <p className= "errors">
-          {validationObject.lat}
-          </p>}
+            {errors.lat && <div className="error">{errors.lat}</div>}
+            {validationObject.lat && <p className="errors">
+              {validationObject.lat}
+            </p>}
             <p>,</p>
             <label className='label-container' >
               Longitude
@@ -228,9 +299,10 @@ if (image.url.length > 0 ) {
                 onChange={(e) => setLng(e.target.value)}
               />
             </label>
-            {validationObject.lng && <p className= "errors">
-          {validationObject.lng}
-          </p>}
+            {errors.lng && <div className="error">{errors.lng}</div>}
+            {validationObject.lng && <p className="errors">
+              {validationObject.lng}
+            </p>}
           </div>
         </div>
 
@@ -246,8 +318,9 @@ if (image.url.length > 0 ) {
               onChange={(e) => setDescription(e.target.value)}
             />
           </label>
-          {validationObject.description && <p className= "errors">
-          {validationObject.description}
+          {errors.description&& <div className="error">{errors.description}</div>}
+          {validationObject.description && <p className="errors">
+            {validationObject.description}
           </p>}
           <div id='text-area-footer'></div>
         </div>
@@ -264,8 +337,9 @@ if (image.url.length > 0 ) {
               onChange={(e) => setName(e.target.value)}
             />
           </label>
-          {validationObject.name && <p className= "errors">
-          {validationObject.name}
+          {errors.name&& <div className="error">{errors.name}</div>}
+          {validationObject.name && <p className="errors">
+            {validationObject.name}
           </p>}
           <div id='text-area-footer'></div>
         </div>
@@ -285,8 +359,9 @@ if (image.url.length > 0 ) {
               />
             </div>
           </label>
-          {validationObject.price && <p className= "errors">
-          {validationObject.price}
+          {errors.price && <div className="error">{errors.price}</div>}
+          {validationObject.price && <p className="errors">
+            {validationObject.price}
           </p>}
           <div id='text-area-footer'></div>
         </div>
@@ -294,8 +369,8 @@ if (image.url.length > 0 ) {
 
         <div className='form-div-container'>
           <label className='label-container'>
-           Liven up your spot with Photos
-           <p id='p-in-textarea'> Submit a link to at least one photo to publish your spot</p>
+            Liven up your spot with Photos
+            <p id='p-in-textarea'> Submit a link to at least one photo to publish your spot</p>
             <input
               type='text'
               placeholder='Preview Image URL'
@@ -308,8 +383,8 @@ if (image.url.length > 0 ) {
               }}
             />
           </label>
-          {validationObject.images?.[0]?.url && <p className= "errors">
-          {validationObject.images[0].url}
+          {validationObject.images?.[0]?.url && <p className="errors">
+            {validationObject.images[0].url}
           </p>}
         </div>
 
@@ -327,9 +402,9 @@ if (image.url.length > 0 ) {
                 setImages(newImages);
               }}
             />
-          {validationObject.images && <p className= "errors">
-          {validationObject.images}
-          </p>}
+            {validationObject.images && <p className="errors">
+              {validationObject.images}
+            </p>}
           </div>
         ))}
 
@@ -341,7 +416,7 @@ if (image.url.length > 0 ) {
 
         <button id='submit-form-button'
           type="submit"
-          // disabled={Object.keys(validationObject).length > 0}
+        // disabled={Object.keys(validationObject).length > 0}
         >
           Create Spot
         </button>

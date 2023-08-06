@@ -35,7 +35,7 @@ export const addTheImage = (spotId, image) => ({
     type: ADD_IMAGE,
     spotId,
     image,
-  });
+});
 
 // thunk action creator
 
@@ -70,48 +70,52 @@ export const deleteSpot = (spotId) => async (dispatch) => {
         method: 'DELETE'
     })
 
-    if(res.ok) {
+    if (res.ok) {
         dispatch(removeSpot(spotId))
-    }else {
+    } else {
         const errors = await res.json();
         return errors;
     }
 }
 
-export const createSpot = (spot) => async(dispatch)=> {
-const res= await csrfFetch('/api/spots', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(spot),
-})
+export const createSpot = (spot) => async (dispatch) => {
+console.log( '44444444', spot)
+    try {
+        const res = await csrfFetch('/api/spots', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(spot),
+        })
 
-if (res.ok) {
-    const spotDetails = await res.json();
+        if (!res.ok) {
+            // If response is not ok, throw an error with the JSON data
+            const errors = await res.json();
+            throw new Error(JSON.stringify(errors));
+        }
 
-    return spotDetails
-} else {
-    const errors = await res.json();
-    return errors;
+        const spotDetails = await res.json();
+        return spotDetails;
+    } catch (error) {
+        // console.log("8888888888", error)
+        throw error; // Re-throw the error to be caught in the component
+    }
+
 }
 
+export const updateSpot = (spot) => async (dispatch) => {
+    const res = await csrfFetch(`/api/spots/${spot.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(spot)
+    })
 
-
-}
-
-export const updateSpot =(spot) => async (dispatch) => {
-const res = await csrfFetch(`/api/spots/${spot.id}`, {
-method: 'PUT',
-headers: { 'Content-Type': 'application/json' },
-body: JSON.stringify(spot)
-})
-
-if (res.ok) {
-    const updatedSpot = await res.json();
-    dispatch(editSpot(updatedSpot))
-}else {
-    const errors = await res.json();
-    return errors;
-}
+    if (res.ok) {
+        const updatedSpot = await res.json();
+        dispatch(editSpot(updatedSpot))
+    } else {
+        const errors = await res.json();
+        return errors;
+    }
 
 }
 ///////////////////////////////////////////
@@ -120,26 +124,26 @@ export const addImage = (spotId, image, preview) => async (dispatch) => {
     try {
 
 
-      const response = await csrfFetch(`/api/spots/${spotId}/images`, {
-        method: 'POST',
-        body: JSON.stringify({
-            "url": image,
-            "preview": preview
-          })
-      });
+        const response = await csrfFetch(`/api/spots/${spotId}/images`, {
+            method: 'POST',
+            body: JSON.stringify({
+                "url": image,
+                "preview": preview
+            })
+        });
 
-    //   if (!response.ok) {
-    //     throw new Error('Failed to upload image');
-    //   }
+        //   if (!response.ok) {
+        //     throw new Error('Failed to upload image');
+        //   }
 
-    //   const imageData = await response.json();
+        //   const imageData = await response.json();
 
-    //   dispatch(addTheImage(imageData));
+        //   dispatch(addTheImage(imageData));
     } catch (error) {
 
-      console.error('Error uploading image:', error);
+        console.error('Error uploading image:', error);
     }
-  };
+};
 
 
 
@@ -190,13 +194,13 @@ const spotReducer = (state = initialState, action) => {
             };
 
         case UPDATE_SPOT:
-    return {
-        ...state,
-        singleSpot: {
-          ...state.singleSpot,
-          [action.spot.id]: action.spot,
-        },
-      };
+            return {
+                ...state,
+                singleSpot: {
+                    ...state.singleSpot,
+                    [action.spot.id]: action.spot,
+                },
+            };
 
 
 

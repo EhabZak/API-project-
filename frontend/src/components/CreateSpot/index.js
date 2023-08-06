@@ -19,7 +19,7 @@ export default function CreateSpotForm() {
 
     return (
         <>
-            <h1 class='header'>Create a new Spot</h1>
+            <h1 className='header'>Create a new Spot</h1>
 
             <SpotForm
                 spot={spot}

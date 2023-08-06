@@ -4,11 +4,12 @@ import { deleteSpot } from '../../store/spotsReducer';
 import { useModal } from "../../context/Modal";
 
 function DeleteModel({ spotId }) {
+  
   const dispatch = useDispatch();
   const { closeModal } = useModal();
 
 
-  
+
   const handelDeleteSpot = () => {
     console.log("=============", spotId);
     dispatch(deleteSpot(spotId))

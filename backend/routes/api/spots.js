@@ -548,7 +548,7 @@ router.get('/:spotId/reviews', async (req, res) => {
 
     //////////////////////////////////////
     if (currReviews.length === 0) {
-        return res.status(404).json({ message: "There are no reviews for this spot" });
+        return res.status(200).json({});
     }
 
 

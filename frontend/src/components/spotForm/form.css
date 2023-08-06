@@ -94,3 +94,7 @@ cursor: not-allowed;
 
 
 }
+.errors{
+    color:red;
+    font-size: 10px;
+}

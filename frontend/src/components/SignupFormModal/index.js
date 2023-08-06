@@ -15,6 +15,8 @@ function SignupFormModal() {
   const [errors, setErrors] = useState({});
   const { closeModal } = useModal();
 
+
+  ////////////////////////////////////////////////////////////////////
   const handleSubmit = (e) => {
     e.preventDefault();
     if (password === confirmPassword) {
@@ -40,7 +42,7 @@ function SignupFormModal() {
       confirmPassword: "Confirm Password field must be the same as the Password field"
     });
   };
-
+//////////////////////////////////////////////////////////////
   return (
     <>
       <h1>Sign Up</h1>
