@@ -13,7 +13,7 @@ export default function SpotForm({ spot, formType }) {
   const dispatch = useDispatch();
   const history = useHistory();
   const [errors, setErrors] = useState({});
-
+  const [imageErrors, setImageErrors] = useState({})
 
 
   //////////////////////////////////////////////////////////////////
@@ -94,6 +94,7 @@ export default function SpotForm({ spot, formType }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrors({});
+    setImageErrors({})
     /////////////////////////////////////////////////////////
     const errorObject = {}
     if (country.length < 1) {
@@ -142,30 +143,44 @@ export default function SpotForm({ spot, formType }) {
     setValidationObject(errorObject)
 
     //////////////////////////////////
-    if (spot)
-     { spot = { ...spot, country, address, city, state, lat: lat, lng: lng, description, name, price } }
-     console.log("898988988999888",spot)
+    if (spot) { spot = { ...spot, country, address, city, state, lat: lat, lng: lng, description, name, price } }
+    console.log("898988988999888", spot)
     if (formType === 'Update Spot') {
 
-      const editedSpot = await dispatch(updateSpot(spot));
-      spot = editedSpot;
 
-    } else if (formType === 'Create Spot') {
+
+      // await dispatch(updateSpot(spot));
 
       try {
-        await dispatch(createSpot(spot));
-console.log("000000000000000",spot)
+        await dispatch(updateSpot(spot));
+        console.log("000000000000000", spot)
       } catch (error) {
         // console.log('&&&&&&&&&&', error)
         const data = await error.json();
-        console.log("%%%%%%%%%%%", data.errors)
+        // console.log("%%%%%%%%%%%", data.errors)
         if (data && data.errors) {
           setErrors(data.errors);
         }
 
       }
 
-      console.log('22222222222222', errors)
+
+    } else if (formType === 'Create Spot') {
+
+      try {
+        await dispatch(createSpot(spot));
+        // console.log("000000000000000",spot)
+      } catch (error) {
+        // console.log('&&&&&&&&&&', error)
+        const data = await error.json();
+        // console.log("%%%%%%%%%%%", data.errors)
+        if (data && data.errors) {
+          setErrors(data.errors);
+        }
+
+      }
+
+      // console.log('22222222222222', errors)
       /////////////////////////////////////
       images.forEach(async (image, index) => {
         if (image.url) {
@@ -173,7 +188,10 @@ console.log("000000000000000",spot)
 
             dispatch(addImage(spot.id, image.url, image.preview));
           } catch (error) {
-            console.error('Error adding image:', error);
+            const data = await error.json();
+            if (data && data.errors) {
+              setImageErrors(data.errors);
+            }
           }
         }
       });
@@ -192,8 +210,9 @@ console.log("000000000000000",spot)
 
   }
   useEffect(() => {
-    console.log('errors updated:', errors);
-  }, [errors]);
+    // console.log('errors updated:', errors)
+    console.log("000000000000000", spot);
+  }, [ spot]);
   console.log('22222222222222', errors)
   ////////////////////////////////////////////////////////////////
   return (
@@ -318,7 +337,7 @@ console.log("000000000000000",spot)
               onChange={(e) => setDescription(e.target.value)}
             />
           </label>
-          {errors.description&& <div className="error">{errors.description}</div>}
+          {errors.description && <div className="error">{errors.description}</div>}
           {validationObject.description && <p className="errors">
             {validationObject.description}
           </p>}
@@ -337,7 +356,7 @@ console.log("000000000000000",spot)
               onChange={(e) => setName(e.target.value)}
             />
           </label>
-          {errors.name&& <div className="error">{errors.name}</div>}
+          {errors.name && <div className="error">{errors.name}</div>}
           {validationObject.name && <p className="errors">
             {validationObject.name}
           </p>}
@@ -383,6 +402,7 @@ console.log("000000000000000",spot)
               }}
             />
           </label>
+          {imageErrors.images && <div className="error">{imageErrors.images}</div>}
           {validationObject.images?.[0]?.url && <p className="errors">
             {validationObject.images[0].url}
           </p>}
@@ -402,6 +422,7 @@ console.log("000000000000000",spot)
                 setImages(newImages);
               }}
             />
+            {imageErrors.images && <div className="error">{imageErrors.images}</div>}
             {validationObject.images && <p className="errors">
               {validationObject.images}
             </p>}

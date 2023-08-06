@@ -96,7 +96,7 @@ console.log( '44444444', spot)
         const spotDetails = await res.json();
         return spotDetails;
     } catch (error) {
-        // console.log("8888888888", error)
+        console.log("createspot&&&&&&", error)
         throw error; // Re-throw the error to be caught in the component
     }
 
@@ -124,7 +124,7 @@ export const addImage = (spotId, image, preview) => async (dispatch) => {
     try {
 
 
-        const response = await csrfFetch(`/api/spots/${spotId}/images`, {
+        const res = await csrfFetch(`/api/spots/${spotId}/images`, {
             method: 'POST',
             body: JSON.stringify({
                 "url": image,
@@ -132,16 +132,20 @@ export const addImage = (spotId, image, preview) => async (dispatch) => {
             })
         });
 
-        //   if (!response.ok) {
-        //     throw new Error('Failed to upload image');
-        //   }
+        if (!res.ok) {
+            // If response is not ok, throw an error with the JSON data
+            const errors = await res.json();
+            throw new Error(JSON.stringify(errors));
+        }
 
-        //   const imageData = await response.json();
+        const spotImageDetails = await res.json();
+        return spotImageDetails;
 
-        //   dispatch(addTheImage(imageData));
+
+
     } catch (error) {
-
-        console.error('Error uploading image:', error);
+console.log("8888888888", error)
+       throw error;
     }
 };
 
