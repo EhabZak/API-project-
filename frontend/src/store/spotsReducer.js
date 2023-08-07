@@ -101,10 +101,12 @@ export const deleteSpot = (spotId) => async (dispatch) => {
 //     }
 
 // }
+
+
 /////////////////////////////////////////////////
 
 export const createSpot = (spot) => async (dispatch) => {
-    // console.log( '44444444', spot)
+    console.log( '44444444', spot)
 
             const res = await csrfFetch('/api/spots', {
                 method: 'POST',
@@ -112,7 +114,9 @@ export const createSpot = (spot) => async (dispatch) => {
                 body: JSON.stringify(spot),
             })
            const spotDetails = await res.json()
+
 console.log("spot details:", spotDetails)
+
             if (spotDetails && spotDetails.errors) {
 
                 return console.log(spotDetails)
@@ -152,7 +156,7 @@ export const updateSpot = (spot) => async (dispatch) => {
 
 export const addImage = (spotId, image, preview) => async (dispatch) => {
     try {
-
+console.log( '66666666', spotId)
 
         const res = await csrfFetch(`/api/spots/${spotId}/images`, {
             method: 'POST',

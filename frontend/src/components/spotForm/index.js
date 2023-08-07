@@ -126,25 +126,25 @@ export default function SpotForm({ spot, formType }) {
       errorObject.description = "Description needs a minimum of 30 characters";
     }
 
-    
-    images.forEach((image) => {
 
-      if (image.url.length < 1) {
-        errorObject.images = "image is required";
-      }
-      if (image.url.length > 0) {
-        const validExtensions = [".png", ".jpg", ".jpeg"];
-        const imageUrl = image.url;
-        const imageExtension = imageUrl.split('.').pop().toLowerCase();
-        console.log( '*******image extension', imageExtension)
-        if (!validExtensions.includes(imageExtension)) {
-          errorObject.images = "Image URL must end with .png, .jpg, or .jpeg";
-        }else{
+    // images.forEach((image) => {
 
-        }
-      }
+    //   if (image.url.length < 1) {
+    //     errorObject.images = "image is required";
+    //   }
+    //   if (image.url.length > 0) {
+    //     const validExtensions = [".png", ".jpg", ".jpeg"];
+    //     const imageUrl = image.url;
+    //     const imageExtension = imageUrl.split('.').pop().toLowerCase();
+    //     console.log( '*******image extension', imageExtension)
+    //     if (!validExtensions.includes(imageExtension)) {
+    //       errorObject.images = "Image URL must end with .png, .jpg, or .jpeg";
+    //     }else{
 
-    })
+    //     }
+    //   }
+
+    // })
     setValidationObject(errorObject)
 
     //////////////////////////////////
@@ -208,6 +208,7 @@ if (Object.values(errors).length){
 
       // console.log('22222222222222', errors)
       /////////////////////////////////////
+
       images.forEach(async (image, index) => {
         if (image.url) {
           try {
@@ -234,7 +235,7 @@ if (Object.values(errors).length){
 if (spot.id){
 
   history.push(`/spots/${spot.id}`);
-}
+}else return null
 
   }
   useEffect(() => {
@@ -243,6 +244,10 @@ if (spot.id){
   }, [spot]);
   // console.log('22222222222222', errors)
   ////////////////////////////////////////////////////////////////
+
+  if (!spot){
+    return null
+  }
   return (
     <div id='main-container'>
       <form

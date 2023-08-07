@@ -1,33 +1,39 @@
-import SpotForm from "../spotForm"
+import SpotForm2 from "./spotForm2"
 import "../updateform/updateForm.css"
 
 export default function CreateSpotForm() {
 
-    const spot = {
-        country: '',
-        address: '',
-        city: '',
-        city: '',
-        state: '',
-        lat: '',
-        lng: '',
-        description: '',
-        name: '',
-        price: ''
+    // const spot = {
+    //     country: '',
+    //     address: '',
+    //     city: '',
+    //     city: '',
+    //     state: '',
+    //     lat: '',
+    //     lng: '',
+    //     description: '',
+    //     name: '',
+    //     price: ''
 
-    }
+    // }
 
-    return (
-        <>
-            <h1 className='header'>Create a new Spot</h1>
+    // return (
+    //     <>
+    //         <h1 className='header'>Create a new Spot</h1>
 
-            <SpotForm
-                spot={spot}
-                formType='Create Spot'
+    //         <SpotForm2
+    //             spot={spot}
+    //             formType='Create Spot'
 
-            />
-        </>
-    )
+    //         />
+    //     </>
+    // )
+
+      return (
+        <SpotForm2
+          formType="Create"
+        />
+      )
 
 
 }
