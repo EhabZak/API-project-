@@ -59,7 +59,7 @@ function CreateReviewModel({ spotId }) {
     return (
         <div>
             <form onSubmit={handleSubmit} id='form-review'>
-                <h1>How was your stay?</h1>
+                <h2>How was your stay?</h2>
                 <div>
                 {message && <div className="error">{message}</div>}
                 </div>
@@ -81,10 +81,11 @@ function CreateReviewModel({ spotId }) {
                         >
                             ★
                         </span>
-                    ))}
+                    ))}<span>stars</span>
                 </p>
                 {errors.stars && <div className="error">{errors.stars}</div>}
-                <button onClick={handelCreateReview}>Submit your Review</button>
+                <button id="submit-review-btn"
+                onClick={handelCreateReview}>Submit your Review</button>
             </form>
         </div>
     );

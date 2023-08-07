@@ -62,7 +62,7 @@ function LogInButton({ user }) {
 
       </li>
       <li>
-          <button className="buttons" onClick={(e) =>{
+          <button className="buttons" id="demo-user-button" onClick={(e) =>{
             const credential = "Demo-lition"
             const password = "password"
             setShowMenu(false)

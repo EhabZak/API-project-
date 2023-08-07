@@ -15,3 +15,12 @@ flex-direction: column;
 margin-bottom: 5px;
 text-align: start;
 }
+#demo-user-button{
+    margin-top: 20px;
+    border: none;
+    text-align: center;
+    background-color: white;
+    text-decoration: underline;
+    margin-bottom: 20px;
+    
+}
