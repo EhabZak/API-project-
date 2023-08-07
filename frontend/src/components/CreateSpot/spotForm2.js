@@ -5,6 +5,7 @@ import { useHistory, useParams, useRouteMatch } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 // import { fetchDetailedSpot } from '../../store/spotsReducer';
 import { createSpot, updateSpot } from '../../store/spotsReducer';
+import './form2.css'
 
 import { addImage } from '../../store/spotsReducer';
 import { createSpotThunk } from '../../store/createSpotReducer';
@@ -32,7 +33,7 @@ export default function SpotForm2({ formType, spotId }) {
     const history = useHistory();
 
     const sessionUser = useSelector((state) => state.session.user);
-    
+
     let spotEdit;
 
 
@@ -107,10 +108,12 @@ export default function SpotForm2({ formType, spotId }) {
           onSubmit={handleSubmit}
         >
           <h1>{formType === 'Create' ? 'Create a new Spot' : 'Update your Spot'}</h1>
+<h3>Where's your place located?</h3>
+<p>Guests will only get your exact location once they book a reservation.</p>
           <div>
             <div className="div-title">
               <div className="error-container">
-                <p>Country</p>
+                <p className='label-container'>Country</p>
                 {validationObj.country && <p className="errors">{validationObj.country}</p>}
               </div>
             </div>
@@ -123,14 +126,14 @@ export default function SpotForm2({ formType, spotId }) {
             <div className="city-state-input-box">
               <div className="state">
                 <div className="error-container">
-                  <p>City</p>
+                  <p className='label-container'>City</p>
                   {validationObj.city && <p className="errors">{validationObj.city}</p>}
                 </div>
                 <input type="text" id="state" value={state} onChange={(e) => setState(e.target.value)} />
               </div>
               <div className="city">
                 <div className="error-container">
-                  <p>State</p>
+                  <p className='label-container'>State</p>
                   {validationObj.state && <p className="errors">{validationObj.state}</p>}
                 </div>
                 <input type="text" id="city" value={city} onChange={(e) => setCity(e.target.value)} />
@@ -151,14 +154,14 @@ export default function SpotForm2({ formType, spotId }) {
             <div className="lat-lng-input-box">
               <div className="latitude">
                 <div className="error-container">
-                  <p>latitude</p>
+                  <p className='label-container'>latitude</p>
                   {validationObj.lat && <p className="errors">{validationObj.lat}</p>}
                 </div>
                 <input type="text" id="lat" value={lat} onChange={(e) => setLat(e.target.value)} />
               </div>
               <div className="Longitude">
                 <div className="error-container">
-                  <p>Longitude</p>
+                  <p className='label-container'>Longitude</p>
                   {validationObj.lng && <p className="errors">{validationObj.lng}</p>}
                 </div>
                 <input type="text" id="lng" value={lng} onChange={(e) => setLng(e.target.value)} />
@@ -168,7 +171,9 @@ export default function SpotForm2({ formType, spotId }) {
           {/* **************************************************************** */}
           <div className={formType === 'Create' ? 'create-description-textarea' : 'edit-description-textarea'}>
             <div className="div-title">Describe your place to guests</div>
-            <label htmlFor="description"></label>
+            <p>Mention the best features of your place, any special amenities like </p>
+            <p> fast wifi or parking, and what you love about the neighborhood</p>
+            <label htmlFor="description" className='text-container' >
             <textarea
               type="text"
               id="description"
@@ -176,9 +181,12 @@ export default function SpotForm2({ formType, spotId }) {
               onChange={(e) => setDescription(e.target.value)}
               className={formType === 'Edit' ? 'edit-form-textarea' : ''}
             />
+            </label>
           </div>
           <div>
             <div className="div-title">Create a title for your spot</div>
+            <p>Catch guests' attention with a spot title that highlights </p>
+            <p> what makes your place special</p>
             <label htmlFor="Name" className="label"></label>
             <input type="text" id="name" value={name} onChange={(e) => setName(e.target.value)} />
           </div>
@@ -192,7 +200,7 @@ export default function SpotForm2({ formType, spotId }) {
           </div>
           {formType === 'Create' && (
             <div className="form-image-input">
-              <div>
+              <div class='image-container'>
                 <label htmlFor="previewImage"></label>
                 <input
                   type="url"
@@ -206,7 +214,7 @@ export default function SpotForm2({ formType, spotId }) {
                 />
                 {validationObj.previewImage && <p className="errors">{validationObj.previewImage}</p>}
               </div>
-              <div>
+              <div class='image-container'>
                 <label htmlFor="imageUrl2"></label>
                 <input
                   type="url"
@@ -220,7 +228,7 @@ export default function SpotForm2({ formType, spotId }) {
                 />
                 {validationObj.imageUrl2 && <p className="errors">{validationObj.imageUrl2}</p>}
               </div>
-              <div>
+              <div class='image-container'>
                 <label htmlFor="imageUrl3"></label>
                 <input
                   type="url"
@@ -234,7 +242,7 @@ export default function SpotForm2({ formType, spotId }) {
                 />
                 {validationObj.imageUrl3 && <p className="errors">{validationObj.imageUrl3}</p>}
               </div>
-              <div>
+              <div class='image-container'>
                 <label htmlFor="imageUrl4"></label>
                 <input
                   type="url"
@@ -248,7 +256,7 @@ export default function SpotForm2({ formType, spotId }) {
                 />
                 {validationObj.imageUrl4 && <p className="errors">{validationObj.imageUrl4}</p>}
               </div>
-              <div>
+              <div class='image-container'>
                 <label htmlFor="imageUrl5"></label>
                 <input
                   type="url"
@@ -264,9 +272,12 @@ export default function SpotForm2({ formType, spotId }) {
               </div>
             </div>
           )}
-          <button className="spot-form-btn" type="submit" disabled={Object.keys(validationObj).length > 0}>
+<div id='div-button-container'>
+          <button className="spot-form-btn" id='submit-form-button' type="submit" disabled={Object.keys(validationObj).length > 0}>
             Submit
           </button>
+          </div>
+
         </form>
       </div>
     );
