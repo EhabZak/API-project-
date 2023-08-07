@@ -1,25 +1,18 @@
 import React from "react";
 import { useDispatch } from 'react-redux';
-import { deleteSpot } from '../../store/spotsReducer';
+import { deleteSpot,getOwnerAllSpotsThunk } from '../../store/spotsReducer';
 import { useModal } from "../../context/Modal";
 
+
 function DeleteModel({ spotId }) {
-  
   const dispatch = useDispatch();
   const { closeModal } = useModal();
 
 
-
-  const handelDeleteSpot = () => {
-    console.log("=============", spotId);
-    dispatch(deleteSpot(spotId))
-
-    .then(() => {
-        closeModal();
-      })
-      .catch((error) => {
-        console.error('Error deleting spot:', error);
-      });
+  const handelDeleteSpot =async () => {
+    await dispatch(deleteSpot(spotId));
+    await dispatch(getOwnerAllSpotsThunk());
+     closeModal();
 
   }
 

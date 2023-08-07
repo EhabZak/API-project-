@@ -184,7 +184,26 @@ console.log("8888888888", error)
 };
 
 
+/////////////////////////////////////////////
 
+const GET_ALL_SPOTS_OF_CURRENT_USER = "/get_all_spots_of_user"; //read. // GET spots/
+export const getAllOwnerSpots = (spots) => ({ type: GET_ALL_SPOTS_OF_CURRENT_USER, spots });
+export const getOwnerAllSpotsThunk = () => async (dispatch) => {
+  const res = await csrfFetch("/api/spots/current");
+
+  if (res.ok) {
+    const Spots  = await res.json(); // { Spots: [] }
+    // do the thing with this data
+    // console.log("Spots from getOwnerAllSpotsThunk:", Spots)
+    dispatch(getAllOwnerSpots(Spots));
+    // dispatch(getAllSpots(Spots))
+    return Spots;
+  } else {
+    const errors = await res.json();
+    console.log("spot NOT OK getOwnerAllSpotsThunk:")
+    return errors;
+  }
+};
 
 /////////////////////////////////////////////
 
