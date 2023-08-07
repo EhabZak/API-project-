@@ -1,0 +1,24 @@
+
+#delete-container{
+    border: black solid 4px;
+    border-radius: 10px;
+}
+
+#delete-buttons{
+    display: flex;
+    flex-direction: column;
+gap: 10px;
+margin-bottom: 20px;
+
+}
+
+
+#delete-buttons button {
+margin-left: 10px;
+margin-right: 10px;
+background-color:  #FF5A5F;
+  border: black solid 1px;
+  box-shadow: 3px 3px 2px black;
+  color: white;
+  height: 30px
+}

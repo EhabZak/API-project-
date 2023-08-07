@@ -1,12 +1,12 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
+import { useHistory, useParams, useRouteMatch } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 // import { fetchDetailedSpot } from '../../store/spotsReducer';
 import { createSpot, updateSpot } from '../../store/spotsReducer';
 import './form.css'
-import { addImage, receiveSpot } from '../../store/spotsReducer';
+import { addImage } from '../../store/spotsReducer';
 
 export default function SpotForm({ spot, formType }) {
   const { spotId } = useParams();
@@ -17,32 +17,19 @@ export default function SpotForm({ spot, formType }) {
 
 
   //////////////////////////////////////////////////////////////////
-console.log('11111111111', spot)
+
   //////////////////ehab ////////////////////////////////////////////
-  // const [country, setCountry] = useState(spot?.country);
-  // const [address, setAddress] = useState(spot?.address);
-  // const [city, setCity] = useState(spot?.city);
-  // const [state, setState] = useState(spot?.state);
-  // const [lat, setLat] = useState(spot?.lat);
-  // const [lng, setLng] = useState(spot?.lng);
-  // const [description, setDescription] = useState(spot?.description);
-  // const [name, setName] = useState(spot?.name);
-  // const [price, setPrice] = useState(spot?.price);
-  // const [validationObject, setValidationObject] = useState({})
-/////////////////////////////////////////////////////////////////
-const [country, setCountry] = useState('');
-const [address, setAddress] = useState('');
-const [city, setCity] = useState('');
-const [state, setState] = useState('');
-const [lat, setLat] = useState('');
-const [lng, setLng] = useState('');
-const [description, setDescription] = useState('');
-const [name, setName] = useState('');
-const [price, setPrice] = useState('');
-const [validationObject, setValidationObject] = useState({})
+  const [country, setCountry] = useState(spot?.country);
+  const [address, setAddress] = useState(spot?.address);
+  const [city, setCity] = useState(spot?.city);
+  const [state, setState] = useState(spot?.state);
+  const [lat, setLat] = useState(spot?.lat);
+  const [lng, setLng] = useState(spot?.lng);
+  const [description, setDescription] = useState(spot?.description);
+  const [name, setName] = useState(spot?.name);
+  const [price, setPrice] = useState(spot?.price);
+  const [validationObject, setValidationObject] = useState({})
 
-
-  ////////////////////////////////////////////////////
   const [images, setImages] = useState([
     { url: '', preview: true },
     { url: '', preview: false },
@@ -50,33 +37,9 @@ const [validationObject, setValidationObject] = useState({})
     { url: '', preview: false },
     { url: '', preview: false },
   ]);
+  // const [imageUrl,setImageUrl]
   // console.log('*************', spot) // if we are updating the spot
   ////////////////////////////////////////////////////////////
-  useEffect(() => {
-    if (formType === 'Edit') {
-
-      dispatch(receiveSpot(spotId))
-    .then(data => {
-      console.log("***************", data)
-        setAddress(data.address);
-        setCity(data.city);
-        setState(data.state);
-        setCountry(data.country);
-        setLat(data.lat);
-        setLng(data.lng);
-        setName(data.name);
-        setDescription(data.description);
-        setPrice(data.price);
-      })
-    }
-  } , [spotId, formType]);
-
-
-
-
-
-
-  ////////////////////////////////////////////////////
   // useEffect(() => {
   // const errorObject = {}
   //     if (country.length < 1) {
@@ -163,44 +126,52 @@ const [validationObject, setValidationObject] = useState({})
       errorObject.description = "Description needs a minimum of 30 characters";
     }
 
-    images.forEach((image) => {
 
-      if (image.url.length < 1) {
-        errorObject.images = "image is required";
-      }
-      if (image.url.length > 0) {
-        const validExtensions = [".png", ".jpg", ".jpeg"];
-        const imageUrl = image.url;
-        const imageExtension = imageUrl.split('.').pop().toLowerCase();
-        if (!validExtensions.includes(imageExtension)) {
-          errorObject.images = "Image URL must end with .png, .jpg, or .jpeg";
-        }
-      }
+    // images.forEach((image) => {
 
-    })
+    //   if (image.url.length < 1) {
+    //     errorObject.images = "image is required";
+    //   }
+    //   if (image.url.length > 0) {
+    //     const validExtensions = [".png", ".jpg", ".jpeg"];
+    //     const imageUrl = image.url;
+    //     const imageExtension = imageUrl.split('.').pop().toLowerCase();
+    //     console.log( '*******image extension', imageExtension)
+    //     if (!validExtensions.includes(imageExtension)) {
+    //       errorObject.images = "Image URL must end with .png, .jpg, or .jpeg";
+    //     }else{
+
+    //     }
+    //   }
+
+    // })
     setValidationObject(errorObject)
 
     //////////////////////////////////
     if (spot) { spot = { ...spot, country, address, city, state, lat: lat, lng: lng, description, name, price } }
-    console.log("898988988999888", spot)
-    if (formType === 'Update Spot') {
+    // console.log("898988988999888", spot)
+    //////////////////////////////////////////////////
+
+    if (formType === 'Update spot') {
 
 
 
       // await dispatch(updateSpot(spot));
 
+
       try {
+        const updatedSpotData = await dispatch(updateSpot(spot));
 
-        const NewUpdatedSpot = { id: spotId, address, city, state, country, lat, lng, name, description, price };
-
-        const updatedSpotData =await dispatch(updateSpot(NewUpdatedSpot));
-        console.log("000000000000000", spot)
-
+        // console.log("^^^^^updated spot data ^^^^^^", updatedSpotData)
         if (updatedSpotData) {
+
+          // console.log("555555updated spot data 5555555", updatedSpotData)
           // history.push(`/spots/${spotId}`);
           history.push(`/spots/${updatedSpotData.id}`);
         }
 
+
+
       } catch (error) {
         // console.log('&&&&&&&&&&', error)
         const data = await error.json();
@@ -210,25 +181,34 @@ const [validationObject, setValidationObject] = useState({})
         }
 
       }
-
+      ////////////////////////////////////////////////////////
 
     } else if (formType === 'Create Spot') {
 
-      try {
-        await dispatch(createSpot(spot));
-        // console.log("000000000000000",spot)
-      } catch (error) {
-        // console.log('&&&&&&&&&&', error)
-        const data = await error.json();
-        // console.log("%%%%%%%%%%%", data.errors)
-        if (data && data.errors) {
-          setErrors(data.errors);
-        }
 
-      }
+      dispatch(createSpot(spot))
+        .then(async (res) => {
+          const data = await res
+          console.log( '@@@data@@@' , data)
+          return console.log(data)
+        })
+        .catch(async (res) => {
+          const data = await res
+          console.log('&&&&&&&&', data)
+          if (data&& data.errors){
+            return setErrors(data.errors)
+          }
+        })
+        console.log("#######", errors)
+if (Object.values(errors).length){
+  console.log("4444errors", errors)
+}
+      console.log("000000000000000",spot)
+
 
       // console.log('22222222222222', errors)
       /////////////////////////////////////
+
       images.forEach(async (image, index) => {
         if (image.url) {
           try {
@@ -252,19 +232,27 @@ const [validationObject, setValidationObject] = useState({})
     // } else {
     //   history.push(`/spots/${spot.id}`);
     // }
+if (spot.id){
 
-    history.push(`/spots/${spot.id}`);
+  history.push(`/spots/${spot.id}`);
+}else return null
 
   }
   useEffect(() => {
     // console.log('errors updated:', errors)
-    console.log("000000000000000", spot);
-  }, [ spot]);
-  console.log('22222222222222', errors)
+    // console.log("000000000000000", spot);
+  }, [spot]);
+  // console.log('22222222222222', errors)
   ////////////////////////////////////////////////////////////////
+
+  if (!spot){
+    return null
+  }
   return (
     <div id='main-container'>
-      <form onSubmit={handleSubmit} id='form-container'>
+      <form
+        // className={formType === 'Create Spot' ? 'create-container' : 'Update spot'}
+        onSubmit={handleSubmit} id='form-container'>
 
 
         <h2>Where is your place located?</h2>
@@ -433,48 +421,54 @@ const [validationObject, setValidationObject] = useState({})
         </div>
 
 
-        <div className='form-div-container'>
-          <label className='label-container'>
-            Liven up your spot with Photos
-            <p id='p-in-textarea'> Submit a link to at least one photo to publish your spot</p>
-            <input
-              type='text'
-              placeholder='Preview Image URL'
-              name='previewImage'
-              value={images[0].url}
-              onChange={(e) => {
-                const newImages = [...images];
-                newImages[0].url = e.target.value;
-                setImages(newImages);
-              }}
-            />
-          </label>
-          {imageErrors.images && <div className="error">{imageErrors.images}</div>}
-          {validationObject.images?.[0]?.url && <p className="errors">
-            {validationObject.images[0].url}
-          </p>}
-        </div>
-
-
-        {images.slice(1).map((image, index) => (
-          <div key={index} className='label-container'>
-            <input
-              type='text'
-              placeholder={`Image URL`}
-              name={`imageUrl${index}`}
-              value={image.url}
-              onChange={(e) => {
-                const newImages = [...images];
-                newImages[index + 1].url = e.target.value;
-                setImages(newImages);
-              }}
-            />
+        {formType === 'Create Spot' && (
+          <div className='form-div-container'>
+            <label className='label-container'>
+              Liven up your spot with Photos
+              <p id='p-in-textarea'> Submit a link to at least one photo to publish your spot</p>
+              <input
+                type='text'
+                placeholder='Preview Image URL'
+                name='previewImage'
+                value={images[0].url}
+                onChange={(e) => {
+                  const newImages = [...images];
+                  newImages[0].url = e.target.value;
+                  setImages(newImages);
+                }}
+              />
+            </label>
             {imageErrors.images && <div className="error">{imageErrors.images}</div>}
-            {validationObject.images && <p className="errors">
-              {validationObject.images}
-            </p>}
+            {validationObject.images?.[0]?.url && (
+              <p className="errors">
+                {validationObject.images[0].url}
+              </p>
+            )}
+
+            {images.slice(1).map((image, index) => (
+              <div key={index} className='label-container'>
+                <input
+                  type='text'
+                  placeholder={`Image URL`}
+                  name={`imageUrl${index}`}
+                  value={image.url}
+                  onChange={(e) => {
+                    const newImages = [...images];
+                    newImages[index + 1].url = e.target.value;
+                    setImages(newImages);
+                  }}
+                />
+                {imageErrors.images && <div className="error">{imageErrors.images}</div>}
+                {validationObject.images && (
+                  <p className="errors">
+                    {validationObject.images}
+                  </p>
+                )}
+              </div>
+            ))}
           </div>
-        ))}
+        )}
+
 
 
 

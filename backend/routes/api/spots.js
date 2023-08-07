@@ -383,7 +383,7 @@ const validateNewImg = [
         .isLength({ min: 4 })
         .withMessage('url is required'),
     check('preview')
-        .exists({ checkFalsy: true })
+        // .exists({ checkFalsy: true })
         .isLength({ min: 4 })
         .withMessage('preview is required'),
     handleValidationErrors
@@ -393,7 +393,7 @@ router.post('/:id/images', requireAuth, validateNewImg, async (req, res) => {
     const userId = req.user.id;
 
     const spotId = req.params.id;
-   
+
     const { url, preview } = req.body;
 
     // Check if the spot exists
@@ -516,7 +516,7 @@ router.delete('/:spotId', requireAuth,
 /// 8-Get all Reviews by a Spot's id//////////////////////////
 
 router.get('/:spotId/reviews', async (req, res) => {
-    const thisUserId = req.user.id
+    // const thisUserId = req.user.id
     const spotId = req.params.spotId;
 
     const currReviews = await Review.findAll({
@@ -548,7 +548,7 @@ router.get('/:spotId/reviews', async (req, res) => {
 
     //////////////////////////////////////
     if (currReviews.length === 0) {
-        return res.status(404).json({ message: "There are no reviews for this spot" });
+        return res.status(200).json({});
     }
 
 

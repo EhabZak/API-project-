@@ -37,7 +37,7 @@ const spots =[
   country: "United States of America",
   lat: 31.7645358,
   lng: -132.4730327,
-  name: "Hello Bye",
+  name: "Eden garden",
   description: "House where web developers are created",
   price: 213
 },
@@ -52,9 +52,44 @@ const spots =[
   name: "Hello see",
   description: "building web developers are created",
   price: 321
+},
+{
+  ownerId: 1,
+  address: "123 Albacore Lane",
+  city: "San Francisco",
+  state: "California",
+  country: "United States of America",
+  lat: 37.7645358,
+  lng: -122.4730327,
+  name: "App Academy",
+  description: "Place where web developers are created",
+  price: 123
+
+},
+{
+  ownerId: 2,
+  address: "123 spring Lane",
+  city: "Boston",
+  state: "California",
+  country: "United States of America",
+  lat: 31.7645358,
+  lng: -132.4730327,
+  name: "best place",
+  description: "House where web developers are created",
+  price: 213
+},
+{
+  ownerId: 3,
+  address: "123 beach Lane",
+  city: "San Jose",
+  state: "California",
+  country: "United States of America",
+  lat: 41.7645358,
+  lng: -142.4730327,
+  name: "beach park",
+  description: "building web developers are created",
+  price: 321
 }
-
-
 
 
 ]

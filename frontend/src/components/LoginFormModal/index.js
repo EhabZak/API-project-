@@ -3,6 +3,8 @@ import * as sessionActions from "../../store/session";
 import { useDispatch } from "react-redux";
 import { useModal } from "../../context/Modal";
 import "./LoginForm.css";
+import  { useEffect, useRef } from "react";
+// ... (import statements and other code) ...
 
 function LoginFormModal() {
   const dispatch = useDispatch();
@@ -10,6 +12,38 @@ function LoginFormModal() {
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
   const { closeModal } = useModal();
+  const [showMenu, setShowMenu] = useState(false);
+  const ulRef = useRef();
+  const [isSignInButtonDisabled, setIsSignInButtonDisabled] = useState(true);
+  const [isDemoButtonDisabled, setIsDemoButtonDisabled] = useState(false);
+
+  const ulClassName = "profile-dropdown" + (showMenu ? "" : " hidden");
+
+  useEffect(() => {
+    if (!showMenu) return;
+
+    const closeMenu = (e) => {
+      if (!ulRef.current.contains(e.target)) {
+        setShowMenu(false);
+      }
+    };
+
+    document.addEventListener("click", closeMenu);
+
+    return () => document.removeEventListener("click", closeMenu);
+  }, [showMenu]);
+
+  const handleUsernameChange = (event) => {
+    const newCredential = event.target.value;
+    setCredential(newCredential);
+    setIsSignInButtonDisabled(newCredential.length < 4 || password.length < 6);
+  };
+
+  const handlePasswordChange = (event) => {
+    const newPassword = event.target.value;
+    setPassword(newPassword);
+    setIsSignInButtonDisabled(credential.length < 4 || newPassword.length < 6);
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -24,38 +58,62 @@ function LoginFormModal() {
       });
   };
 
+  const handleDemoButtonClick = (e) => {
+    e.preventDefault();
+    const demoCredential = "Demo-lition";
+    const demoPassword = "password";
+    setShowMenu(false);
+    dispatch(sessionActions.login({ credential: demoCredential, password: demoPassword }));
+  };
+
   return (
-    <>
-      <h1>Log In</h1>
-      <form onSubmit={handleSubmit}>
-        <label>
+    <div id="log-in-outer-container">
+      <h2>Log In</h2>
+      <form onSubmit={handleSubmit} id="log-in-form-container">
+        <label className="log-in-label-container">
           Username or Email
           <input
             type="text"
             value={credential}
-            onChange={(e) => setCredential(e.target.value)}
+            onChange={handleUsernameChange}
             required
           />
         </label>
-        <label>
+        <label className="log-in-label-container">
           Password
           <input
             type="password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={handlePasswordChange}
             required
           />
         </label>
         {errors.credential && (
           <p>{errors.credential}</p>
         )}
-        <button type="submit">Log In</button>
+        <button type="submit" id="login-button" disabled={isSignInButtonDisabled}
+         
+          >
+        Log In
+        </button>
+
+        <div id="demo-user-container">
+          <button
+            className="buttons"
+            id="demo-user-button"
+            onClick={handleDemoButtonClick}
+
+          >
+            Demo User
+          </button>
+        </div>
       </form>
-    </>
+    </div>
   );
 }
 
 export default LoginFormModal;
+
  /*
 
  Overall Flow:

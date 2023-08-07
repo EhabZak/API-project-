@@ -1,0 +1,26 @@
+
+
+
+#login-buttons-container{
+display: flex;
+flex-direction: column;
+/* justify-content: flex-start; */
+
+}
+
+#login-buttons-container button{
+    border: none;
+    background-color: white;
+    width: 150px;
+margin-bottom: 5px;
+text-align: start;
+}
+#demo-user-button{
+    margin-top: 20px;
+    border: none;
+    text-align: center;
+    background-color: white;
+    text-decoration: underline;
+    margin-bottom: 20px;
+    
+}
