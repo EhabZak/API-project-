@@ -38,7 +38,7 @@ return (
       </div>
         <SpotForm
           spot={spot}
-          formType="Update Report"
+          formType="Update spot"
         />
       </>
     )

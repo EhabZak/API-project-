@@ -61,7 +61,7 @@ height: 80px;
 }
 
 .profile-dropdown{
-border: 1px solid black;
+border: 2px solid black;
 box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
 background-color: white;
 list-style-type: none;

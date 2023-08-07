@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import * as sessionActions from "../../store/session";
 import { useDispatch } from "react-redux";
 import { useModal } from "../../context/Modal";
-import "./LoginForm.css";
+// import "./LoginForm.css";
 
 function LoginFormModal() {
   const dispatch = useDispatch();
@@ -25,10 +25,10 @@ function LoginFormModal() {
   };
 
   return (
-    <>
+    <div id="log-in-form-container">
       <h1>Log In</h1>
-      <form onSubmit={handleSubmit}>
-        <label>
+      <form onSubmit={handleSubmit} id="log-in-form-container">
+        <label className="log-in-label-container">
           Username or Email
           <input
             type="text"
@@ -37,7 +37,7 @@ function LoginFormModal() {
             required
           />
         </label>
-        <label>
+        <label className="log-in-label-container">
           Password
           <input
             type="password"
@@ -51,7 +51,7 @@ function LoginFormModal() {
         )}
         <button type="submit">Log In</button>
       </form>
-    </>
+    </div>
   );
 }
 

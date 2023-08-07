@@ -1,0 +1,11 @@
+#log-in-form-container{
+    display: flex;
+    flex-direction: column;
+    background-color: lightblue;
+    justify-content: center;
+    border: solid black 2px;
+    border-radius: 10px;
+    width: 100%;
+
+}
+

@@ -24,11 +24,13 @@ function ReviewDeleteModel({ reviewId }) {
 
     return (
         <div id= 'main-review-delete-container'>
+          <div id="second-level-main">
           <h1 id="delete-review-header">Confirm Delete</h1>
           <p>Are you sure you want to delete this review?</p>
           <div id="review-buttons-container">
           <button className="delete-button" onClick={handelDeleteReview}>Yes (Delete Review)</button>
           <button className="cancel-button" onClick={closeModal}>No (Keep Review)</button>
+          </div>
           </div>
         </div>
       );

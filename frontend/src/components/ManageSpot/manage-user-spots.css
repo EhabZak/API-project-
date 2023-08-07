@@ -1,3 +1,17 @@
+body{
+    box-sizing: border-box;
+    /* background-color: lightblue; */
+    margin:0px;
+    font-family: "Helvetica", sans-serif;
+}
+
+#manage-header-container{
+display: flex;
+flex-direction: column;
+
+
+
+}
 #spot-edit-buttons{
 display: flex;
 width: 100%;
@@ -10,3 +24,24 @@ gap:10px;
     border: solid black 1px;
 box-shadow: 2px 2px;
     }
+
+
+.init-manage{
+display: flex;
+justify-content: center;
+
+}
+
+#manage-header{
+    margin-right: 16px ;
+}
+
+#manage-header-button{
+    padding-right: 16px ;
+    color: white;
+    background-color:  #757373;
+    border: solid black 1px;
+ box-shadow: 3px 3px 2px black;
+}
+
+

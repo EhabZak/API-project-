@@ -78,29 +78,58 @@ export const deleteSpot = (spotId) => async (dispatch) => {
     }
 }
 
+// export const createSpot = (spot) => async (dispatch) => {
+// console.log( '44444444', spot)
+//     try {
+//         const res = await csrfFetch('/api/spots', {
+//             method: 'POST',
+//             headers: { 'Content-Type': 'application/json' },
+//             body: JSON.stringify(spot),
+//         })
+
+//         if (!res.ok) {
+
+//             const errors = await res.json();
+//             throw new Error(JSON.stringify(errors));
+//         }
+
+//         const spotDetails = await res.json();
+//         return spotDetails;
+//     } catch (error) {
+//         console.log("createspot&&&&&&", error)
+//         return error; // Re-throw the error to be caught in the component
+//     }
+
+// }
+/////////////////////////////////////////////////
+
 export const createSpot = (spot) => async (dispatch) => {
-console.log( '44444444', spot)
-    try {
-        const res = await csrfFetch('/api/spots', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(spot),
-        })
+    // console.log( '44444444', spot)
 
-        if (!res.ok) {
-            // If response is not ok, throw an error with the JSON data
-            const errors = await res.json();
-            throw new Error(JSON.stringify(errors));
-        }
+            const res = await csrfFetch('/api/spots', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(spot),
+            })
+           const spotDetails = await res.json()
+console.log("spot details:", spotDetails)
+            if (spotDetails && spotDetails.errors) {
 
-        const spotDetails = await res.json();
-        return spotDetails;
-    } catch (error) {
-        console.log("createspot&&&&&&", error)
-        throw error; // Re-throw the error to be caught in the component
+                return console.log(spotDetails)
+            }
+
+dispatch (receiveSpot(spotDetails))
+            return spotDetails;
+
+
+
+
     }
 
-}
+
+
+
+//////////////////////////////////////////////////
 
 export const updateSpot = (spot) => async (dispatch) => {
     const res = await csrfFetch(`/api/spots/${spot.id}`, {
@@ -111,7 +140,8 @@ export const updateSpot = (spot) => async (dispatch) => {
 
     if (res.ok) {
         const updatedSpot = await res.json();
-        dispatch(editSpot(updatedSpot))
+        // dispatch(editSpot(updatedSpot))
+        dispatch(receiveSpot(updatedSpot.id))
     } else {
         const errors = await res.json();
         return errors;
@@ -145,7 +175,7 @@ export const addImage = (spotId, image, preview) => async (dispatch) => {
 
     } catch (error) {
 console.log("8888888888", error)
-       throw error;
+       return  error;
     }
 };
 

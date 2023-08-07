@@ -95,7 +95,7 @@ if (userReview.length < 1){
                         <p>{formatDate(review.createdAt)}</p>
                         <p>{review.review}</p>
                         <div>  {review.userId === sessionUser.id ? (
-                             <div ><OpenModalButton
+                             <div id='delete-review-button'><OpenModalButton
                              buttonText="Delete"
                              modalComponent={<ReviewDeleteModel reviewId={review.id} />}
                          />

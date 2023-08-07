@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
+import { useHistory, useParams, useRouteMatch } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 // import { fetchDetailedSpot } from '../../store/spotsReducer';
 import { createSpot, updateSpot } from '../../store/spotsReducer';
@@ -37,6 +37,7 @@ export default function SpotForm({ spot, formType }) {
     { url: '', preview: false },
     { url: '', preview: false },
   ]);
+  // const [imageUrl,setImageUrl]
   // console.log('*************', spot) // if we are updating the spot
   ////////////////////////////////////////////////////////////
   // useEffect(() => {
@@ -125,6 +126,7 @@ export default function SpotForm({ spot, formType }) {
       errorObject.description = "Description needs a minimum of 30 characters";
     }
 
+    
     images.forEach((image) => {
 
       if (image.url.length < 1) {
@@ -134,8 +136,11 @@ export default function SpotForm({ spot, formType }) {
         const validExtensions = [".png", ".jpg", ".jpeg"];
         const imageUrl = image.url;
         const imageExtension = imageUrl.split('.').pop().toLowerCase();
+        console.log( '*******image extension', imageExtension)
         if (!validExtensions.includes(imageExtension)) {
           errorObject.images = "Image URL must end with .png, .jpg, or .jpeg";
+        }else{
+
         }
       }
 
@@ -144,16 +149,29 @@ export default function SpotForm({ spot, formType }) {
 
     //////////////////////////////////
     if (spot) { spot = { ...spot, country, address, city, state, lat: lat, lng: lng, description, name, price } }
-    console.log("898988988999888", spot)
-    if (formType === 'Update Spot') {
+    // console.log("898988988999888", spot)
+    //////////////////////////////////////////////////
+
+    if (formType === 'Update spot') {
 
 
 
       // await dispatch(updateSpot(spot));
 
+
       try {
-        await dispatch(updateSpot(spot));
-        console.log("000000000000000", spot)
+        const updatedSpotData = await dispatch(updateSpot(spot));
+
+        // console.log("^^^^^updated spot data ^^^^^^", updatedSpotData)
+        if (updatedSpotData) {
+
+          // console.log("555555updated spot data 5555555", updatedSpotData)
+          // history.push(`/spots/${spotId}`);
+          history.push(`/spots/${updatedSpotData.id}`);
+        }
+
+
+
       } catch (error) {
         // console.log('&&&&&&&&&&', error)
         const data = await error.json();
@@ -163,22 +181,30 @@ export default function SpotForm({ spot, formType }) {
         }
 
       }
-
+      ////////////////////////////////////////////////////////
 
     } else if (formType === 'Create Spot') {
 
-      try {
-        await dispatch(createSpot(spot));
-        // console.log("000000000000000",spot)
-      } catch (error) {
-        // console.log('&&&&&&&&&&', error)
-        const data = await error.json();
-        // console.log("%%%%%%%%%%%", data.errors)
-        if (data && data.errors) {
-          setErrors(data.errors);
-        }
 
-      }
+      dispatch(createSpot(spot))
+        .then(async (res) => {
+          const data = await res
+          console.log( '@@@data@@@' , data)
+          return console.log(data)
+        })
+        .catch(async (res) => {
+          const data = await res
+          console.log('&&&&&&&&', data)
+          if (data&& data.errors){
+            return setErrors(data.errors)
+          }
+        })
+        console.log("#######", errors)
+if (Object.values(errors).length){
+  console.log("4444errors", errors)
+}
+      console.log("000000000000000",spot)
+
 
       // console.log('22222222222222', errors)
       /////////////////////////////////////
@@ -205,19 +231,23 @@ export default function SpotForm({ spot, formType }) {
     // } else {
     //   history.push(`/spots/${spot.id}`);
     // }
+if (spot.id){
 
-    history.push(`/spots/${spot.id}`);
+  history.push(`/spots/${spot.id}`);
+}
 
   }
   useEffect(() => {
     // console.log('errors updated:', errors)
-    console.log("000000000000000", spot);
-  }, [ spot]);
-  console.log('22222222222222', errors)
+    // console.log("000000000000000", spot);
+  }, [spot]);
+  // console.log('22222222222222', errors)
   ////////////////////////////////////////////////////////////////
   return (
     <div id='main-container'>
-      <form onSubmit={handleSubmit} id='form-container'>
+      <form
+        // className={formType === 'Create Spot' ? 'create-container' : 'Update spot'}
+        onSubmit={handleSubmit} id='form-container'>
 
 
         <h2>Where is your place located?</h2>
@@ -386,48 +416,54 @@ export default function SpotForm({ spot, formType }) {
         </div>
 
 
-        <div className='form-div-container'>
-          <label className='label-container'>
-            Liven up your spot with Photos
-            <p id='p-in-textarea'> Submit a link to at least one photo to publish your spot</p>
-            <input
-              type='text'
-              placeholder='Preview Image URL'
-              name='previewImage'
-              value={images[0].url}
-              onChange={(e) => {
-                const newImages = [...images];
-                newImages[0].url = e.target.value;
-                setImages(newImages);
-              }}
-            />
-          </label>
-          {imageErrors.images && <div className="error">{imageErrors.images}</div>}
-          {validationObject.images?.[0]?.url && <p className="errors">
-            {validationObject.images[0].url}
-          </p>}
-        </div>
-
-
-        {images.slice(1).map((image, index) => (
-          <div key={index} className='label-container'>
-            <input
-              type='text'
-              placeholder={`Image URL`}
-              name={`imageUrl${index}`}
-              value={image.url}
-              onChange={(e) => {
-                const newImages = [...images];
-                newImages[index + 1].url = e.target.value;
-                setImages(newImages);
-              }}
-            />
+        {formType === 'Create Spot' && (
+          <div className='form-div-container'>
+            <label className='label-container'>
+              Liven up your spot with Photos
+              <p id='p-in-textarea'> Submit a link to at least one photo to publish your spot</p>
+              <input
+                type='text'
+                placeholder='Preview Image URL'
+                name='previewImage'
+                value={images[0].url}
+                onChange={(e) => {
+                  const newImages = [...images];
+                  newImages[0].url = e.target.value;
+                  setImages(newImages);
+                }}
+              />
+            </label>
             {imageErrors.images && <div className="error">{imageErrors.images}</div>}
-            {validationObject.images && <p className="errors">
-              {validationObject.images}
-            </p>}
+            {validationObject.images?.[0]?.url && (
+              <p className="errors">
+                {validationObject.images[0].url}
+              </p>
+            )}
+
+            {images.slice(1).map((image, index) => (
+              <div key={index} className='label-container'>
+                <input
+                  type='text'
+                  placeholder={`Image URL`}
+                  name={`imageUrl${index}`}
+                  value={image.url}
+                  onChange={(e) => {
+                    const newImages = [...images];
+                    newImages[index + 1].url = e.target.value;
+                    setImages(newImages);
+                  }}
+                />
+                {imageErrors.images && <div className="error">{imageErrors.images}</div>}
+                {validationObject.images && (
+                  <p className="errors">
+                    {validationObject.images}
+                  </p>
+                )}
+              </div>
+            ))}
           </div>
-        ))}
+        )}
+
 
 
 

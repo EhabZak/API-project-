@@ -1,204 +1,215 @@
-import { useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { useState } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-// import { fetchDetailedSpot } from '../../store/spotsReducer';
-import { createSpot, updateSpot } from '../../store/spotsReducer';
-import './form.css'
 
-export default function SpotForm({ spot, formType }) {
-  const { spotId } = useParams();
-  const dispatch = useDispatch();
-  const history = useHistory();
-  const [errors, setErrors] = useState({});
+import { csrfFetch } from "./csrf";
+// action types
+export const LOAD_SPOTS = 'spots/LOAD-SPOT'
+export const RECEIVE_SPOT = 'spots/RECEIVE_SPOT'
+export const UPDATE_SPOT = 'spots/UPDATE-SPOT'
+export const REMOVE_SPOT = 'spots/REMOVE-SPOT'
+export const ADD_IMAGE = 'spots/ADD_IMAGE';
+//action creators
 
-  //////////////////////////////////////////////////////////////
-  const [country, setCountry] = useState("");
-  const [address, setAddress] = useState("");
-  const [city, setCity] = useState("");
-  const [state, setState] = useState("");
-  const [latitude, setLatitude] = useState("");
-  const [longitude, setLongitude] = useState("");
-  const [description, setDescription] = useState("");
-  const [name, setName] = useState("");
-  const [price, setPrice] = useState("");
-  const [validationObject, setValidationObject] = useState({})
-
-
-  ////////////////////////////////////////////////////////////
-  // const spot = useSelector((state) =>state.spotState.singleSpot[spotId]);
-
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setErrors({});
-
-    //////////////////////////////////
-
-    if (formType === 'Update Spot') {
-      const editedSpot = await dispatch(updateSpot(spot));
-      spot = editedSpot;
-    } else if (formType === 'Create Spot') {
-      const newSpot = await dispatch(createSpot(spot));
-      spot = newSpot;
+export const loadSpots = (spots) => {
+    return {
+        type: LOAD_SPOTS,
+        spots
     }
-
-    ///////////////////////////////////
-
-
-    if (spot.errors) {
-      setErrors(spot.errors);
-    } else {
-      history.push(`/spots/${spot.id}`);
-    }
-  }
-
-  return (
-    <div id='main-container'>
-      <form onSubmit={handleSubmit} id='form-container'>
-
-        <h1 > create a new Spot </h1>
-        <h2>Where is your place located?</h2>
-        <p>Guests will only get you exact address once they booked a reservation.</p>
-        <div class='form-div-container'>
-          <label class='label-container'>
-            Country
-            <input
-              type="text"
-              placeholder="Country"
-              name="country"
-              value={country}
-              onChange={(e) => setCountry(e.target.value)}
-            />
-          </label>
-        </div>
-
-        <div class='form-div-container' >
-          <label class='label-container'>
-            Street Address
-            <input
-              type="text"
-              placeholder="Address"
-              name="address"
-              value={address}
-              onChange={(e) => setAddress(e.target.value)}
-            />
-          </label>
-        </div>
-
-        <div class='form-div-container' >
-          <div id='state-container'>
-            <label class='label-container' >
-              City
-              <input
-                type="text"
-                placeholder="City"
-                name="city"
-                value={city}
-                onChange={(e) => setCity(e.target.value)}
-              />
-            </label>
-            <p>,</p>
-            <label class='label-container' >
-              State
-              <input
-                type="text"
-                placeholder="State"
-                name="state"
-                value={state}
-                onChange={(e) => setState(e.target.value)}
-              />
-            </label>
-          </div>
-        </div>
-
-
-        <div class='form-div-container' >
-          <div id='latitude-container'>
-            <label class='label-container' >
-              Latitude
-              <input
-                type="text"
-                placeholder="Latitude"
-                name="latitude"
-                value={latitude}
-                onChange={(e) => setLatitude(e.target.value)}
-              />
-            </label>
-            <p>,</p>
-            <label class='label-container' >
-              Longitude
-              <input
-                type="text"
-                placeholder="Longitude"
-                name="longitude"
-                value={longitude}
-                onChange={(e) => setLongitude(e.target.value)}
-              />
-            </label>
-          </div>
-        </div>
-
-        <div class='form-div-container' >
-          <label class='label-container'>
-            Describe you place to guests
-            <p id='p-in-textarea'> mention the best features of your space, any special amenities like fast wifi or parking, and what you love about the neighborhood</p>
-            <textarea
-              type="text"
-              placeholder="Description"
-              name="description"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-            />
-          </label>
-          <div id='text-area-footer'></div>
-        </div>
-
-        <div class='form-div-container' >
-          <label class='label-container'>
-            Create a title for your spot
-            <p id='p-in-textarea'> Catch guests' attention with a spot title highlights what makes you place special</p>
-            <input
-              type="text"
-              placeholder="Name of your spot"
-              name="name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
-          </label>
-          <div id='text-area-footer'></div>
-        </div>
-
-        <div class='form-div-container' >
-          <label class='label-container'>
-            Set a base price for your spot
-            <p id='p-in-textarea'> Competitive pricing can help your listing stand out and rank higher in search results</p>
-            <div id='price-div'>
-              <p>$</p>
-              <input
-                type="text"
-                placeholder="Price per nigh (USD)"
-                name="price"
-                value={price}
-                onChange={(e) => setPrice(e.target.value)}
-              />
-            </div>
-          </label>
-          <div id='text-area-footer'></div>
-        </div>
-
-        <button id='submit-form-button'
-          type="submit"
-          disabled={Object.keys(validationObject).length > 0}
-        >
-          Create Spot
-        </button>
-
-
-
-
-      </form>
-    </div>
-  )
 }
+
+export const receiveSpot = (spot) => ({
+    type: RECEIVE_SPOT,
+    spot
+})
+
+
+export const editSpot = (spot) => ({
+    type: UPDATE_SPOT,
+    spot
+})
+
+export const removeSpot = (spotId) => ({
+    type: REMOVE_SPOT,
+    spotId
+})
+
+export const addTheImage = (spotId, image) => ({
+    type: ADD_IMAGE,
+    spotId,
+    image,
+});
+
+// thunk action creator
+
+export const fetchSpots = () => async (dispatch) => {
+
+    const response = await fetch('api/spots')
+
+    if (response.ok) {
+        const spots = await response.json();
+        dispatch(loadSpots(spots))
+    }
+    // console.log("*********", spots)
+
+}
+
+export const fetchDetailedSpot = (spotId) => async (dispatch) => {
+    const res = await csrfFetch(`/api/spots/${spotId}`);
+    // console.log( "^^^^^^^^^^^", res)
+    if (res.ok) {
+        const spotDetails = await res.json();
+        // console.log( "^^^^^^^^^^^", spotDetails)
+        dispatch(receiveSpot(spotDetails))
+    } else {
+        const errors = await res.json();
+        return errors;
+    }
+
+}
+
+export const deleteSpot = (spotId) => async (dispatch) => {
+    const res = await csrfFetch(`/api/spots/${spotId}`, {
+        method: 'DELETE'
+    })
+
+    if (res.ok) {
+        dispatch(removeSpot(spotId))
+    } else {
+        const errors = await res.json();
+        return errors;
+    }
+}
+
+export const createSpot = (spot) => async (dispatch) => {
+console.log( '44444444', spot)
+    try {
+        const res = await csrfFetch('/api/spots', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(spot),
+        })
+
+        if (!res.ok) {
+            // If response is not ok, throw an error with the JSON data
+            const errors = await res.json();
+            throw new Error(JSON.stringify(errors));
+        }
+
+        const spotDetails = await res.json();
+        return spotDetails;
+    } catch (error) {
+        console.log("createspot&&&&&&", error)
+        throw error; // Re-throw the error to be caught in the component
+    }
+
+}
+
+export const updateSpot = (spot) => async (dispatch) => {
+    const res = await csrfFetch(`/api/spots/${spot.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(spot)
+    })
+
+    if (res.ok) {
+        const updatedSpot = await res.json();
+        dispatch(receiveSpot(updatedSpot))
+    } else {
+        const errors = await res.json();
+        return errors;
+    }
+
+}
+///////////////////////////////////////////
+
+export const addImage = (spotId, image, preview) => async (dispatch) => {
+    try {
+
+
+        const res = await csrfFetch(`/api/spots/${spotId}/images`, {
+            method: 'POST',
+            body: JSON.stringify({
+                "url": image,
+                "preview": preview
+            })
+        });
+
+        if (!res.ok) {
+            // If response is not ok, throw an error with the JSON data
+            const errors = await res.json();
+            throw new Error(JSON.stringify(errors));
+        }
+
+        const spotImageDetails = await res.json();
+        return spotImageDetails;
+
+
+
+    } catch (error) {
+console.log("8888888888", error)
+       throw error;
+    }
+};
+
+
+
+
+/////////////////////////////////////////////
+
+/// reducer
+
+const initialState = { allSpots: {}, singleSpot: {}, isLoading: true };
+
+////////////////////////////////////////////
+
+const spotReducer = (state = initialState, action) => {
+    switch (action.type) {
+
+        case LOAD_SPOTS:
+            const newEstate = { ...state, allSpots: {} }; // to not have stail state /for the update you will need to bring in {state.allspots}
+            action.spots.Spots.forEach(
+                (spot) => (newEstate.allSpots[spot.id] = spot)
+            );
+            // console.log("&&&&&&&&&&&&&&&&",newEstate.allspots)
+            return newEstate
+
+        case RECEIVE_SPOT:
+
+            const receivedSpot = {
+                ...state,
+                singleSpot: {
+                    ...state.singleSpot,
+                    [action.spot.id]: action.spot
+                }
+            }
+            //const receivedSpot = { ...state, [action.spot.id]: action.spot }
+            // console.log("&&&&&&&&&&&&&&&&",receivedSpot.singleSpot)
+            return receivedSpot;
+
+        case REMOVE_SPOT:
+            // const newState = { ...state, allSpots: {} };
+            const newAllSpots = { ...state.allSpots };
+
+            console.log('************', action.spotId)
+
+            delete newAllSpots[action.spotId];
+            // delete newState[action.allSpots.spotId];
+            return {
+                ...state,
+                allSpots: newAllSpots,
+            };
+
+        case UPDATE_SPOT:
+            return {
+                ...state,
+                singleSpot: {
+                    ...state.singleSpot,
+                    [action.spot.id]: action.spot,
+                },
+            };
+
+
+
+        default:
+            return state;
+    }
+}
+export default spotReducer

@@ -27,9 +27,16 @@ export default function ManageSpot() {
 
     return (
 
-        <div className="init">
-
-            <h2>Manage Your Spots</h2>
+        <div className="init-manage">
+            <div id='manage-header-container'>
+                <div id='manage-header'>
+                <h2 >Manage Your Spots</h2>
+                <button id='manage-header-button' >
+                    <Link to={"/create-spot"} id="custom-link">
+                        Create a New Spot
+                    </Link>
+                </button>
+                </div>
             <ul id='spots-list'>
                 {Object.values(spots)
                     .filter((spot) => spot.ownerId === currUser.id)
@@ -55,7 +62,7 @@ export default function ManageSpot() {
                                 />
                                 </div>
 
-                                <Link to ={`/spots/${spot.id}/edit`} >
+                                <Link to={`/spots/${spot.id}/edit`} >
                                     <button>Update</button>
                                 </Link>
                             </div>
@@ -63,7 +70,7 @@ export default function ManageSpot() {
                         </li>
                     ))}
             </ul>
-
+            </div>
         </div>
     )
 

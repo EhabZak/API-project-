@@ -1,84 +1,47 @@
-// spotsReducer.js
+{formType === 'Create Spot' && (
+  <div className='form-div-container'>
+    <label className='label-container'>
+      Liven up your spot with Photos
+      <p id='p-in-textarea'> Submit a link to at least one photo to publish your spot</p>
+      <input
+        type='text'
+        placeholder='Preview Image URL'
+        name='previewImage'
+        value={images[0].url}
+        onChange={(e) => {
+          const newImages = [...images];
+          newImages[0].url = e.target.value;
+          setImages(newImages);
+        }}
+      />
+    </label>
+    {imageErrors.images && <div className="error">{imageErrors.images}</div>}
+    {validationObject.images?.[0]?.url && (
+      <p className="errors">
+        {validationObject.images[0].url}
+      </p>
+    )}
 
-// ... (existing imports and code for the reducer)
-
-// Action types
-// ... (existing action types)
-export const ADD_IMAGE = 'spots/ADD_IMAGE';
-
-// ... (existing action creators)
-
-export const addImage = (spotId, image) => ({
-  type: ADD_IMAGE,
-  spotId,
-  image,
-});
-
-// ... (existing thunk action creators)
-
-// Reducer
-const initialState = {
-  allSpots: {},
-  singleSpot: {},
-  isLoading: true
-};
-
-const spotReducer = (state = initialState, action) => {
-  switch (action.type) {
-    case LOAD_SPOTS:
-      const newEstate = { ...state, allSpots: {} };
-      action.spots.spots.forEach((spot) => (newEstate.allSpots[spot.id] = spot));
-      return newEstate;
-
-    case RECEIVE_SPOT:
-      const receivedSpot = {
-        ...state,
-        singleSpot: {
-          ...state.singleSpot,
-          [action.spot.id]: action.spot,
-        },
-      };
-      return receivedSpot;
-
-    case REMOVE_SPOT:
-      const newAllSpots = { ...state.allSpots };
-      delete newAllSpots[action.spotId];
-      return {
-        ...state,
-        allSpots: newAllSpots,
-      };
-
-    case UPDATE_SPOT:
-      return {
-        ...state,
-        singleSpot: {
-          ...state.singleSpot,
-          [action.spot.id]: action.spot,
-        },
-      };
-
-    case ADD_IMAGE:
-      const spotId = action.spotId;
-      const image = action.image;
-      const spotCopy = { ...state.singleSpot[spotId] };
-      const updatedImages = [...spotCopy.SpotImages, image];
-      spotCopy.SpotImages = updatedImages;
-
-      return {
-        ...state,
-        singleSpot: {
-          ...state.singleSpot,
-          [spotId]: spotCopy,
-        },
-      };
-
-
-
-
-      
-    default:
-      return state;
-  }
-};
-
-export default spotReducer;
+    {images.slice(1).map((image, index) => (
+      <div key={index} className='label-container'>
+        <input
+          type='text'
+          placeholder={`Image URL`}
+          name={`imageUrl${index}`}
+          value={image.url}
+          onChange={(e) => {
+            const newImages = [...images];
+            newImages[index + 1].url = e.target.value;
+            setImages(newImages);
+          }}
+        />
+        {imageErrors.images && <div className="error">{imageErrors.images}</div>}
+        {validationObject.images && (
+          <p className="errors">
+            {validationObject.images}
+          </p>
+        )}
+      </div>
+    ))}
+  </div>
+)}

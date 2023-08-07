@@ -1,8 +1,32 @@
 .body{
-    width: 1000px;
-  height: 100vh;
+
+  /* width: 100vh; */
   padding: 20px;
   box-sizing: border-box;
+background-color: aqua;
+}
+
+
+#main-container{
+  display: flex;
+
+  justify-content: center;
+}
+.init-details-container{
+  /* width: 1200px; */
+display: flex;
+justify-content: center;
+flex-direction: column;
+
+}
+
+#spot-details-container{
+  /* width: 1200px; */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+/* background-color: blue; */
+
 }
 .grid-wrapper {
     display: flex;
@@ -45,7 +69,7 @@
   #description-btn{
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    margin-right: 70px;
+    margin-right: 0px;
     margin-left: 40px;
 
   }
@@ -74,7 +98,7 @@
     width: 80%;
     height: 35px;
     margin-bottom: 30px;
-    box-shadow: 2px 2px;
+    box-shadow: 3px 3px 2px black;
     color: white;
     background-color: #FF5A5F
 }
