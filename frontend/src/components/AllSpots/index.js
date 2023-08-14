@@ -26,7 +26,7 @@ export default function AllSpots() {
             <h1></h1>
             <ul id='spots-list'>
         {Object.values(spots).map((spot) => (
-          <li key={spot.id} id='spot-container'>
+          <li key={spot.id} className='spot-container'>
 
 
                <Link to={`spots/${spot.id}`}>
@@ -35,10 +35,10 @@ export default function AllSpots() {
 
 
             <div id='address-rating'>
-            <p> {spot.address}</p>
+            <p> {spot.city}, {spot.state}</p>
             <p><i className="fa-solid fa-star"></i> {spot.avgRating}</p>
             </div>
-            <p id='price'> ${spot.price} night</p>
+            <p id='price'> <span>${spot.price}</span> night</p>
 
           </li>
         ))}
