@@ -18,7 +18,7 @@ const {Spot} = require('../models');
 const spots =[
 {
   ownerId: 1,
-  address: "123 Disney Lane",
+  address: "123 Disney Lane-spotId-1",
   city: "San Francisco",
   state: "California",
   country: "United States of America",
@@ -31,7 +31,7 @@ const spots =[
 },
 {
   ownerId: 2,
-  address: "123 LaLa Lane",
+  address: "123 LaLa Lane-spotId-2",
   city: "Boston",
   state: "California",
   country: "United States of America",
@@ -43,7 +43,7 @@ const spots =[
 },
 {
   ownerId: 3,
-  address: "123 Bye Lane",
+  address: "123 Bye Lane-spotId-3",
   city: "San Jose",
   state: "California",
   country: "United States of America",
@@ -55,7 +55,7 @@ const spots =[
 },
 {
   ownerId: 1,
-  address: "123 Albacore Lane",
+  address: "123 Albacore Lane-spotId-4",
   city: "San Francisco",
   state: "California",
   country: "United States of America",
@@ -68,7 +68,7 @@ const spots =[
 },
 {
   ownerId: 2,
-  address: "123 spring Lane",
+  address: "123 spring Lane-spotId-5",
   city: "Boston",
   state: "California",
   country: "United States of America",
@@ -80,7 +80,7 @@ const spots =[
 },
 {
   ownerId: 3,
-  address: "123 beach Lane",
+  address: "123 beach Lane-spotId-6",
   city: "San Jose",
   state: "California",
   country: "United States of America",
