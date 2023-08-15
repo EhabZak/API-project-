@@ -96,6 +96,7 @@ export const deleteSpot = (spotId) => async (dispatch) => {
 //         const spotDetails = await res.json();
 //         return spotDetails;
 //     } catch (error) {
+    
 //         console.log("createspot&&&&&&", error)
 //         return error; // Re-throw the error to be caught in the component
 //     }
@@ -106,33 +107,26 @@ export const deleteSpot = (spotId) => async (dispatch) => {
 /////////////////////////////////////////////////
 
 export const createSpot = (spot) => async (dispatch) => {
-    console.log( '44444444', spot)
+    console.log('44444444', spot)
 
-            const res = await csrfFetch('/api/spots', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(spot),
-            })
-           const spotDetails = await res.json()
+    const res = await csrfFetch('/api/spots', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(spot),
+    })
+    const spotDetails = await res.json()
 
-console.log("spot details:", spotDetails)
+    console.log("spot details:", spotDetails)
 
-            if (spotDetails && spotDetails.errors) {
+    if (spotDetails && spotDetails.errors) {
 
-                return console.log(spotDetails)
-            }
-
-dispatch (receiveSpot(spotDetails))
-            return spotDetails;
-
-
-
-
+        return console.log(spotDetails)
     }
 
+    dispatch(receiveSpot(spotDetails))
+    return spotDetails;
 
-
-
+}
 //////////////////////////////////////////////////
 
 export const updateSpot = (spot) => async (dispatch) => {
@@ -156,7 +150,7 @@ export const updateSpot = (spot) => async (dispatch) => {
 
 export const addImage = (spotId, image, preview) => async (dispatch) => {
     try {
-console.log( '66666666', spotId)
+        console.log('66666666', spotId)
 
         const res = await csrfFetch(`/api/spots/${spotId}/images`, {
             method: 'POST',
@@ -178,8 +172,8 @@ console.log( '66666666', spotId)
 
 
     } catch (error) {
-console.log("8888888888", error)
-       return  error;
+        console.log("8888888888", error)
+        return error;
     }
 };
 
@@ -189,20 +183,20 @@ console.log("8888888888", error)
 const GET_ALL_SPOTS_OF_CURRENT_USER = "/get_all_spots_of_user"; //read. // GET spots/
 export const getAllOwnerSpots = (spots) => ({ type: GET_ALL_SPOTS_OF_CURRENT_USER, spots });
 export const getOwnerAllSpotsThunk = () => async (dispatch) => {
-  const res = await csrfFetch("/api/spots/current");
+    const res = await csrfFetch("/api/spots/current");
 
-  if (res.ok) {
-    const Spots  = await res.json(); // { Spots: [] }
-    // do the thing with this data
-    // console.log("Spots from getOwnerAllSpotsThunk:", Spots)
-    dispatch(getAllOwnerSpots(Spots));
-    // dispatch(getAllSpots(Spots))
-    return Spots;
-  } else {
-    const errors = await res.json();
-    console.log("spot NOT OK getOwnerAllSpotsThunk:")
-    return errors;
-  }
+    if (res.ok) {
+        const Spots = await res.json(); // { Spots: [] }
+        // do the thing with this data
+        // console.log("Spots from getOwnerAllSpotsThunk:", Spots)
+        dispatch(getAllOwnerSpots(Spots));
+        // dispatch(getAllSpots(Spots))
+        return Spots;
+    } else {
+        const errors = await res.json();
+        console.log("spot NOT OK getOwnerAllSpotsThunk:")
+        return errors;
+    }
 };
 
 /////////////////////////////////////////////
