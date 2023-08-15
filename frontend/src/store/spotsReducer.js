@@ -107,7 +107,7 @@ export const deleteSpot = (spotId) => async (dispatch) => {
 
 ///Romeo solution -2 /////////////////////////////////////////////
 
-export const createSpot = (spot) => async (dispatch) => {
+export const createSpot = (spot,sessionUser) => async (dispatch) => {
     // console.log('44444444', spot)
 
     const res = await csrfFetch('/api/spots', {
@@ -123,7 +123,7 @@ export const createSpot = (spot) => async (dispatch) => {
 
         return console.log(spotDetails)
     }
-
+spotDetails.owner = sessionUser.username
     dispatch(receiveSpot(spotDetails))
     return spotDetails;
 

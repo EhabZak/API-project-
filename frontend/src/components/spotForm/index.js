@@ -12,7 +12,7 @@ export default function SpotForm({ spot, formType }) {
   const { spotId } = useParams();
   const dispatch = useDispatch();
   const history = useHistory();
-
+  const sessionUser = useSelector((state) => state.session.user);
 
   ////////////////////////////////////////////////////
   //! errors set ///////////////////////////////////
@@ -216,7 +216,7 @@ export default function SpotForm({ spot, formType }) {
     } else if (formType === 'Create Spot') {
 
 
-      dispatch(createSpot(spot))
+      dispatch(createSpot(spot, sessionUser))
         .then(async (res) => {
           const data = await res
           console.log('@@@data@@@', data)
@@ -255,9 +255,6 @@ export default function SpotForm({ spot, formType }) {
         .catch(async (res) => {
           const data = await res
           // console.log('&&&&&&&&', data)
-
-
-
 
 
 
