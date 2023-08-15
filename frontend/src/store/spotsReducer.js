@@ -107,27 +107,69 @@ export const deleteSpot = (spotId) => async (dispatch) => {
 
 ///Romeo solution -2 /////////////////////////////////////////////
 
-export const createSpot = (spot,sessionUser) => async (dispatch) => {
+// export const createSpot = (spot, sessionUser) => async (dispatch) => {
+//     // console.log('44444444', spot)
+
+//     const res = await csrfFetch('/api/spots', {
+//         method: 'POST',
+//         headers: { 'Content-Type': 'application/json' },
+//         body: JSON.stringify(spot),
+//     })
+//     const spotDetails = await res.json()
+
+//     // console.log("spot details:", spotDetails)
+
+//     if (spotDetails && spotDetails.errors) {
+
+//         return console.log(spotDetails)
+//     }
+// /// if response is ok
+//     spotDetails.owner = sessionUser.username
+//     dispatch(receiveSpot(spotDetails))
+//     return spotDetails;
+
+// }
+///My third solution -3 /////////////////////////////////////////////
+
+export const createSpot = (spot, sessionUser) => async (dispatch) => {
     // console.log('44444444', spot)
+    try {
+        const res = await csrfFetch('/api/spots', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(spot),
+        })
 
-    const res = await csrfFetch('/api/spots', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(spot),
-    })
-    const spotDetails = await res.json()
+        const spotDetails = await res.json()
 
-    // console.log("spot details:", spotDetails)
+        if (!res.ok) {
 
-    if (spotDetails && spotDetails.errors) {
+            // const errors = await res.json();
+            throw new Error(JSON.stringify(errors));
+        }
 
-        return console.log(spotDetails)
+        // console.log("spot details:", spotDetails)
+
+        if (spotDetails.errors) {
+
+            console.log("Server returned errors:", spotDetails.errors);
+            return spotDetails;
+        }
+        /// if response is ok
+        spotDetails.owner = sessionUser.username
+        dispatch(receiveSpot(spotDetails))
+        return spotDetails;
+    } catch (error) {
+
+        console.log("&&&ERROR&&&&&&", error)
+        throw error; // Re-throw the error to be caught in the component
     }
-spotDetails.owner = sessionUser.username
-    dispatch(receiveSpot(spotDetails))
-    return spotDetails;
 
 }
+
+
+
+
 //////////////////////////////////////////////////
 
 export const updateSpot = (spot) => async (dispatch) => {
