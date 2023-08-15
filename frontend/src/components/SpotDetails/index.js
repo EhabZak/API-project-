@@ -14,7 +14,7 @@ export default function SpotDetails() {
     const spot = useSelector((state) => state.spotState.singleSpot[spotId]);
     // spot = useSelector((state) => state.spots ? state.spots[spotId] : null);
 
-    // console.log( '@@@@@@ spot @@@@@@',spot)
+    console.log( '@@@@@@ spot @@@@@@',spot)
     // console.log( '!!!!!!spotID @@@@@@',spotId)
     const dispatch = useDispatch();
 
@@ -26,7 +26,7 @@ export default function SpotDetails() {
     if (!spot) {
         return null
     }
-    // console.log('222222spotImages22222', spot.spotImages)
+    console.log('222222spotImages22222', spot.spotImages)
     // console.log('111spot111', spot)
     ////////////////////////////////////////////////////////
 
@@ -49,7 +49,7 @@ export default function SpotDetails() {
 
                     <div id='grid-wrapper'>
                         <ul id='images'>
-                            {spot && spot.SpotImages.map((image) => (
+                            {spot  && spot.SpotImages && spot.SpotImages.map((image) => (
                                 <li>
                                     <img src={image.url} alt="spot image" />
                                 </li>

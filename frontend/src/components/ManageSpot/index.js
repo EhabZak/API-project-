@@ -37,11 +37,11 @@ export default function ManageSpot() {
                     </Link>
                 </button>
                 </div>
-            <ul id='spots-list'>
+            <ul id='manage-spots-list'>
                 {Object.values(spots)
                     .filter((spot) => spot.ownerId === currUser.id)
                     .map((spot) => (
-                        <li key={spot.id} id='spot-container'>
+                        <li key={spot.id} id='manage-spot-container'>
 
 
                             <Link to={`spots/${spot.id}`}>

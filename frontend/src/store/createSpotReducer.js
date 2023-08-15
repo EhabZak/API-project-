@@ -1,9 +1,14 @@
 import { csrfFetch } from "./csrf";
 
-
+// action types
 const CREATE_SPOT = "CREATE_SPOT";
 
-export const createSpot = (spot) =>({ type: CREATE_SPOT, spot});
+//!action creators //////////////////////////////////////////
+
+export const createSpot = (spot) =>({
+  type: CREATE_SPOT,
+   spot
+  });
 
 // ***************************createSpotThunk***************************
 export const createSpotThunk = (newSpot, newSpotImage, sessionUser) => async (dispatch) => {

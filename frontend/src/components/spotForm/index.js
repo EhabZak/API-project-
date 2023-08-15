@@ -12,12 +12,17 @@ export default function SpotForm({ spot, formType }) {
   const { spotId } = useParams();
   const dispatch = useDispatch();
   const history = useHistory();
+
+
+  ////////////////////////////////////////////////////
+  //! errors set ///////////////////////////////////
+
   const [errors, setErrors] = useState({});
   const [imageErrors, setImageErrors] = useState({})
-
+  const [validationObject, setValidationObject] = useState({})
 
   //////////////////////////////////////////////////////////////////
-//! USE STATE////////////////////////////////////////////////////
+  //! USE STATE////////////////////////////////////////////////////
   //////////////////ehab ////////////////////////////////////////////
   const [country, setCountry] = useState(spot?.country);
   const [address, setAddress] = useState(spot?.address);
@@ -28,7 +33,7 @@ export default function SpotForm({ spot, formType }) {
   const [description, setDescription] = useState(spot?.description);
   const [name, setName] = useState(spot?.name);
   const [price, setPrice] = useState(spot?.price);
-  const [validationObject, setValidationObject] = useState({})
+
 
   const [images, setImages] = useState([
     { url: '', preview: true },
@@ -37,9 +42,26 @@ export default function SpotForm({ spot, formType }) {
     { url: '', preview: false },
     { url: '', preview: false },
   ]);
+
+  // const [previewImage, setPreviewImage] = useState({ url: '', preview: true });
+  // const [imageUrl2, setImageUrl2] = useState({ url: '', preview: false });
+  // const [imageUrl3, setImageUrl3] = useState({ url: '', preview: false });
+  // const [imageUrl4, setImageUrl4] = useState({ url: '', preview: false });
+  // const [imageUrl5, setImageUrl5] = useState({ url: '', preview: false });
+
+
+
+
+
+
+
+
+
   // const [imageUrl,setImageUrl]
   // console.log('*************', spot) // if we are updating the spot
   ////////////////////////////////////////////////////////////
+  //! END of use state ///////////////////////////////////////
+
   // useEffect(() => {
   // const errorObject = {}
   //     if (country.length < 1) {
@@ -92,7 +114,7 @@ export default function SpotForm({ spot, formType }) {
 
   // console.log( '******', validationObject)
   //////////////////////////////////////////////////////////////////////
-//! Handle submit ///////////////////////////////////////////////////////
+  //! START Handle submit ///////////////////////////////////////////////////////
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -101,7 +123,7 @@ export default function SpotForm({ spot, formType }) {
     /////////////////////////////////////////////////////////
     const errorObject = {}
     if (country.length < 1) {
-      errorObject.country = "Country is required";
+      errorObject.country = "*******Country is required";
     }
     if (address.length < 1) {
       errorObject.address = "Address is required";
@@ -110,7 +132,7 @@ export default function SpotForm({ spot, formType }) {
       errorObject.city = "City is required";
     }
     if (state.length < 1) {
-      errorObject.state = "State is required";
+      errorObject.state = "*******State is required";
     }
     if (lat.length < 1) {
       errorObject.lat = "Latitude is required";
@@ -153,7 +175,7 @@ export default function SpotForm({ spot, formType }) {
     if (spot) { spot = { ...spot, country, address, city, state, lat: lat, lng: lng, description, name, price } }
     // console.log("898988988999888", spot)
     //////////////////////////////////////////////////
-
+    /// UPDATE SPOT /////////////////////////////////////////////////
     if (formType === 'Update spot') {
 
 
@@ -183,7 +205,13 @@ export default function SpotForm({ spot, formType }) {
         }
 
       }
+
+      /// END OF UPDATE SPOT ///////////////////////////////////////////////
       ////////////////////////////////////////////////////////
+
+      ////////////////////////////////////////////////////////////////////////
+      /// CREATE SPOT //////////////////////////////////////////////////////
+
 
     } else if (formType === 'Create Spot') {
 
@@ -191,69 +219,107 @@ export default function SpotForm({ spot, formType }) {
       dispatch(createSpot(spot))
         .then(async (res) => {
           const data = await res
-          console.log( '@@@data@@@' , data)
+          console.log('@@@data@@@', data)
+
+          /////////////////////////////////////
+          spot.id = data.id
+
+          console.log('this is the ======', spot.id)
+          /// add the images ///////////////////////////////////////
+          images.forEach(async (image, index) => {
+            if (image.url) {
+              try {
+
+                dispatch(addImage(spot.id, image.url, image.preview))
+                .then (async (res)=> {
+                  const imageData= await res
+                  console.log('^^^image-data^^^===', data)
+                })
+
+              } catch (error) {
+                const data = await error.json();
+                if (data && data.errors) {
+                  setImageErrors(data.errors);
+                }
+              }
+            }
+          });
+           /// END of adding the images /////////////////////////////////////
+          history.push(`/spots/${spot.id}`);
           return console.log(data)
+          ///////////////////////////////////
+
+
+
         })
         .catch(async (res) => {
           const data = await res
-          console.log('&&&&&&&&', data)
-          if (data&& data.errors){
+          // console.log('&&&&&&&&', data)
+
+
+
+
+
+
+          if (data && data.errors) {
             return setErrors(data.errors)
           }
         })
-        console.log("#######", errors)
-if (Object.values(errors).length){
-  console.log("4444errors", errors)
-}
-      console.log("000000000000000",spot)
+      // console.log("#######", errors)
+      if (Object.values(errors).length) {
+        console.log("4444errors", errors)
+      }
+      // console.log("000000000000000",spot)
 
 
       // console.log('22222222222222', errors)
-      /////////////////////////////////////
+      //       /////////////////////////////////////
+      //       spot.id = data.spotId
+      // //////////////////////////////////////////
+      //       images.forEach(async (image, index) => {
+      //         if (image.url) {
+      //           try {
 
-      images.forEach(async (image, index) => {
-        if (image.url) {
-          try {
+      //             dispatch(addImage(spot.id, image.url, image.preview));
+      //           } catch (error) {
+      //             const data = await error.json();
+      //             if (data && data.errors) {
+      //               setImageErrors(data.errors);
+      //             }
+      //           }
+      //         }
+      //       });
 
-            dispatch(addImage(spot.id, image.url, image.preview));
-          } catch (error) {
-            const data = await error.json();
-            if (data && data.errors) {
-              setImageErrors(data.errors);
-            }
-          }
-        }
-      });
-
-      ///////////////////////////////////
+      //       ///////////////////////////////////
     }
-
+    /// END OF CREATE SPOT //////////////////////////////////
+    /////////////////////////////////////////////////////////
 
     // if (spot.errors) {
     //   setErrors(spot.errors);
     // } else {
     //   history.push(`/spots/${spot.id}`);
     // }
-if (spot.id){
+    if (spot.id) {
 
-  history.push(`/spots/${spot.id}`);
-}else return null
+      history.push(`/spots/${spot.id}`);
+    } else return null
 
   }
 
   ///////////////////////////////////////////////////////////////
   //! end of handle submit ///////////////////////////////////////////
-  
+  /////////////////////////////////////////////////////////////////
   useEffect(() => {
     // console.log('errors updated:', errors)
     // console.log("000000000000000", spot);
   }, [spot]);
   // console.log('22222222222222', errors)
 
-/////////////////////////////////////////////////////////////////
-//! JSX  starts  /////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////
-  if (!spot){
+  /////////////////////////////////////////////////////////////////
+  //! JSX  starts  /////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////
+  if (!spot) {
     return null
   }
 
@@ -496,4 +562,5 @@ if (spot.id){
 
   /////////////////////////////////////////////////////
   //! end of JSX//////////////////////////////////////////////
+  /////////////////////////////////////////////////////////
 }

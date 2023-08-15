@@ -77,6 +77,7 @@ export const deleteSpot = (spotId) => async (dispatch) => {
         return errors;
     }
 }
+/// my first solution -1 //////////////////////////////////////////////////////////////
 
 // export const createSpot = (spot) => async (dispatch) => {
 // console.log( '44444444', spot)
@@ -96,7 +97,7 @@ export const deleteSpot = (spotId) => async (dispatch) => {
 //         const spotDetails = await res.json();
 //         return spotDetails;
 //     } catch (error) {
-    
+
 //         console.log("createspot&&&&&&", error)
 //         return error; // Re-throw the error to be caught in the component
 //     }
@@ -104,10 +105,10 @@ export const deleteSpot = (spotId) => async (dispatch) => {
 // }
 
 
-/////////////////////////////////////////////////
+///Romeo solution -2 /////////////////////////////////////////////
 
 export const createSpot = (spot) => async (dispatch) => {
-    console.log('44444444', spot)
+    // console.log('44444444', spot)
 
     const res = await csrfFetch('/api/spots', {
         method: 'POST',
@@ -116,7 +117,7 @@ export const createSpot = (spot) => async (dispatch) => {
     })
     const spotDetails = await res.json()
 
-    console.log("spot details:", spotDetails)
+    // console.log("spot details:", spotDetails)
 
     if (spotDetails && spotDetails.errors) {
 
