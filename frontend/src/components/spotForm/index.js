@@ -214,27 +214,25 @@ export default function SpotForm({ spot, formType }) {
 
 
     } else if (formType === 'Create Spot') {
-
-
       dispatch(createSpot(spot, sessionUser))
         .then(async (res) => {
           const data = await res
-          console.log('@@@data@@@', data)
+          // console.log('@@@data@@@', data)
 
           /////////////////////////////////////
           spot.id = data.id
 
-          console.log('this is the ======', spot.id)
+          // console.log('this is the ======', spot.id)
           /// add the images ///////////////////////////////////////
           images.forEach(async (image, index) => {
             if (image.url) {
               try {
 
                 dispatch(addImage(spot.id, image.url, image.preview))
-                .then (async (res)=> {
-                  const imageData= await res
-                  console.log('^^^image-data^^^===', data)
-                })
+                  .then(async (res) => {
+                    const imageData = await res
+                    console.log('^^^image-data^^^===', data)
+                  })
 
               } catch (error) {
                 const data = await error.json();
@@ -244,32 +242,39 @@ export default function SpotForm({ spot, formType }) {
               }
             }
           });
-           /// END of adding the images /////////////////////////////////////
+          /// END of adding the images /////////////////////////////////////
+
+          /// maybe you need to add a condition if no error then redirect
           history.push(`/spots/${spot.id}`);
           return console.log(data)
           ///////////////////////////////////
 
-
-
         })
         .catch(async (res) => {
           const data = await res
-          // console.log('&&&&&&&&', data)
-
-
+          // console.log('EEEEerror in componentEEEE', data.errors)
 
           if (data && data.errors) {
-            return setErrors(data.errors)
+            setErrors(data.errors)
+
+            // console.log('555 errors 55555', errors)
           }
         })
+
+        // console.log('YYY errors YYYY', errors)
+
+      //! this is just to check if there are any errors in the ERRORS object
+
       // console.log("#######", errors)
-      if (Object.values(errors).length) {
-        console.log("4444errors", errors)
-      }
+      // if (Object.values(errors).length) {
+      //   console.log("4444errors", errors)
+      // }
       // console.log("000000000000000",spot)
 
 
       // console.log('22222222222222', errors)
+
+      //! /////////////////////////////////////////////////////////////////////
       //       /////////////////////////////////////
       //       spot.id = data.spotId
       // //////////////////////////////////////////
@@ -320,7 +325,7 @@ export default function SpotForm({ spot, formType }) {
     return null
   }
 
-
+  // console.log('*** errors ****', errors.city)
   return (
     <div id='main-container'>
       <form
@@ -341,7 +346,7 @@ export default function SpotForm({ spot, formType }) {
               onChange={(e) => setCountry(e.target.value)}
             />
           </label>
-          {errors.country && <div className="error">{errors.country}</div>}
+          {errors.country && <div className="backend-errors">{errors.country}</div>}
           {validationObject.country && <p className="errors">
             {validationObject.country}
           </p>}
@@ -358,7 +363,7 @@ export default function SpotForm({ spot, formType }) {
               onChange={(e) => setAddress(e.target.value)}
             />
           </label>
-          {errors.address && <div className="error">{errors.address}</div>}
+          {errors.address && <div className="backend-errors">{errors.address}</div>}
           {validationObject.address && <p className="errors">
             {validationObject.address}
           </p>}
@@ -376,7 +381,7 @@ export default function SpotForm({ spot, formType }) {
                 onChange={(e) => setCity(e.target.value)}
               />
             </label>
-            {errors.city && <div className="error">{errors.city}</div>}
+            {errors.city && <div className="backend-errors">{errors.city} </div>}
             {validationObject.city && <p className="errors">
               {validationObject.city}
             </p>}
@@ -391,7 +396,7 @@ export default function SpotForm({ spot, formType }) {
                 onChange={(e) => setState(e.target.value)}
               />
             </label>
-            {errors.city && <div className="error">{errors.city}</div>}
+            {errors.city && <div className="backend-errors">{errors.city}</div>}
             {validationObject.state && <p className="errors">
               {validationObject.state}
             </p>}
@@ -411,7 +416,7 @@ export default function SpotForm({ spot, formType }) {
                 onChange={(e) => setLat(e.target.value)}
               />
             </label>
-            {errors.lat && <div className="error">{errors.lat}</div>}
+            {errors.lat && <div className="backend-errors">{errors.lat}</div>}
             {validationObject.lat && <p className="errors">
               {validationObject.lat}
             </p>}
@@ -426,7 +431,7 @@ export default function SpotForm({ spot, formType }) {
                 onChange={(e) => setLng(e.target.value)}
               />
             </label>
-            {errors.lng && <div className="error">{errors.lng}</div>}
+            {errors.lng && <div className="backend-errors">{errors.lng}</div>}
             {validationObject.lng && <p className="errors">
               {validationObject.lng}
             </p>}
@@ -445,7 +450,7 @@ export default function SpotForm({ spot, formType }) {
               onChange={(e) => setDescription(e.target.value)}
             />
           </label>
-          {errors.description && <div className="error">{errors.description}</div>}
+          {errors.description && <div className="backend-errors">{errors.description}</div>}
           {validationObject.description && <p className="errors">
             {validationObject.description}
           </p>}
@@ -464,7 +469,7 @@ export default function SpotForm({ spot, formType }) {
               onChange={(e) => setName(e.target.value)}
             />
           </label>
-          {errors.name && <div className="error">{errors.name}</div>}
+          {errors.name && <div className="backend-errors">{errors.name}</div>}
           {validationObject.name && <p className="errors">
             {validationObject.name}
           </p>}
@@ -486,7 +491,7 @@ export default function SpotForm({ spot, formType }) {
               />
             </div>
           </label>
-          {errors.price && <div className="error">{errors.price}</div>}
+          {errors.price && <div className="backend-errors">{errors.price}</div>}
           {validationObject.price && <p className="errors">
             {validationObject.price}
           </p>}
@@ -511,7 +516,7 @@ export default function SpotForm({ spot, formType }) {
                 }}
               />
             </label>
-            {imageErrors.images && <div className="error">{imageErrors.images}</div>}
+            {imageErrors.images && <div className="backend-errors">{imageErrors.images}</div>}
             {validationObject.images?.[0]?.url && (
               <p className="errors">
                 {validationObject.images[0].url}
@@ -531,7 +536,7 @@ export default function SpotForm({ spot, formType }) {
                     setImages(newImages);
                   }}
                 />
-                {imageErrors.images && <div className="error">{imageErrors.images}</div>}
+                {imageErrors.images && <div className="backend-errors">{imageErrors.images}</div>}
                 {validationObject.images && (
                   <p className="errors">
                     {validationObject.images}

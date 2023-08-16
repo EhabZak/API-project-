@@ -105,7 +105,7 @@ export const deleteSpot = (spotId) => async (dispatch) => {
 // }
 
 
-///Romeo solution -2 /////////////////////////////////////////////
+///My -R solution -2 /////////////////////////////////////////////
 
 // export const createSpot = (spot, sessionUser) => async (dispatch) => {
 //     // console.log('44444444', spot)
@@ -132,40 +132,34 @@ export const deleteSpot = (spotId) => async (dispatch) => {
 ///My third solution -3 /////////////////////////////////////////////
 
 export const createSpot = (spot, sessionUser) => async (dispatch) => {
-    // console.log('44444444', spot)
     try {
+        // console.log(spot)
         const res = await csrfFetch('/api/spots', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(spot),
-        })
+        });
 
-        const spotDetails = await res.json()
+        
 
-        if (!res.ok) {
+        //! Process successful response
+        const spotDetails = await res.json();
+        spotDetails.owner = sessionUser.username;
+        dispatch(receiveSpot(spotDetails));
 
-            // const errors = await res.json();
-            throw new Error(JSON.stringify(errors));
-        }
+        // console.log('this is the response ===>', spotDetails);
 
-        // console.log("spot details:", spotDetails)
-
-        if (spotDetails.errors) {
-
-            console.log("Server returned errors:", spotDetails.errors);
-            return spotDetails;
-        }
-        /// if response is ok
-        spotDetails.owner = sessionUser.username
-        dispatch(receiveSpot(spotDetails))
         return spotDetails;
+
     } catch (error) {
-
-        console.log("&&&ERROR&&&&&&", error)
-        throw error; // Re-throw the error to be caught in the component
+        const data = await error.json()
+        // console.log('&&&ERROR&&&&&&' , data);
+        // throw error;
+        // return data;
+        // throw new Error(JSON.stringify(data));
+        throw data
     }
-
-}
+};
 
 
 
@@ -193,7 +187,7 @@ export const updateSpot = (spot) => async (dispatch) => {
 
 export const addImage = (spotId, image, preview) => async (dispatch) => {
     try {
-        console.log('66666666', spotId)
+        // console.log('66666666', spotId)
 
         const res = await csrfFetch(`/api/spots/${spotId}/images`, {
             method: 'POST',
@@ -237,7 +231,7 @@ export const getOwnerAllSpotsThunk = () => async (dispatch) => {
         return Spots;
     } else {
         const errors = await res.json();
-        console.log("spot NOT OK getOwnerAllSpotsThunk:")
+        // console.log("spot NOT OK getOwnerAllSpotsThunk:")
         return errors;
     }
 };
@@ -278,7 +272,7 @@ const spotReducer = (state = initialState, action) => {
             // const newState = { ...state, allSpots: {} };
             const newAllSpots = { ...state.allSpots };
 
-            console.log('************', action.spotId)
+            // console.log('************', action.spotId)
 
             delete newAllSpots[action.spotId];
             // delete newState[action.allSpots.spotId];
