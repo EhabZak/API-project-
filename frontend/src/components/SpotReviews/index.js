@@ -94,20 +94,25 @@ if (userReview.length < 1){
                         <p>{review.User.firstName}</p>
                         <p>{formatDate(review.createdAt)}</p>
                         <p>{review.review}</p>
-                        <div>  {review.userId === sessionUser.id ? (
+                        <div>
+                            {sessionUser && review.userId === sessionUser.id ? (
                              <div id='delete-review-button'><OpenModalButton
                              buttonText="Delete"
                              modalComponent={<ReviewDeleteModel reviewId={review.id} />}
                          />
                          </div>
-                        ) : null}</div>
+                        ) : null}
+                        </div>
                     </li>
                 ))}
             </ul>
         );
     } else {
         console.log('22222222', reviews)
-        reviewsList = <p>Be the first to post a review!</p>;
+        if (sessionUser){
+
+            reviewsList = <p>Be the first to post a review!</p>;
+        }
     }
     ///////////////////////////////////////////////////////////////////////////
     let reviewRating;

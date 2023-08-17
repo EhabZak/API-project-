@@ -78,7 +78,7 @@ export default function SpotDetails() {
                     </div>
                 </div>
 
-                <div>this is the review location
+                <div>
                     <SpotReviews spotId={spot.id} />
                 </div>
 
