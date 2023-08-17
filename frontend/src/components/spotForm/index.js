@@ -61,11 +61,12 @@ export default function SpotForm({ spot, formType }) {
   // console.log('*************', spot) // if we are updating the spot
   ////////////////////////////////////////////////////////////
   //! END of use state ///////////////////////////////////////
-console.log('&&& submit &&&&', submit)
+
+// console.log('&&& submit &&&&', submit)
   useEffect(() => {
   const errorObject = {}
 
-if (submit){
+// if (submit){
       if (country.length < 1) {
         errorObject.country = "Country is required";
       }
@@ -105,14 +106,14 @@ if (submit){
 
       }
 
-      console.log('****this is the error object', errorObject)
+      // console.log('****this is the error object', errorObject)
 
       images.forEach((image) => {
         if (image.url.length > 0) {
           const validExtensions = ["png", "jpg", "jpeg"];
           const imageUrl = image.url;
           const imageExtension = imageUrl.split('.').pop().toLowerCase();
-          console.log('*******image extension', imageExtension)
+          // console.log('*******image extension', imageExtension)
           if (!validExtensions.includes(imageExtension)) {
             errorObject.images = "Image URL must end with .png, .jpg, or .jpeg";
           }
@@ -122,11 +123,12 @@ if (submit){
 
 
   setValidationObject(errorObject)
-    }
+
   }, [country, address, city, state, lat, lng, description, name, price, images[0], images]);
 
 
-  // console.log( '******', validationObject)
+  console.log( '****Validation object*****', validationObject)
+  console.log( '++++++ errors Object +++++++', errors)
   //////////////////////////////////////////////////////////////////////
   //! START Handle submit ///////////////////////////////////////////////////////
 
@@ -134,7 +136,10 @@ if (submit){
     e.preventDefault();
     setErrors({});
     setImageErrors({})
+
+
     /////////////////////////////////////////////////////////
+
     // const errorObject = {}
     // if (country.length < 1) {
     //   errorObject.country = "Country is required";
@@ -224,6 +229,7 @@ if (submit){
 
           // console.log("555555updated spot data 5555555", updatedSpotData)
           // history.push(`/spots/${spotId}`);
+
           history.push(`/spots/${updatedSpotData.id}`);
         }
 
@@ -278,8 +284,10 @@ if (submit){
           /// END of adding the images /////////////////////////////////////
 
           /// maybe you need to add a condition if no error then redirect
+          if ( Object.values(validationObject).length < 1) {
           history.push(`/spots/${spot.id}`);
           return console.log(data)
+          }
           ///////////////////////////////////
 
         })
@@ -367,13 +375,13 @@ if (submit){
 
   ////////////////////////////////////////
 
-  useEffect(() => {
+  // useEffect(() => {
 
 
-    console.log(validationObject)
-  }
+  //   console.log(validationObject)
+  // }
 
-    , [validationObject]);
+  //   , [validationObject]);
 
 
 
@@ -405,7 +413,7 @@ if (submit){
               onChange={(e) => setCountry(e.target.value)}
             />
           </label>
-          {errors.country && <div className="backend-errors">{errors.country}</div>}
+          { !validationObject.country && errors.country && <div className="backend-errors">{errors.country}</div>}
           {validationObject.country && <p className="errors">
             {validationObject.country}
           </p>}
@@ -422,7 +430,7 @@ if (submit){
               onChange={(e) => setAddress(e.target.value)}
             />
           </label>
-          {errors.address && <div className="backend-errors">{errors.address}</div>}
+          {!validationObject.address && errors.address && <div className="backend-errors">{errors.address}</div>}
           {validationObject.address && <p className="errors">
             {validationObject.address}
           </p>}
@@ -440,8 +448,8 @@ if (submit){
                 onChange={(e) => setCity(e.target.value)}
               />
             </label>
-            {errors.city && <div className="backend-errors">{errors.city} </div>}
-            {validationObject.city && <p className="errors">
+            {!validationObject.city && errors.city && <div className="backend-errors">{errors.city} </div>}
+            { validationObject.city && <p className="errors">
               {validationObject.city}
             </p>}
             <p>,</p>
@@ -455,7 +463,7 @@ if (submit){
                 onChange={(e) => setState(e.target.value)}
               />
             </label>
-            {errors.city && <div className="backend-errors">{errors.city}</div>}
+            {!validationObject.state && errors.state && <div className="backend-errors">{errors.city}</div>}
             {validationObject.state && <p className="errors">
               {validationObject.state}
             </p>}
@@ -468,14 +476,14 @@ if (submit){
             <label className='label-container' >
               Latitude
               <input
-                type="text"
+                type="number"
                 placeholder="lat"
                 name="lat"
                 value={lat}
                 onChange={(e) => setLat(e.target.value)}
               />
             </label>
-            {errors.lat && <div className="backend-errors">{errors.lat}</div>}
+            {!validationObject.lat && errors.lat && <div className="backend-errors">{errors.lat}</div>}
             {validationObject.lat && <p className="errors">
               {validationObject.lat}
             </p>}
@@ -483,14 +491,14 @@ if (submit){
             <label className='label-container' >
               Longitude
               <input
-                type="text"
+                type="number"
                 placeholder="lng"
                 name="lng"
                 value={lng}
                 onChange={(e) => setLng(e.target.value)}
               />
             </label>
-            {errors.lng && <div className="backend-errors">{errors.lng}</div>}
+            {!validationObject.lng && errors.lng && <div className="backend-errors">{errors.lng}</div>}
             {validationObject.lng && <p className="errors">
               {validationObject.lng}
             </p>}
@@ -509,7 +517,7 @@ if (submit){
               onChange={(e) => setDescription(e.target.value)}
             />
           </label>
-          {errors.description && <div className="backend-errors">{errors.description}</div>}
+          {!validationObject.description && errors.description && <div className="backend-errors">{errors.description}</div>}
           {validationObject.description && <p className="errors">
             {validationObject.description}
           </p>}
@@ -528,7 +536,7 @@ if (submit){
               onChange={(e) => setName(e.target.value)}
             />
           </label>
-          {errors.name && <div className="backend-errors">{errors.name}</div>}
+          {!validationObject.name && errors.name && <div className="backend-errors">{errors.name}</div>}
           {validationObject.name && <p className="errors">
             {validationObject.name}
           </p>}
@@ -550,7 +558,7 @@ if (submit){
               />
             </div>
           </label>
-          {errors.price && <div className="backend-errors">{errors.price}</div>}
+          {!validationObject.price && errors.price && <div className="backend-errors">{errors.price}</div>}
           {validationObject.price && <p className="errors">
             {validationObject.price}
           </p>}
@@ -611,7 +619,7 @@ if (submit){
         <button id='submit-form-button'
           type="submit"
           onClick = {() => setSubmit(true)}
-        // disabled={Object.values(validationObject).length > 0}
+        disabled={Object.values(validationObject).length > 0 }
         >
           Create Spot
         </button>
