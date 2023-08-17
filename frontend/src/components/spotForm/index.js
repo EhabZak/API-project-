@@ -43,22 +43,8 @@ export default function SpotForm({ spot, formType }) {
     { url: '', preview: false },
   ]);
 
-  // const [previewImage, setPreviewImage] = useState({ url: '', preview: true });
-  // const [imageUrl2, setImageUrl2] = useState({ url: '', preview: false });
-  // const [imageUrl3, setImageUrl3] = useState({ url: '', preview: false });
-  // const [imageUrl4, setImageUrl4] = useState({ url: '', preview: false });
-  // const [imageUrl5, setImageUrl5] = useState({ url: '', preview: false });
 
 
-
-
-
-
-
-
-
-  // const [imageUrl,setImageUrl]
-  // console.log('*************', spot) // if we are updating the spot
   ////////////////////////////////////////////////////////////
   //! END of use state ///////////////////////////////////////
 
@@ -143,19 +129,19 @@ export default function SpotForm({ spot, formType }) {
     if (name.length < 1) {
       errorObject.name = "Name is required";
     }
-    if (price.length < 1) {
+    if (price <= 0) {
       errorObject.price = "Price is required";
     }
+
     if (description.length < 30) {
       errorObject.description = "Description needs a minimum of 30 characters";
     }
 
-
+  // if (!images[0].url) {
+  //       errorObject.images = "Preview image is required";
+  //     }
     // images.forEach((image) => {
 
-    //   if (image.url.length < 1) {
-    //     errorObject.images = "image is required";
-    //   }
     //   if (image.url.length > 0) {
     //     const validExtensions = [".png", ".jpg", ".jpeg"];
     //     const imageUrl = image.url;
@@ -169,6 +155,32 @@ export default function SpotForm({ spot, formType }) {
     //   }
 
     // })
+
+
+
+
+    
+    images.slice(1).forEach((image,index) => {
+
+      if (image.url.length > 0) {
+        const validExtensions = [".png", ".jpg", ".jpeg"];
+        const imageUrl = image.url;
+        const imageExtension = imageUrl.split('.').pop().toLowerCase();
+        console.log( '*******image extension', imageExtension)
+        if (!validExtensions.includes(imageExtension)) {
+          errorObject[`image${index}`] = "Image URL must end with .png, .jpg, or .jpeg";
+        }
+      }
+
+    })
+
+
+console.log('^^^^^errorObject^^^^^ ' , errorObject)
+
+
+
+
+
     setValidationObject(errorObject)
 
     //////////////////////////////////
@@ -346,7 +358,7 @@ export default function SpotForm({ spot, formType }) {
               onChange={(e) => setCountry(e.target.value)}
             />
           </label>
-          {errors.country && <div className="backend-errors">{errors.country}</div>}
+          { !validationObject.country && errors.country && <div className="backend-errors">{errors.country}</div>}
           {validationObject.country && <p className="errors">
             {validationObject.country}
           </p>}
@@ -363,7 +375,7 @@ export default function SpotForm({ spot, formType }) {
               onChange={(e) => setAddress(e.target.value)}
             />
           </label>
-          {errors.address && <div className="backend-errors">{errors.address}</div>}
+          {!validationObject.country && errors.address && <div className="backend-errors">{errors.address}</div>}
           {validationObject.address && <p className="errors">
             {validationObject.address}
           </p>}
@@ -381,7 +393,7 @@ export default function SpotForm({ spot, formType }) {
                 onChange={(e) => setCity(e.target.value)}
               />
             </label>
-            {errors.city && <div className="backend-errors">{errors.city} </div>}
+            {!validationObject.country && errors.city && <div className="backend-errors">{errors.city} </div>}
             {validationObject.city && <p className="errors">
               {validationObject.city}
             </p>}
@@ -396,7 +408,7 @@ export default function SpotForm({ spot, formType }) {
                 onChange={(e) => setState(e.target.value)}
               />
             </label>
-            {errors.city && <div className="backend-errors">{errors.city}</div>}
+            {!validationObject.country && errors.city && <div className="backend-errors">{errors.city}</div>}
             {validationObject.state && <p className="errors">
               {validationObject.state}
             </p>}
@@ -416,7 +428,7 @@ export default function SpotForm({ spot, formType }) {
                 onChange={(e) => setLat(e.target.value)}
               />
             </label>
-            {errors.lat && <div className="backend-errors">{errors.lat}</div>}
+            {!validationObject.country && errors.lat && <div className="backend-errors">{errors.lat}</div>}
             {validationObject.lat && <p className="errors">
               {validationObject.lat}
             </p>}
@@ -431,7 +443,7 @@ export default function SpotForm({ spot, formType }) {
                 onChange={(e) => setLng(e.target.value)}
               />
             </label>
-            {errors.lng && <div className="backend-errors">{errors.lng}</div>}
+            {!validationObject.country && errors.lng && <div className="backend-errors">{errors.lng}</div>}
             {validationObject.lng && <p className="errors">
               {validationObject.lng}
             </p>}
@@ -450,7 +462,7 @@ export default function SpotForm({ spot, formType }) {
               onChange={(e) => setDescription(e.target.value)}
             />
           </label>
-          {errors.description && <div className="backend-errors">{errors.description}</div>}
+          {!validationObject.country && errors.description && <div className="backend-errors">{errors.description}</div>}
           {validationObject.description && <p className="errors">
             {validationObject.description}
           </p>}
@@ -469,7 +481,7 @@ export default function SpotForm({ spot, formType }) {
               onChange={(e) => setName(e.target.value)}
             />
           </label>
-          {errors.name && <div className="backend-errors">{errors.name}</div>}
+          {!validationObject.country && errors.name && <div className="backend-errors">{errors.name}</div>}
           {validationObject.name && <p className="errors">
             {validationObject.name}
           </p>}
@@ -483,7 +495,7 @@ export default function SpotForm({ spot, formType }) {
             <div id='price-div'>
               <p>$</p>
               <input
-                type="text"
+                type="number"
                 placeholder="Price per night (USD)"
                 name="price"
                 value={price}
@@ -491,7 +503,7 @@ export default function SpotForm({ spot, formType }) {
               />
             </div>
           </label>
-          {errors.price && <div className="backend-errors">{errors.price}</div>}
+          {!validationObject.country && errors.price && <div className="backend-errors">{errors.price}</div>}
           {validationObject.price && <p className="errors">
             {validationObject.price}
           </p>}
@@ -500,6 +512,7 @@ export default function SpotForm({ spot, formType }) {
 
 
         {formType === 'Create Spot' && (
+
           <div className='form-div-container'>
             <label className='label-container'>
               Liven up your spot with Photos
@@ -509,6 +522,7 @@ export default function SpotForm({ spot, formType }) {
                 placeholder='Preview Image URL'
                 name='previewImage'
                 value={images[0].url}
+                // required={true}
                 onChange={(e) => {
                   const newImages = [...images];
                   newImages[0].url = e.target.value;
@@ -537,9 +551,9 @@ export default function SpotForm({ spot, formType }) {
                   }}
                 />
                 {imageErrors.images && <div className="backend-errors">{imageErrors.images}</div>}
-                {validationObject.images && (
+                {validationObject[`image${index}`] && (
                   <p className="errors">
-                    {validationObject.images}
+                    {validationObject[`image${index}`]}
                   </p>
                 )}
               </div>

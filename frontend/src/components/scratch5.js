@@ -1,26 +1,52 @@
-// my first solution -1 //////////////////////////////////////////////////////////////
-
-export const createSpot = (spot) => async (dispatch) => {
-    console.log('44444444', spot)
-    try {
-        const res = await csrfFetch('/api/spots', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(spot),
-        })
-
-        if (!res.ok) {
-
-            const errors = await res.json();
-            throw new Error(JSON.stringify(errors));
-        }
-
-        const spotDetails = await res.json();
-        return spotDetails;
-    } catch (error) {
-
-        console.log("createspot&&&&&&", error)
-        return error; // Re-throw the error to be caught in the component
-    }
-
-}
+{formType === 'Create Spot' && (
+    <div className='form-div-container'>
+      {images.map((image, index) => (
+        index === 0 ? (
+          <div key={index} className='label-container'>
+            <label className='label-container'>
+              Liven up your spot with Photos
+              <p id='p-in-textarea'> Submit a link to at least one photo to publish your spot</p>
+              <input
+                type='text'
+                placeholder='Preview Image URL'
+                name='previewImage'
+                value={images[0].url}
+                required={true}
+                onChange={(e) => {
+                  const newImages = [...images];
+                  newImages[0].url = e.target.value;
+                  setImages(newImages);
+                }}
+              />
+            </label>
+            {imageErrors.images && <div className="backend-errors">{imageErrors.images}</div>}
+            {validationObject.images?.[0]?.url && (
+              <p className="errors">
+                {validationObject.images[0].url}
+              </p>
+            )}
+          </div>
+        ) : (
+          <div key={index} className='label-container'>
+            <input
+              type='text'
+              placeholder={`Image URL`}
+              name={`imageUrl${index}`}
+              value={image.url}
+              onChange={(e) => {
+                const newImages = [...images];
+                newImages[index + 1].url = e.target.value;
+                setImages(newImages);
+              }}
+            />
+            {imageErrors.images && <div className="backend-errors">{imageErrors.images}</div>}
+            {validationObject[`image${index}`] && (
+              <p className="errors">
+                {validationObject[`image${index}`]}
+              </p>
+            )}
+          </div>
+        )
+      ))}
+    </div>
+  )}
