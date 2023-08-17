@@ -483,7 +483,7 @@ export default function SpotForm({ spot, formType }) {
             <div id='price-div'>
               <p>$</p>
               <input
-                type="text"
+                type="number"
                 placeholder="Price per night (USD)"
                 name="price"
                 value={price}
@@ -507,6 +507,7 @@ export default function SpotForm({ spot, formType }) {
               <input
                 type='text'
                 placeholder='Preview Image URL'
+                required ="true"
                 name='previewImage'
                 value={images[0].url}
                 onChange={(e) => {
