@@ -33,7 +33,7 @@ export default function SpotForm({ spot, formType }) {
   const [description, setDescription] = useState(spot?.description);
   const [name, setName] = useState(spot?.name);
   const [price, setPrice] = useState(spot?.price);
-
+  const [submit, setSubmit] = useState(false)
 
   const [images, setImages] = useState([
     { url: '', preview: true },
@@ -61,55 +61,69 @@ export default function SpotForm({ spot, formType }) {
   // console.log('*************', spot) // if we are updating the spot
   ////////////////////////////////////////////////////////////
   //! END of use state ///////////////////////////////////////
+console.log('&&& submit &&&&', submit)
+  useEffect(() => {
+  const errorObject = {}
 
-  // useEffect(() => {
-  // const errorObject = {}
-  //     if (country.length < 1) {
-  //       errorObject.country = "Country is required";
-  //     }
-  //     if (address.length < 1) {
-  //       errorObject.address= "Address is required";
-  //     }
-  //     if (city.length < 1) {
-  //       errorObject.city = "City is required";
-  //     }
-  //     if (state.length < 1) {
-  //       errorObject.state = "State is required";
-  //     }
-  //     if (lat.length < 1) {
-  //       errorObject.lat = "Latitude is required";
-  //     }
-  //     if (lng.length < 1) {
-  //       errorObject.lng = "Longitude is required";
-  //     }
-  //     if (name.length < 1) {
-  //       errorObject.name = "Name is required";
-  //     }
-  //     if (price.length < 1) {
-  //       errorObject.price = "Price is required";
-  //     }
-  //     if (description.length < 30) {
-  //       errorObject.description = "Description needs a minimum of 30 characters";
-  //     }
+if (submit){
+      if (country.length < 1) {
+        errorObject.country = "Country is required";
+      }
+      if (address.length < 1) {
+        errorObject.address= "Address is required";
+      }
+      if (city.length < 1) {
+        errorObject.city = "City is required";
+      }
+      if (state.length < 1) {
+        errorObject.state = "State is required";
+      }
+      if (lat.length < 1) {
+        errorObject.lat = "Latitude is required";
+      }
+      if (lng.length < 1) {
+        errorObject.lng = "Longitude is required";
+      }
+      if (name.length < 1) {
+        errorObject.name = "Name is required";
+      }
+      if (price.length < 1) {
+        errorObject.price = "Price is required";
+      }
+      if (description.length < 30) {
+        errorObject.description = "Description needs a minimum of 30 characters";
+      }
 
-  //     images.forEach((image) => {
+      if (images[0].url > 0) {
+        const validExtensions = ["png", "jpg", "jpeg"];
+        const imageUrl = images[0].url;
+        const imageExtension = imageUrl.split('.').pop().toLowerCase();
+        console.log('*******image extension', imageExtension)
+        if (!validExtensions.includes(imageExtension)) {
+          errorObject.images[0] = "Image URL must end with .png, .jpg, or .jpeg";
+        }
 
-  //       if (image.url.length < 1) {
-  //         errorObject.images = "image is required";
-  //       }
-  // if (image.url.length > 0 ) {
-  //   const validExtensions = [".png", ".jpg", ".jpeg"];
-  //   const imageUrl = image.url;
-  //   const imageExtension = imageUrl.split('.').pop().toLowerCase();
-  //   if (!validExtensions.includes(imageExtension) ) {
-  //     errorObject.images = "Image URL must end with .png, .jpg, or .jpeg";
-  //   }
-  // }
+      }
 
-  // })
-  // setValidationObject(errorObject)
+      console.log('****this is the error object', errorObject)
 
-  // }, [country, address, city, state, lat, lng, description, name, price, images[0], images]);
+      images.forEach((image) => {
+        if (image.url.length > 0) {
+          const validExtensions = ["png", "jpg", "jpeg"];
+          const imageUrl = image.url;
+          const imageExtension = imageUrl.split('.').pop().toLowerCase();
+          console.log('*******image extension', imageExtension)
+          if (!validExtensions.includes(imageExtension)) {
+            errorObject.images = "Image URL must end with .png, .jpg, or .jpeg";
+          }
+        }
+
+      })
+
+
+  setValidationObject(errorObject)
+    }
+  }, [country, address, city, state, lat, lng, description, name, price, images[0], images]);
 
 
   // console.log( '******', validationObject)
@@ -121,75 +135,75 @@ export default function SpotForm({ spot, formType }) {
     setErrors({});
     setImageErrors({})
     /////////////////////////////////////////////////////////
-    const errorObject = {}
-    if (country.length < 1) {
-      errorObject.country = "*******Country is required";
-    }
-    if (address.length < 1) {
-      errorObject.address = "Address is required";
-    }
-    if (city.length < 1) {
-      errorObject.city = "City is required";
-    }
-    if (state.length < 1) {
-      errorObject.state = "*******State is required";
-    }
-    if (lat.length < 1) {
-      errorObject.lat = "Latitude is required";
-    }
-    if (lng.length < 1) {
-      errorObject.lng = "Longitude is required";
-    }
-    if (name.length < 1) {
-      errorObject.name = "Name is required";
-    }
-    if (price.length < 1) {
-      errorObject.price = "Price is required";
-    }
-    if (description.length < 30) {
-      errorObject.description = "Description needs a minimum of 30 characters";
-    }
+    // const errorObject = {}
+    // if (country.length < 1) {
+    //   errorObject.country = "Country is required";
+    // }
+    // if (address.length < 1) {
+    //   errorObject.address = "Address is required";
+    // }
+    // if (city.length < 1) {
+    //   errorObject.city = "City is required";
+    // }
+    // if (state.length < 1) {
+    //   errorObject.state = "State is required";
+    // }
+    // if (lat.length < 1) {
+    //   errorObject.lat = "Latitude is required";
+    // }
+    // if (lng.length < 1) {
+    //   errorObject.lng = "Longitude is required";
+    // }
+    // if (name.length < 1) {
+    //   errorObject.name = "Name is required";
+    // }
+    // if (price.length < 1) {
+    //   errorObject.price = "Price is required";
+    // }
+    // if (description.length < 30) {
+    //   errorObject.description = "Description needs a minimum of 30 characters";
+    // }
 
-console.log( "this is the preview image",images[0].url)
+    // console.log("this is the preview image", images[0].url)
 
-if (images[0].url> 0 ) {
-  const validExtensions = ["png", "jpg", "jpeg"];
-  const imageUrl = images[0].url;
-  const imageExtension = imageUrl.split('.').pop().toLowerCase();
-  console.log( '*******image extension', imageExtension)
-  if (!validExtensions.includes(imageExtension)) {
-      errorObject.images[0] = "Image URL must end with .png, .jpg, or .jpeg";
-    }
+    // if (images[0].url > 0) {
+    //   const validExtensions = ["png", "jpg", "jpeg"];
+    //   const imageUrl = images[0].url;
+    //   const imageExtension = imageUrl.split('.').pop().toLowerCase();
+    //   console.log('*******image extension', imageExtension)
+    //   if (!validExtensions.includes(imageExtension)) {
+    //     errorObject.images[0] = "Image URL must end with .png, .jpg, or .jpeg";
+    //   }
 
-}
+    // }
 
-console.log('****this is the error object', errorObject)
+    // console.log('****this is the error object', errorObject)
 
-    images.forEach((image) => {
-        if (image.url.length > 0) {
-            const validExtensions = ["png", "jpg", "jpeg"];
-            const imageUrl = image.url;
-            const imageExtension = imageUrl.split('.').pop().toLowerCase();
-            console.log( '*******image extension', imageExtension)
-            if (!validExtensions.includes(imageExtension)) {
-                errorObject.images = "Image URL must end with .png, .jpg, or .jpeg";
-              }
-              }
+    // images.forEach((image) => {
+    //   if (image.url.length > 0) {
+    //     const validExtensions = ["png", "jpg", "jpeg"];
+    //     const imageUrl = image.url;
+    //     const imageExtension = imageUrl.split('.').pop().toLowerCase();
+    //     console.log('*******image extension', imageExtension)
+    //     if (!validExtensions.includes(imageExtension)) {
+    //       errorObject.images = "Image URL must end with .png, .jpg, or .jpeg";
+    //     }
+    //   }
 
-            })
-
-
-            //   if (image.url.length < 1) {
-            //     errorObject.images = "image is required";
-            //   }
+    // })
 
 
-            setValidationObject(errorObject)
+    //   if (image.url.length < 1) {
+    //     errorObject.images = "image is required";
+    //   }
 
 
-            const hasValidationErrors = Object.values(validationObject)
+    // setValidationObject(errorObject)
 
-            console.log ('#####', hasValidationErrors)
+
+    // const hasValidationErrors = Object.values(validationObject)
+
+    // console.log('##validationObject not in create###', hasValidationErrors)
     //////////////////////////////////
     if (spot) { spot = { ...spot, country, address, city, state, lat: lat, lng: lng, description, name, price } }
     // console.log("898988988999888", spot)
@@ -279,8 +293,8 @@ console.log('****this is the error object', errorObject)
             // console.log('555 errors 55555', errors)
           }
         })
-        console.log ('#####', hasValidationErrors)
-        // console.log('YYY errors YYYY', errors)
+
+      // console.log('YYY errors YYYY', errors)
 
       //! this is just to check if there are any errors in the ERRORS object
 
@@ -331,11 +345,37 @@ console.log('****this is the error object', errorObject)
   ///////////////////////////////////////////////////////////////
   //! end of handle submit ///////////////////////////////////////////
   /////////////////////////////////////////////////////////////////
+  // useEffect(() => {
+
+  //   // console.log('errors updated:', errors)
+  //   // console.log("000000000000000", spot);
+  // }, [spot]);
+  // // console.log('22222222222222', errors)
+
+//! DAN useEFFECT ///////////////////////////////////////////////////////////
+  // useEffect(() => {
+  //   const errorObject = {}
+
+  //   // if (description.length < 30) {
+
+  //   //   errorObject.description = "Description needs a minimum of 30 characters";
+  //   // }
+
+  //   setValidationObject(errorObject)
+
+  // }, [description]);
+
+  ////////////////////////////////////////
+
   useEffect(() => {
-    // console.log('errors updated:', errors)
-    // console.log("000000000000000", spot);
-  }, [spot]);
-  // console.log('22222222222222', errors)
+
+
+    console.log(validationObject)
+  }
+
+    , [validationObject]);
+
+
 
   /////////////////////////////////////////////////////////////////
   //! JSX  starts  /////////////////////////////////////////////////
@@ -524,9 +564,9 @@ console.log('****this is the error object', errorObject)
               Liven up your spot with Photos
               <p id='p-in-textarea'> Submit a link to at least one photo to publish your spot</p>
               <input
-                type='text'
+                type='url'
                 placeholder='Preview Image URL'
-                required ="true"
+                required={true}
                 name='previewImage'
                 value={images[0].url}
                 onChange={(e) => {
@@ -546,7 +586,7 @@ console.log('****this is the error object', errorObject)
             {images.slice(1).map((image, index) => (
               <div key={index} className='label-container'>
                 <input
-                  type='text'
+                  type='url'
                   placeholder={`Image URL`}
                   name={`imageUrl${index}`}
                   value={image.url}
@@ -570,6 +610,7 @@ console.log('****this is the error object', errorObject)
 
         <button id='submit-form-button'
           type="submit"
+          onClick = {() => setSubmit(true)}
         // disabled={Object.values(validationObject).length > 0}
         >
           Create Spot
