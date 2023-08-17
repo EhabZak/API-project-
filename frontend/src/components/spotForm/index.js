@@ -150,27 +150,46 @@ export default function SpotForm({ spot, formType }) {
       errorObject.description = "Description needs a minimum of 30 characters";
     }
 
+console.log( "this is the preview image",images[0].url)
 
-    // images.forEach((image) => {
+if (images[0].url> 0 ) {
+  const validExtensions = ["png", "jpg", "jpeg"];
+  const imageUrl = images[0].url;
+  const imageExtension = imageUrl.split('.').pop().toLowerCase();
+  console.log( '*******image extension', imageExtension)
+  if (!validExtensions.includes(imageExtension)) {
+      errorObject.images[0] = "Image URL must end with .png, .jpg, or .jpeg";
+    }
 
-    //   if (image.url.length < 1) {
-    //     errorObject.images = "image is required";
-    //   }
-    //   if (image.url.length > 0) {
-    //     const validExtensions = [".png", ".jpg", ".jpeg"];
-    //     const imageUrl = image.url;
-    //     const imageExtension = imageUrl.split('.').pop().toLowerCase();
-    //     console.log( '*******image extension', imageExtension)
-    //     if (!validExtensions.includes(imageExtension)) {
-    //       errorObject.images = "Image URL must end with .png, .jpg, or .jpeg";
-    //     }else{
+}
 
-    //     }
-    //   }
+console.log('****this is the error object', errorObject)
 
-    // })
-    setValidationObject(errorObject)
+    images.forEach((image) => {
+        if (image.url.length > 0) {
+            const validExtensions = ["png", "jpg", "jpeg"];
+            const imageUrl = image.url;
+            const imageExtension = imageUrl.split('.').pop().toLowerCase();
+            console.log( '*******image extension', imageExtension)
+            if (!validExtensions.includes(imageExtension)) {
+                errorObject.images = "Image URL must end with .png, .jpg, or .jpeg";
+              }
+              }
 
+            })
+
+
+            //   if (image.url.length < 1) {
+            //     errorObject.images = "image is required";
+            //   }
+
+
+            setValidationObject(errorObject)
+
+
+            const hasValidationErrors = Object.values(validationObject)
+
+            console.log ('#####', hasValidationErrors)
     //////////////////////////////////
     if (spot) { spot = { ...spot, country, address, city, state, lat: lat, lng: lng, description, name, price } }
     // console.log("898988988999888", spot)
@@ -260,7 +279,7 @@ export default function SpotForm({ spot, formType }) {
             // console.log('555 errors 55555', errors)
           }
         })
-
+        console.log ('#####', hasValidationErrors)
         // console.log('YYY errors YYYY', errors)
 
       //! this is just to check if there are any errors in the ERRORS object
@@ -518,9 +537,9 @@ export default function SpotForm({ spot, formType }) {
               />
             </label>
             {imageErrors.images && <div className="backend-errors">{imageErrors.images}</div>}
-            {validationObject.images?.[0]?.url && (
+            {validationObject.images && (
               <p className="errors">
-                {validationObject.images[0].url}
+                {validationObject.images}
               </p>
             )}
 
@@ -551,7 +570,7 @@ export default function SpotForm({ spot, formType }) {
 
         <button id='submit-form-button'
           type="submit"
-        // disabled={Object.keys(validationObject).length > 0}
+        // disabled={Object.values(validationObject).length > 0}
         >
           Create Spot
         </button>
