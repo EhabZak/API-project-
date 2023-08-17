@@ -156,19 +156,26 @@ export default function SpotForm({ spot, formType }) {
 
     // })
 
+    if (images[0].url) {
+      const validExtensions = [".jpg", ".jpeg"];
+      const imageUrl = images[0].url;
+      const imageExtension = imageUrl.split('.').pop().toLowerCase();
+      if (!validExtensions.includes(imageExtension)) {
+        errorObject.image0 = "Preview Image URL must end with .jpg or .jpeg";
+      }
+    }
 
+let remainingImages = images.slice(1)
 
-
-    
-    images.slice(1).forEach((image,index) => {
+    remainingImages.forEach((image,index) => {
 
       if (image.url.length > 0) {
         const validExtensions = [".png", ".jpg", ".jpeg"];
         const imageUrl = image.url;
         const imageExtension = imageUrl.split('.').pop().toLowerCase();
-        console.log( '*******image extension', imageExtension)
+        console.log( '*******image extension', imageExtension , index)
         if (!validExtensions.includes(imageExtension)) {
-          errorObject[`image${index}`] = "Image URL must end with .png, .jpg, or .jpeg";
+          errorObject[`remainingImage${index}`] = "Image URL must end with .png, .jpg, or .jpeg";
         }
       }
 
@@ -531,9 +538,9 @@ console.log('^^^^^errorObject^^^^^ ' , errorObject)
               />
             </label>
             {imageErrors.images && <div className="backend-errors">{imageErrors.images}</div>}
-            {validationObject.images?.[0]?.url && (
+            {validationObject.image0 && (
               <p className="errors">
-                {validationObject.images[0].url}
+                {validationObject.image0}
               </p>
             )}
 
@@ -551,9 +558,9 @@ console.log('^^^^^errorObject^^^^^ ' , errorObject)
                   }}
                 />
                 {imageErrors.images && <div className="backend-errors">{imageErrors.images}</div>}
-                {validationObject[`image${index}`] && (
+                {validationObject[`remainingImage${index}`] && (
                   <p className="errors">
-                    {validationObject[`image${index}`]}
+                    {validationObject[`remainingImage${index}`]}
                   </p>
                 )}
               </div>
