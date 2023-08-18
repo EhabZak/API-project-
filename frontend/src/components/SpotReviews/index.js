@@ -44,7 +44,7 @@ Object.values(reviews).filter((review)=>{
 })
 
 // console.log( "***userReview array",userReview)
-if (userReview.length < 1){
+if (userReview.length < 1 && spot.ownerId !== sessionUser.id ){
         reviewButton = (
 
             <div id='spot-edit-buttons'>
@@ -85,7 +85,7 @@ if (userReview.length < 1){
     //////////////////////////////////////////////////////////////////
     let reviewsList;
     if (Object.values(reviews).length > 0) {
-        console.log('1111111', reviews)
+        // console.log('1111111', reviews)
         reviewsList = (
             <ul id="reviews-list">
                 {Object.values(reviews).map((review) => (
@@ -108,8 +108,8 @@ if (userReview.length < 1){
             </ul>
         );
     } else {
-        console.log('22222222', reviews)
-        if (sessionUser){
+        // console.log('22222222', reviews)
+        if (sessionUser && spot.ownerId !== sessionUser.id ){
 
             reviewsList = <p>Be the first to post a review!</p>;
         }
