@@ -88,10 +88,10 @@ if (userReview.length < 1 && spot.ownerId !== sessionUser.id ){
         // console.log('1111111', reviews)
         reviewsList = (
             <ul id="reviews-list">
-                {Object.values(reviews).map((review) => (
+                {Object.values(reviews).reverse().map((review) => (
                     <li key={review.id} id="review-container">
                         {/* {console.log('999999', review)} */}
-                        <p>{review.User.firstName}</p>
+                        <p><i className="fa-regular fa-circle-user" id='user-review-logo'></i> {review.User.firstName}</p>
                         <p>{formatDate(review.createdAt)}</p>
                         <p>{review.review}</p>
                         <div>

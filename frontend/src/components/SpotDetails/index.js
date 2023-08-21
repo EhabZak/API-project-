@@ -50,7 +50,7 @@ export default function SpotDetails() {
                     <div id='grid-wrapper'>
                         <ul id='images'>
                             {spot  && spot.SpotImages && spot.SpotImages.map((image) => (
-                                <li>
+                                <li key={image.id}>
                                     <img src={image.url} alt="spot image" />
                                 </li>
                             ))}
