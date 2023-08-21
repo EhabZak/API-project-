@@ -53,11 +53,11 @@ export const CreateReview =(reviewId, review, rating) => async(dispatch)=> {
         }
 
         const reviewDetails = await res.json();
-        console.log('WWWWWWW', reviewDetails)
+        // console.log('WWWWWWW', reviewDetails)
         return reviewDetails;
 
       } catch (error) {
-console.log("8888888888", error)
+// console.log("8888888888", error)
         throw error;
       }
 

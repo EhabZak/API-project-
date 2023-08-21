@@ -1,11 +1,14 @@
-import React, { useState } from "react";
-import { useDispatch } from 'react-redux';
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from 'react-redux';
 import { useModal } from "../../context/Modal";
+import { useHistory } from 'react-router-dom';
 import "./CreateREviewModel.css";
 import { CreateReview } from "../../store/reviewReducer";
+import { fetchSpotReviews } from "../../store/reviewReducer";
 
 function CreateReviewModel({ spotId }) {
     const dispatch = useDispatch();
+    const history = useHistory();;
     const { closeModal } = useModal();
     const [rating, setRating] = useState(0);
     const [review, setReview] = useState('');
@@ -14,9 +17,18 @@ function CreateReviewModel({ spotId }) {
     const [errors, setErrors] = useState({});
     const [message, setMessage] = useState('');
 
-    const handelCreateReview = () => {
+    /////////////////////////////////////////////////
+
+
+
+    const handelCreateReview = (e) => {
+        e.preventDefault();
+        setErrors({});
+        setMessage('');
+
         dispatch(CreateReview(spotId, review, rating))
             .then(() => {
+                dispatch(fetchSpotReviews(spotId))
                 closeModal();
             })
             .catch(async (error) => {
@@ -27,13 +39,21 @@ function CreateReviewModel({ spotId }) {
                     setMessage(data.message);
                 }
             });
-    }
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setErrors({});
-        setMessage('');
     }
+console.log( '*****review****', review)
+
+    //////////////////////////////////////////////////////////
+
+
+    // const handleSubmit = async (e) => {
+    //     e.preventDefault();
+    //     setErrors({});
+    //     setMessage('');
+
+        // history.push(`/spots/${spotId}`)
+    // }
+    //////////////////////////////////////////////////////////
 
     const handleStarClick = (starValue) => {
         setRating(starValue);
@@ -52,7 +72,7 @@ function CreateReviewModel({ spotId }) {
 
     return (
         <div>
-            <form onSubmit={handleSubmit} id='form-review'>
+            <form onSubmit={handelCreateReview} id='form-review'>
                 <h2>How was your stay?</h2>
                 <div>
                     {message && <div className="error">{message}</div>}
@@ -78,7 +98,8 @@ function CreateReviewModel({ spotId }) {
                 {errors.stars && <div className="error">{errors.stars}</div>}
                 <button
                     id="submit-review-btn"
-                    onClick={handelCreateReview}
+                    type="submit"
+                    // onClick={handelCreateReview}
                     disabled={submitButtonDisabled}
                 >
                     Submit your Review

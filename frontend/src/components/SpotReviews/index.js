@@ -21,7 +21,7 @@ export default function SpotReviews({ spotId }) {
     const spot = useSelector((state) => state.spotState.singleSpot[spotId]);
     // console.log("rrrrrrrr", spot)
     const reviews = useSelector((state) => state.reviewState.reviews.spot)
-    // console.log("55555555", reviews)
+    console.log("55555555", reviews)
 
     // if (!reviews){
     //     return null
@@ -98,7 +98,7 @@ if (userReview.length < 1 && spot.ownerId !== sessionUser.id ){
                             {sessionUser && review.userId === sessionUser.id ? (
                              <div id='delete-review-button'><OpenModalButton
                              buttonText="Delete"
-                             modalComponent={<ReviewDeleteModel reviewId={review.id} />}
+                             modalComponent={<ReviewDeleteModel reviewId={review.id} spotId={spot.id}  />}
                          />
                          </div>
                         ) : null}
