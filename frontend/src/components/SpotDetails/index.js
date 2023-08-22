@@ -12,6 +12,7 @@ export default function SpotDetails() {
     const history = useHistory();
     const [gotoSpot, setGoToSpot] = useState(spotId);
     const spot = useSelector((state) => state.spotState.singleSpot[spotId]);
+    const reviews = useSelector((state) => state.reviewState.reviews.spot)
     // spot = useSelector((state) => state.spots ? state.spots[spotId] : null);
 
     console.log( '@@@@@@ spot @@@@@@',spot)
@@ -26,9 +27,26 @@ export default function SpotDetails() {
     if (!spot) {
         return null
     }
-    console.log('222222spotImages22222', spot.spotImages)
+    // console.log('222222spotImages22222', spot.spotImages)
     // console.log('111spot111', spot)
     ////////////////////////////////////////////////////////
+    let reviewRating;
+    if (Object.values(reviews).length === 0) {
+        reviewRating = (
+
+            <p><i className="fa-solid fa-star" id='review-star'></i> New</p>
+        )
+
+    } else {
+        reviewRating = (
+
+            <p id='review-in-reviews'> <i className="fa-solid fa-star" id='review-star'></i>
+             {spot.avgStarRating.toFixed(1)} <span id='dot-container'><span className="dot"><i class="fa-solid fa-circle"></i></span> </span>  {spot.numReviews} reviews</p>
+
+        )};
+
+
+    ////////////////////////////////////////////////////
 
     const handleReserveClick = () => {
 
@@ -68,7 +86,8 @@ export default function SpotDetails() {
                                 </div>
                             </div>
 
-                            <p id='review-in-reserve'> <i className="fa-solid fa-star"></i> {spot.avgStarRating} .  {spot.numReviews} reviews</p>
+                            <p id='review-in-reserve'> {reviewRating}</p>
+
                             <div id='reserve-btn-container'>
                                 <button id='reserve-btn' onClick={handleReserveClick}>Reserve</button>
                             </div>

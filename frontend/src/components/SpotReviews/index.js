@@ -73,13 +73,6 @@ if (userReview.length < 1 && spot.ownerId !== sessionUser.id ){
         return `${month} ${year}`;
     };
     ////////////////////////////////////////////////////////////////
-// let deleteButton;
-// if (sessionUser){
-//     review.userId === sessionUser.id
-
-
-// }
-
 
 
     //////////////////////////////////////////////////////////////////
@@ -119,13 +112,14 @@ if (userReview.length < 1 && spot.ownerId !== sessionUser.id ){
     if (Object.values(reviews).length === 0) {
         reviewRating = (
 
-            <p><i className="fa-solid fa-star"></i> New</p>
+            <p><i className="fa-solid fa-star" id='review-star'></i> New</p>
         )
 
     } else {
         reviewRating = (
 
-            <p id='review-in-reviews'> <i className="fa-solid fa-star"></i> {spot.avgStarRating} .  {spot.numReviews} reviews</p>
+            <p id='review-in-reviews'> <i className="fa-solid fa-star" id='review-star'></i>
+             {spot.avgStarRating.toFixed(1)} <span id='dot-container'><span className="dot"><i class="fa-solid fa-circle"></i></span> </span>  {spot.numReviews} reviews</p>
 
         )};
 
