@@ -35,31 +35,31 @@ export default function SpotReviews({ spotId }) {
     let reviewButton;
     if (sessionUser) {
 
-let userReview = [];
+        let userReview = [];
 
-Object.values(reviews).filter((review)=>{
-    if ( review.userId === sessionUser.id || spot.ownerId === sessionUser.id) {
-        userReview.push(review.id)
-    }
-})
+        Object.values(reviews).filter((review) => {
+            if (review.userId === sessionUser.id || spot.ownerId === sessionUser.id) {
+                userReview.push(review.id)
+            }
+        })
 
-// console.log( "***userReview array",userReview)
-if (userReview.length < 1 && spot.ownerId !== sessionUser.id ){
-        reviewButton = (
+        // console.log( "***userReview array",userReview)
+        if (userReview.length < 1 && spot.ownerId !== sessionUser.id) {
+            reviewButton = (
 
-            <div id='spot-edit-buttons'>
-                <div>
-                    <OpenModalButton
-                        buttonText="Post Your Review"
-                        modalComponent={<CreateReviewModel spotId={spot.id} />}
-                    />
+                <div id='spot-edit-buttons'>
+                    <div>
+                        <OpenModalButton
+                            buttonText="Post Your Review"
+                            modalComponent={<CreateReviewModel spotId={spot.id} />}
+                        />
+                    </div>
                 </div>
-            </div>
 
-        )
-} else {
-    <></>
-}
+            )
+        } else {
+            <></>
+        }
     } else {
         <></>
 
@@ -89,12 +89,12 @@ if (userReview.length < 1 && spot.ownerId !== sessionUser.id ){
                         <p>{review.review}</p>
                         <div>
                             {sessionUser && review.userId === sessionUser.id ? (
-                             <div id='delete-review-button'><OpenModalButton
-                             buttonText="Delete"
-                             modalComponent={<ReviewDeleteModel reviewId={review.id} spotId={spot.id}  />}
-                         />
-                         </div>
-                        ) : null}
+                                <div id='delete-review-button'><OpenModalButton
+                                    buttonText="Delete"
+                                    modalComponent={<ReviewDeleteModel reviewId={review.id} spotId={spot.id} />}
+                                />
+                                </div>
+                            ) : null}
                         </div>
                     </li>
                 ))}
@@ -102,7 +102,7 @@ if (userReview.length < 1 && spot.ownerId !== sessionUser.id ){
         );
     } else {
         // console.log('22222222', reviews)
-        if (sessionUser && spot.ownerId !== sessionUser.id ){
+        if (sessionUser && spot.ownerId !== sessionUser.id) {
 
             reviewsList = <p>Be the first to post a review!</p>;
         }
@@ -119,9 +119,12 @@ if (userReview.length < 1 && spot.ownerId !== sessionUser.id ){
         reviewRating = (
 
             <p id='review-in-reviews'> <i className="fa-solid fa-star" id='review-star'></i>
-             {spot.avgStarRating.toFixed(1)} <span id='dot-container'><span className="dot"><i class="fa-solid fa-circle"></i></span> </span>  {spot.numReviews} reviews</p>
+                {spot.avgStarRating.toFixed(1)} <span id='dot-container'><span className="dot"><i className="fa-solid fa-circle"></i></span> </span>  {spot.numReviews}
+                 {Object.values(reviews).length === 1 ? <span> review</span> : <span> reviews</span>}
+            </p>
 
-        )};
+        )
+    };
 
 
     /////////////////////////////////////////////////////////////////////

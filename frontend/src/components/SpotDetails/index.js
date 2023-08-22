@@ -41,7 +41,11 @@ export default function SpotDetails() {
         reviewRating = (
 
             <p id='review-in-reviews'> <i className="fa-solid fa-star" id='review-star'></i>
-             {spot.avgStarRating.toFixed(1)} <span id='dot-container'><span className="dot"><i class="fa-solid fa-circle"></i></span> </span>  {spot.numReviews} reviews</p>
+             {spot.avgStarRating.toFixed(1)}
+             <span id='dot-container'><span className="dot"><i className="fa-solid fa-circle"></i></span> </span>
+               {spot.numReviews}
+               {Object.values(reviews).length === 1 ? <span> review</span> : <span> reviews</span>}
+               </p>
 
         )};
 
@@ -86,7 +90,7 @@ export default function SpotDetails() {
                                 </div>
                             </div>
 
-                            <p id='review-in-reserve'> {reviewRating}</p>
+                            <div id='review-in-reserve'> {reviewRating}</div>
 
                             <div id='reserve-btn-container'>
                                 <button id='reserve-btn' onClick={handleReserveClick}>Reserve</button>
