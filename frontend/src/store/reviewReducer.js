@@ -25,7 +25,7 @@ export const fetchSpotReviews = (spotId) => async (dispatch) => {
     if (res.ok) {
         const spotReviews = await res.json();
 
-        // console.log( "^^^^^^^^^^^", spotReviews)
+        console.log( "^^^^^^^^^^^", spotReviews)
         dispatch(receiveSpotReviews(spotReviews))
     } else {
         const errors = await res.json();

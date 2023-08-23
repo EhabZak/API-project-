@@ -21,7 +21,7 @@ export default function SpotReviews({ spotId }) {
     const spot = useSelector((state) => state.spotState.singleSpot[spotId]);
     // console.log("rrrrrrrr", spot)
     const reviews = useSelector((state) => state.reviewState.reviews.spot)
-    console.log("55555555", reviews)
+    // console.log("55555555", reviews)
 
     // if (!reviews){
     //     return null
@@ -87,6 +87,7 @@ export default function SpotReviews({ spotId }) {
                         <p><i className="fa-regular fa-circle-user" id='user-review-logo'></i> {review.User.firstName}</p>
                         <p>{formatDate(review.createdAt)}</p>
                         <p>{review.review}</p>
+
                         <div>
                             {sessionUser && review.userId === sessionUser.id ? (
                                 <div id='delete-review-button'><OpenModalButton
@@ -96,6 +97,7 @@ export default function SpotReviews({ spotId }) {
                                 </div>
                             ) : null}
                         </div>
+
                     </li>
                 ))}
             </ul>
@@ -118,8 +120,10 @@ export default function SpotReviews({ spotId }) {
     } else {
         reviewRating = (
 
-            <p id='review-in-reviews'> <i className="fa-solid fa-star" id='review-star'></i>
-                {spot.avgStarRating.toFixed(1)} <span id='dot-container'><span className="dot"><i className="fa-solid fa-circle"></i></span> </span>  {spot.numReviews}
+            <p id='review-in-reviews'>
+            <i className="fa-solid fa-star" id='review-star'></i>
+                {spot.avgStarRating.toFixed(1)} <span id='dot-container'><span className="dot">
+                    <i className="fa-solid fa-circle"></i></span> </span>  {spot.numReviews}
                  {Object.values(reviews).length === 1 ? <span> review</span> : <span> reviews</span>}
             </p>
 

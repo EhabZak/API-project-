@@ -5,6 +5,7 @@ import { useHistory } from 'react-router-dom';
 import "./CreateREviewModel.css";
 import { CreateReview } from "../../store/reviewReducer";
 import { fetchSpotReviews } from "../../store/reviewReducer";
+import { fetchDetailedSpot } from "../../store/spotsReducer";
 
 function CreateReviewModel({ spotId }) {
     const dispatch = useDispatch();
@@ -29,6 +30,7 @@ function CreateReviewModel({ spotId }) {
         dispatch(CreateReview(spotId, review, rating))
             .then(() => {
                 dispatch(fetchSpotReviews(spotId))
+                dispatch(fetchDetailedSpot(spotId))
                 closeModal();
             })
             .catch(async (error) => {
@@ -85,15 +87,15 @@ console.log( '*****review****', review)
                     onChange={handleReviewChange}
                 />
                 {errors.review && <div className="error">{errors.review}</div>}
-                <p className="star-container">
+                <p className="star-container"><span> Stars</span>
                     {[1, 2, 3, 4, 5].map((star) => (
                         <span
                             key={star}
                             onClick={() => handleStarClick(star)}
                         >
-                            ★
+                            <i className="fa-solid fa-star" id='review-rating-star'></i>
                         </span>
-                    ))}<span>stars</span>
+                    ))}
                 </p>
                 {errors.stars && <div className="error">{errors.stars}</div>}
                 <button

@@ -15,7 +15,7 @@ export default function SpotDetails() {
     const reviews = useSelector((state) => state.reviewState.reviews.spot)
     // spot = useSelector((state) => state.spots ? state.spots[spotId] : null);
 
-    console.log( '@@@@@@ spot @@@@@@',spot)
+    // console.log( '@@@@@@ spot @@@@@@',spot)
     // console.log( '!!!!!!spotID @@@@@@',spotId)
     const dispatch = useDispatch();
 
