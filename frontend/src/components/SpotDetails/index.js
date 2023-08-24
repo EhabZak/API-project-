@@ -80,14 +80,18 @@ export default function SpotDetails() {
                         </ul>
                     </div>
                     <div id='description-btn'>
+
+                    <div id='detailed-description-container'>
                         <h2>Hosted by {spot.owner.firstName} {spot.owner.lastName} </h2>
+                        <p id='detail-description'>{spot.description}</p>
+                        </div>
 
                         <div id='reserve-container'>
                             <div id='price-in-reserve'>
                                 <p >${spot.price} </p>
                                 <div id='night-container'>
                                     <p>night</p>
-                                    
+
                                 </div>
                             </div>
 
@@ -97,7 +101,6 @@ export default function SpotDetails() {
                                 <button id='reserve-btn' onClick={handleReserveClick}>Reserve</button>
                             </div>
                         </div>
-                        <p>{spot.description}</p>
 
                     </div>
                 </div>
