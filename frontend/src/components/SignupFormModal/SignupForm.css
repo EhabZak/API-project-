@@ -8,6 +8,7 @@ justify-content: center;
 align-items: center;
 width: 300px;
 border-radius: 10px;
+
 }
 
 
@@ -33,14 +34,19 @@ border-width: 2px;
     display: flex;
     flex-direction: column;
     align-items: center;
+    margin-left: 20px;
 
+}
+#signup-form input{
+margin-left: 0px;
+background-color: rgb(207, 219, 252);
 }
 
 .signup-label-container{
     display: flex;
     flex-direction: column;
     width: 300px;
-    margin-left: 10px;
+    margin-left: 25px;
     margin-right: 10px;
 }
 #sign-up-container button{
@@ -52,6 +58,7 @@ margin-top: 15px;
 width: 250px ;
 margin-right: 25px;
 height: 30px;
+color: white;
 }
 .signup-label-container input {
     width: 250px;
@@ -61,4 +68,10 @@ height: 30px;
 .signup-label-container label {
 
     margin-left: 100px ;
+}
+
+#errors-sign-up{
+    color: red;
+    font-size: 12px;
+    width: 250px;
 }
