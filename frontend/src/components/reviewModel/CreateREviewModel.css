@@ -4,27 +4,15 @@
     flex-direction: row-reverse ;
   }
 
-/*
-.star-radio input[type='radio']:checked ~ span
-,
-.star-radio span.star-hover  {
-
-  display: block;
-  content: '\f005';
-  color: gold;
-} */
-
-.star-hover:hover::before {
-  color: blue;
-}
-
 
 #review-rating-star:hover {
 
 color: gold;
 }
 
-
+.star-container .star.clicked {
+  color: gold;
+}
 
 
   .star-container span {
@@ -36,17 +24,10 @@ color: gold;
   .star-container span:hover ~ span
 
   {
-    color: red;
+    color: gold;
   }
 
-  .star-container span:checked,
-  .star-container span:checked ~ span {
-    color: blue;
-  }
 
-  /* .star-container.clicked span ~ span {
-    color: gray;
-  } */
 
 #form-review{
 

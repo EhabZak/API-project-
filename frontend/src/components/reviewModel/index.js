@@ -96,7 +96,7 @@ console.log( '*****review****', review)
                         >
                             <i className="fa-solid fa-star" id='review-rating-star'></i>
                         </span>
-                    ))}
+                    )).reverse()}
                 </p>
                 {errors.stars && <div className="error">{errors.stars}</div>}
                 <button
