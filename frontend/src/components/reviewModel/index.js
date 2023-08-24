@@ -92,7 +92,7 @@ console.log( '*****review****', review)
                         <span
                             key={star}
                             onClick={() => handleStarClick(star)}
-                            className={rating >= star ? "star clicked" : "star"}
+                            className={rating >= star ? "clicked" : "star"}
                         >
                             <i className="fa-solid fa-star" id='review-rating-star'></i>
                         </span>

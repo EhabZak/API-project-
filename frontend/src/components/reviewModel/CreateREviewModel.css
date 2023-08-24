@@ -5,17 +5,17 @@
   }
 
 
-#review-rating-star:hover {
+/* #review-rating-star:hover {
 
 color: gold;
-}
+} */
 
-.star-container .star.clicked {
+.star-container .clicked {
   color: gold;
 }
 
 
-  .star-container span {
+  .star {
     color: gray;
     transition: color 0.3s ease;
   }
@@ -58,8 +58,7 @@ color: gold;
 margin-bottom: 20px;
 height: 30px;
 width: 90%;
-/* margin-right: 10px;
-margin-left: 10px; */
+
 }
 #submit-review-btn:disabled{
   background-color: gray;
