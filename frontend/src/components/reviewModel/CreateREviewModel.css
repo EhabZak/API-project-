@@ -4,6 +4,29 @@
     flex-direction: row-reverse ;
   }
 
+/*
+.star-radio input[type='radio']:checked ~ span
+,
+.star-radio span.star-hover  {
+
+  display: block;
+  content: '\f005';
+  color: gold;
+} */
+
+.star-hover:hover::before {
+  color: blue;
+}
+
+
+#review-rating-star:hover {
+
+color: gold;
+}
+
+
+
+
   .star-container span {
     color: gray;
     transition: color 0.3s ease;
@@ -11,20 +34,19 @@
 
   .star-container span:hover,
   .star-container span:hover ~ span
-  
 
   {
-    color: black;
+    color: red;
   }
 
   .star-container span:checked,
   .star-container span:checked ~ span {
-    color: black;
+    color: blue;
   }
 
-  .star-container.clicked span ~ span {
-    color: gray; /* Restore color for stars to the left of clicked one */
-  }
+  /* .star-container.clicked span ~ span {
+    color: gray;
+  } */
 
 #form-review{
 

@@ -87,11 +87,12 @@ console.log( '*****review****', review)
                     onChange={handleReviewChange}
                 />
                 {errors.review && <div className="error">{errors.review}</div>}
-                <p className="star-container"><span> Stars</span>
+                <p className="star-container"><b> Stars</b>
                     {[1, 2, 3, 4, 5].map((star) => (
                         <span
                             key={star}
                             onClick={() => handleStarClick(star)}
+                            className={rating >= star ? "star clicked" : "star"}
                         >
                             <i className="fa-solid fa-star" id='review-rating-star'></i>
                         </span>
