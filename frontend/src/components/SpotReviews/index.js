@@ -122,7 +122,8 @@ export default function SpotReviews({ spotId }) {
 
             <p id='review-in-reviews'>
             <i className="fa-solid fa-star" id='review-star'></i>
-                {spot.avgStarRating.toFixed(1)} <span id='dot-container'><span className="dot">
+            {spot.avgStarRating !== undefined? spot.avgStarRating.toFixed(1): spot.avgStarRating}
+                <span id='dot-container'><span className="dot">
                     <i className="fa-solid fa-circle"></i></span> </span>  {spot.numReviews}
                  {Object.values(reviews).length === 1 ? <span> review</span> : <span> reviews</span>}
             </p>
