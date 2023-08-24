@@ -87,6 +87,7 @@ export default function SpotDetails() {
                                 <p >${spot.price} </p>
                                 <div id='night-container'>
                                     <p>night</p>
+                                    
                                 </div>
                             </div>
 
