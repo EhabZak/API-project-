@@ -63,12 +63,16 @@ function LoginFormModal() {
     const demoCredential = "Demo-lition";
     const demoPassword = "password";
     setShowMenu(false);
-    dispatch(sessionActions.login({ credential: demoCredential, password: demoPassword }));
+    dispatch(sessionActions.login({ credential: demoCredential, password: demoPassword }))
+    .then(closeModal)
   };
 
   return (
     <div id="log-in-outer-container">
       <h2>Log In</h2>
+      {errors.credential && (
+          <p id="error-log-in">{errors.credential}</p>
+        )}
       <form onSubmit={handleSubmit} id="log-in-form-container">
         <label className="log-in-label-container">
           Username or Email
@@ -88,11 +92,9 @@ function LoginFormModal() {
             required
           />
         </label>
-        {errors.credential && (
-          <p>{errors.credential}</p>
-        )}
+
         <button type="submit" id="login-button" disabled={isSignInButtonDisabled}
-         
+
           >
         Log In
         </button>

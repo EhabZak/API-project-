@@ -296,49 +296,49 @@ const validateCreatePost = [
     check('address')
         .exists({ checkFalsy: true })
         .isLength({ min: 4 })
-        .withMessage('Street address is required'),
+        .withMessage('Street address input is required'),
 
     check('city')
         .exists({ checkFalsy: true })
         .isLength({ min: 4 })
-        .withMessage('City is required'),
+        .withMessage('City input is required'),
     check('state')
         .exists({ checkFalsy: true })
-        .isLength({ min: 4 })
-        .withMessage('State is required'),
+        .isLength({ min: 2 })
+        .withMessage('State input is required'),
 
     check('country')
         .exists({ checkFalsy: true })
         .isLength({ min: 2 })
-        .withMessage('Country is required'),
+        .withMessage('Country input is required'),
 
     check('lat')
         .exists({ checkFalsy: true })
         .isDecimal()
         .isLength({ min: 2 })
-        .withMessage('Latitude is not valid'),
+        .withMessage('Latitude input is not valid'),
 
     check('lng')
         .exists({ checkFalsy: true })
         .isDecimal()
         .isLength({ min: 2 })
-        .withMessage('Longitude is not valid'),
+        .withMessage('Longitude input is not valid'),
 
     check('name')
         .exists({ checkFalsy: true })
         .isLength({ max: 50 })
         .isLength({ min: 4 })
-        .withMessage('Name must be less than 50 characters'),
+        .withMessage('Name input must be more than 4 and less than 50 characters'),
 
     check('description')
         .exists({ checkFalsy: true })
         .isLength({ min: 4 })
-        .withMessage('Description is required'),
+        .withMessage('Description input is required'),
 
     check('price')
         .exists({ checkFalsy: true })
         .isDecimal()
-        .withMessage('Price per day is required'),
+        .withMessage('Price per day input is required'),
     handleValidationErrors
 
 ]

@@ -25,7 +25,7 @@ export const fetchSpotReviews = (spotId) => async (dispatch) => {
     if (res.ok) {
         const spotReviews = await res.json();
 
-        // console.log( "^^^^^^^^^^^", spotReviews)
+        console.log( "^^^^^^^^^^^", spotReviews)
         dispatch(receiveSpotReviews(spotReviews))
     } else {
         const errors = await res.json();
@@ -53,11 +53,11 @@ export const CreateReview =(reviewId, review, rating) => async(dispatch)=> {
         }
 
         const reviewDetails = await res.json();
-        console.log('WWWWWWW', reviewDetails)
+        // console.log('WWWWWWW', reviewDetails)
         return reviewDetails;
 
       } catch (error) {
-console.log("8888888888", error)
+// console.log("8888888888", error)
         throw error;
       }
 

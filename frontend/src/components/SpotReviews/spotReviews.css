@@ -9,3 +9,32 @@
 #review-container{
  list-style: none;
 }
+#user-review-logo{
+    font-size: 1.5rem;
+}
+.dot{
+
+/* background-color: rgb(172, 172, 201); */
+font-weight: bold;
+/* padding-bottom: 10px; */
+font-size: 0.5rem;
+margin-right: 10px;
+margin-left: 10px;
+}
+#dot-container{
+    display: inline-flex !important;
+    /* justify-content: space-between !important; */
+    align-items: center !important;
+    /* background-color: violet; */
+    height: 20px
+}
+#review-star{
+    color: #ff9e00;
+    font-size: .9rem;
+    margin-right: 5px;
+    margin-bottom: 5px;
+}
+#review-date{
+    color: grey;
+    font-size: 13px;
+}

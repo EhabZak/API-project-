@@ -13,6 +13,14 @@ import { createSpotThunk } from '../../store/createSpotReducer';
 export default function SpotForm2({ formType, spotId }) {
 
     const dispatch = useDispatch();
+    const history = useHistory();
+
+   /// session user is used at line 80 //////////////////////////////
+    const sessionUser = useSelector((state) => state.session.user);
+    const [validationObj, setValidationObj] = useState({});
+      //////////////////////////////////////////////////////////////////
+//! USE STATE////////////////////////////////////////////////////
+  //////////////////ehab ////////////////////////////////////////////
     const [address, setAddress] = useState('');
     const [city, setCity] = useState('');
     const [state, setState] = useState('');
@@ -28,21 +36,32 @@ export default function SpotForm2({ formType, spotId }) {
     const [imageUrl3, setImageUrl3] = useState('');
     const [imageUrl4, setImageUrl4] = useState('');
     const [imageUrl5, setImageUrl5] = useState('');
-    const [reloadPage, setReloadPage] = useState(false);
-    const [validationObj, setValidationObj] = useState({});
-    const history = useHistory();
 
-    const sessionUser = useSelector((state) => state.session.user);
+    /// this is not used anywhere /////////////
+    const [reloadPage, setReloadPage] = useState(false);
+
+
+
+
+
+  ////////////////////////////////////////////////////////////
+  //! end of use state ///////////////////////////////////////
+
 
     let spotEdit;
 
-
-
+  //////////////////////////////////////////////////////////////////////
+//! start Handle submit ///////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////
     const handleSubmit = async (e) => {
+
       e.preventDefault();
+
+      /// VALIDATIONS of images ////////////////////////////////////
       const imageUrls = [previewImage, imageUrl2, imageUrl3, imageUrl4, imageUrl5];
       const imageExtensionsRegex = /\.(png|jpe?g)$/i;
       const invalidImages = imageUrls.filter((url) => url && !imageExtensionsRegex.test(url));
+      ///////////////////////////////////////////////////////////////
       if (invalidImages.length > 0) {
         const errorsObj = { ...validationObj };
         invalidImages.forEach((url, index) => {
@@ -52,9 +71,13 @@ export default function SpotForm2({ formType, spotId }) {
         setValidationObj(errorsObj);
         return;
       }
+        /// end of validation of images //////////////////////////////////////////////////////////////////////////
 
-      const newSpot = { address, city, state, country, lat, lng, name, description, price };
-      let newSpotImage= [];
+        const newSpot = { address, city, state, country, lat, lng, name, description, price };
+///////////////////////////////////////////////////////////////////////
+/// what is this ? /////////////////////////////////////////////////////////
+
+        let newSpotImage= [];
       const tempNewSpotImage = [
         { url: previewImage, preview: true },
         { url: imageUrl2, preview: false },
@@ -64,10 +87,11 @@ export default function SpotForm2({ formType, spotId }) {
       ];
 
       tempNewSpotImage.forEach((image) => { if (image.url) newSpotImage.push(image); });
-
+/////////////////////////////////////////////////////////////////////////////
 
       if (formType === 'Create') {
         const newlyCreateSpot = await dispatch(createSpotThunk(newSpot, newSpotImage, sessionUser));
+
         if (newlyCreateSpot.id) {
           history.push(`/spots/${newlyCreateSpot.id}`);
         } else return null;
@@ -92,6 +116,9 @@ export default function SpotForm2({ formType, spotId }) {
 
     };
 
+///////////////////////////////////////////////////////////////
+  //! end of handle submit ///////////////////////////////////////////
+
 
     const clearImageError = (fieldName) => {
       if (validationObj[fieldName]) {
@@ -100,6 +127,11 @@ export default function SpotForm2({ formType, spotId }) {
     };
 
     // if(!spotEdit) return null;
+
+
+/////////////////////////////////////////////////////////////////
+//! JSX  starts  /////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////
 
     return (
       <div className="form-container">
@@ -281,4 +313,9 @@ export default function SpotForm2({ formType, spotId }) {
         </form>
       </div>
     );
+
+
+      /////////////////////////////////////////////////////
+  //! end of JSX//////////////////////////////////////////////
+  /////////////////////////////////////////////////////////
   }

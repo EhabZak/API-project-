@@ -10,10 +10,15 @@ function ProfileButton({ user }) {
   const [showMenu, setShowMenu] = useState(false);
   const ulRef = useRef();
   const routerHistory = useHistory();
+
   const openMenu = () => {
     if (showMenu) return;
     setShowMenu(true);
   };
+
+const closeMenu = () => {
+  setShowMenu(false);
+}
 
   useEffect(() => {
     if (!showMenu) return;
@@ -53,7 +58,7 @@ function ProfileButton({ user }) {
         <li>________________</li>
         <div id="manage-link">
         <li>
-          <Link to ={"/manage-spots"} id="custom-link">
+          <Link to ={"/manage-spots"} id="custom-link" onClick={closeMenu} >
           Manage Spots
           </Link>
           </li>

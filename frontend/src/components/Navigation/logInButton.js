@@ -54,10 +54,12 @@ function LogInButton({ user }) {
       <OpenModalButton
           buttonText="Sign Up"
           modalComponent={<SignupFormModal />}
+          onClose={() => setShowMenu(false)}
         />
         <OpenModalButton
           buttonText="Log In"
           modalComponent={<LoginFormModal />}
+          onClose={() => setShowMenu(false)}
         />
 
       </li>

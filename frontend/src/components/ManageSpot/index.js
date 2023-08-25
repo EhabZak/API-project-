@@ -37,11 +37,11 @@ export default function ManageSpot() {
                     </Link>
                 </button>
                 </div>
-            <ul id='spots-list'>
+            <ul id='manage-spots-list'>
                 {Object.values(spots)
                     .filter((spot) => spot.ownerId === currUser.id)
                     .map((spot) => (
-                        <li key={spot.id} id='spot-container'>
+                        <li key={spot.id} id='manage-spot-container'>
 
 
                             <Link to={`spots/${spot.id}`}>
@@ -51,20 +51,23 @@ export default function ManageSpot() {
 
                             <div id='address-rating'>
                                 <p> {spot.address}</p>
-                                <p><i className="fa-solid fa-star"></i> {spot.avgRating}</p>
+                                <p><i className="fa-solid fa-star" id='manage-star'></i>
+                                {/* {spot.avgRating} */}
+                                {spot.avgRating !== undefined? spot.avgRating.toFixed(1): spot.avgRating}
+                                </p>
                             </div>
                             <p id='price'> ${spot.price} night</p>
 
                             <div id='spot-edit-buttons'>
+                                <Link to={`/spots/${spot.id}/edit`} >
+                                    <button>Update</button>
+                                </Link>
                                 <div ><OpenModalButton
                                     buttonText="Delete"
                                     modalComponent={<DeleteModel spotId={spot.id} />}
                                 />
                                 </div>
 
-                                <Link to={`/spots/${spot.id}/edit`} >
-                                    <button>Update</button>
-                                </Link>
                             </div>
 
                         </li>

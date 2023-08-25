@@ -35,31 +35,31 @@ export default function SpotReviews({ spotId }) {
     let reviewButton;
     if (sessionUser) {
 
-let userReview = [];
+        let userReview = [];
 
-Object.values(reviews).filter((review)=>{
-    if ( review.userId === sessionUser.id || spot.ownerId === sessionUser.id) {
-        userReview.push(review.id)
-    }
-})
+        Object.values(reviews).filter((review) => {
+            if (review.userId === sessionUser.id || spot.ownerId === sessionUser.id) {
+                userReview.push(review.id)
+            }
+        })
 
-// console.log( "***userReview array",userReview)
-if (userReview.length < 1){
-        reviewButton = (
+        // console.log( "***userReview array",userReview)
+        if (userReview.length < 1 && spot.ownerId !== sessionUser.id) {
+            reviewButton = (
 
-            <div id='spot-edit-buttons'>
-                <div>
-                    <OpenModalButton
-                        buttonText="Post Your Review"
-                        modalComponent={<CreateReviewModel spotId={spot.id} />}
-                    />
+                <div id='spot-edit-buttons'>
+                    <div>
+                        <OpenModalButton
+                            buttonText="Post Your Review"
+                            modalComponent={<CreateReviewModel spotId={spot.id} />}
+                        />
+                    </div>
                 </div>
-            </div>
 
-        )
-} else {
-    <></>
-}
+            )
+        } else {
+            <></>
+        }
     } else {
         <></>
 
@@ -73,56 +73,63 @@ if (userReview.length < 1){
         return `${month} ${year}`;
     };
     ////////////////////////////////////////////////////////////////
-// let deleteButton;
-// if (sessionUser){
-//     review.userId === sessionUser.id
-
-
-// }
-
 
 
     //////////////////////////////////////////////////////////////////
     let reviewsList;
     if (Object.values(reviews).length > 0) {
-        console.log('1111111', reviews)
+        // console.log('1111111', reviews)
         reviewsList = (
             <ul id="reviews-list">
-                {Object.values(reviews).map((review) => (
+                {Object.values(reviews).reverse().map((review) => (
                     <li key={review.id} id="review-container">
                         {/* {console.log('999999', review)} */}
-                        <p>{review.User.firstName}</p>
-                        <p>{formatDate(review.createdAt)}</p>
+                        <p><i className="fa-regular fa-circle-user" id='user-review-logo'></i> {review.User.firstName}</p>
+                        <p id='review-date'>{formatDate(review.createdAt)}</p>
                         <p>{review.review}</p>
-                        <div>  {review.userId === sessionUser.id ? (
-                             <div id='delete-review-button'><OpenModalButton
-                             buttonText="Delete"
-                             modalComponent={<ReviewDeleteModel reviewId={review.id} />}
-                         />
-                         </div>
-                        ) : null}</div>
+
+                        <div>
+                            {sessionUser && review.userId === sessionUser.id ? (
+                                <div id='delete-review-button'><OpenModalButton
+                                    buttonText="Delete"
+                                    modalComponent={<ReviewDeleteModel reviewId={review.id} spotId={spot.id} />}
+                                />
+                                </div>
+                            ) : null}
+                        </div>
+
                     </li>
                 ))}
             </ul>
         );
     } else {
-        console.log('22222222', reviews)
-        reviewsList = <p>Be the first to post a review!</p>;
+        // console.log('22222222', reviews)
+        if (sessionUser && spot.ownerId !== sessionUser.id) {
+
+            reviewsList = <p>Be the first to post a review!</p>;
+        }
     }
     ///////////////////////////////////////////////////////////////////////////
     let reviewRating;
     if (Object.values(reviews).length === 0) {
         reviewRating = (
 
-            <p><i className="fa-solid fa-star"></i> New</p>
+            <p><i className="fa-solid fa-star" id='review-star'></i> New</p>
         )
 
     } else {
         reviewRating = (
 
-            <p id='review-in-reviews'> <i className="fa-solid fa-star"></i> {spot.avgStarRating} .  {spot.numReviews} reviews</p>
+            <p id='review-in-reviews'>
+            <i className="fa-solid fa-star" id='review-star'></i>
+            {spot.avgStarRating !== undefined? spot.avgStarRating.toFixed(1): spot.avgStarRating}
+                <span id='dot-container'><span className="dot">
+                    <i className="fa-solid fa-circle"></i></span> </span>  {spot.numReviews}
+                 {Object.values(reviews).length === 1 ? <span> review</span> : <span> reviews</span>}
+            </p>
 
-        )};
+        )
+    };
 
 
     /////////////////////////////////////////////////////////////////////
