@@ -8,7 +8,7 @@ body{
 #manage-header-container{
 display: flex;
 flex-direction: column;
-
+width: 90%;
 
 
 }
@@ -43,6 +43,7 @@ justify-content: center;
     background-color:  #757373;
     border: solid black 1px;
  box-shadow: 3px 3px 2px black;
+ margin-left: 40px;
 }
 
 #manage-spots-list{
@@ -80,4 +81,8 @@ justify-content: center;
 }
 
 
+}
+
+#manage-star{
+    color: gold;
 }
