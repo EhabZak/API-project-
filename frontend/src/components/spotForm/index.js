@@ -70,29 +70,53 @@ export default function SpotForm({ spot, formType }) {
       if (country.length < 1) {
         errorObject.country = "Country is required";
       }
+      if (country.length > 20) {
+        errorObject.country = "Country must have fewer than 20 characters";
+      }
       if (address.length < 1) {
         errorObject.address= "Address is required";
+      }
+      if (address.length > 30) {
+        errorObject.address= "Address must have fewer than 30 characters";
       }
       if (city.length < 1) {
         errorObject.city = "City is required";
       }
+      if (city.length > 20) {
+        errorObject.city = "City must have fewer than 20 characters";
+      }
       if (state.length < 1) {
         errorObject.state = "State is required";
+      }
+      if (state.length > 20) {
+        errorObject.state = "State must have fewer than 20 characters";
       }
       if (lat.length < 1) {
         errorObject.lat = "Latitude is required";
       }
+      if (lat.length > 20) {
+        errorObject.lat = "Latitude must have fewer than 20 digits";
+      }
       if (lng.length < 1) {
         errorObject.lng = "Longitude is required";
+      }
+      if (lng.length > 20) {
+        errorObject.lng = "Longitude must have fewer than 20 digits";
       }
       if (name.length < 1) {
         errorObject.name = "Name is required";
       }
+      if (name.length > 30) {
+        errorObject.name = "Name must have fewer than 30 characters";
+      }
       if (price.length < 1) {
         errorObject.price = "Price is required";
       }
-      if (description.length < 30) {
-        errorObject.description = "Description needs a minimum of 30 characters";
+      if (price.length > 7) {
+        errorObject.price = "Price must have fewer than 7 digits";
+      }
+      if (description.length < 30 || description.length > 250 ) {
+        errorObject.description = "Description needs a minimum of 30 characters and not exceed 250 characters ";
       }
 
       if (images[0].url > 0) {
