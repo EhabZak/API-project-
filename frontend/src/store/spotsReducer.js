@@ -140,7 +140,7 @@ export const createSpot = (spot, sessionUser) => async (dispatch) => {
             body: JSON.stringify(spot),
         });
 
-        
+
 
         //! Process successful response
         const spotDetails = await res.json();
