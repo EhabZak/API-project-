@@ -51,7 +51,10 @@ export default function ManageSpot() {
 
                             <div id='address-rating'>
                                 <p> {spot.address}</p>
-                                <p><i className="fa-solid fa-star" id='manage-star'></i> {spot.avgRating}</p>
+                                <p><i className="fa-solid fa-star" id='manage-star'></i>
+                                {/* {spot.avgRating} */}
+                                {spot.avgRating !== undefined? spot.avgRating.toFixed(1): spot.avgRating}
+                                </p>
                             </div>
                             <p id='price'> ${spot.price} night</p>
 
