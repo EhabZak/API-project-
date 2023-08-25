@@ -34,3 +34,7 @@ margin-left: 10px;
     margin-right: 5px;
     margin-bottom: 5px;
 }
+#review-date{
+    color: grey;
+    font-size: 13px;
+}

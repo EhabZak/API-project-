@@ -85,7 +85,7 @@ export default function SpotReviews({ spotId }) {
                     <li key={review.id} id="review-container">
                         {/* {console.log('999999', review)} */}
                         <p><i className="fa-regular fa-circle-user" id='user-review-logo'></i> {review.User.firstName}</p>
-                        <p>{formatDate(review.createdAt)}</p>
+                        <p id='review-date'>{formatDate(review.createdAt)}</p>
                         <p>{review.review}</p>
 
                         <div>
