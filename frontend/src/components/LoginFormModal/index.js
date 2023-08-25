@@ -63,7 +63,8 @@ function LoginFormModal() {
     const demoCredential = "Demo-lition";
     const demoPassword = "password";
     setShowMenu(false);
-    dispatch(sessionActions.login({ credential: demoCredential, password: demoPassword }));
+    dispatch(sessionActions.login({ credential: demoCredential, password: demoPassword }))
+    .then(closeModal)
   };
 
   return (
