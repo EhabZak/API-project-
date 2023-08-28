@@ -26,7 +26,7 @@ export default function AllSpots() {
 
     return (
 
-        <div className="init">
+        <div className="init-all-spots">
 
             <h1></h1>
             <ul id='spots-list'>
