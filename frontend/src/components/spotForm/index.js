@@ -49,14 +49,6 @@ export default function SpotForm({ spot, formType }) {
   // const [imageUrl4, setImageUrl4] = useState({ url: '', preview: false });
   // const [imageUrl5, setImageUrl5] = useState({ url: '', preview: false });
 
-
-
-
-
-
-
-
-
   // const [imageUrl,setImageUrl]
   // console.log('*************', spot) // if we are updating the spot
   ////////////////////////////////////////////////////////////
@@ -164,75 +156,7 @@ export default function SpotForm({ spot, formType }) {
 
     /////////////////////////////////////////////////////////
 
-    // const errorObject = {}
-    // if (country.length < 1) {
-    //   errorObject.country = "Country is required";
-    // }
-    // if (address.length < 1) {
-    //   errorObject.address = "Address is required";
-    // }
-    // if (city.length < 1) {
-    //   errorObject.city = "City is required";
-    // }
-    // if (state.length < 1) {
-    //   errorObject.state = "State is required";
-    // }
-    // if (lat.length < 1) {
-    //   errorObject.lat = "Latitude is required";
-    // }
-    // if (lng.length < 1) {
-    //   errorObject.lng = "Longitude is required";
-    // }
-    // if (name.length < 1) {
-    //   errorObject.name = "Name is required";
-    // }
-    // if (price.length < 1) {
-    //   errorObject.price = "Price is required";
-    // }
-    // if (description.length < 30) {
-    //   errorObject.description = "Description needs a minimum of 30 characters";
-    // }
 
-    // console.log("this is the preview image", images[0].url)
-
-    // if (images[0].url > 0) {
-    //   const validExtensions = ["png", "jpg", "jpeg"];
-    //   const imageUrl = images[0].url;
-    //   const imageExtension = imageUrl.split('.').pop().toLowerCase();
-    //   console.log('*******image extension', imageExtension)
-    //   if (!validExtensions.includes(imageExtension)) {
-    //     errorObject.images[0] = "Image URL must end with .png, .jpg, or .jpeg";
-    //   }
-
-    // }
-
-    // console.log('****this is the error object', errorObject)
-
-    // images.forEach((image) => {
-    //   if (image.url.length > 0) {
-    //     const validExtensions = ["png", "jpg", "jpeg"];
-    //     const imageUrl = image.url;
-    //     const imageExtension = imageUrl.split('.').pop().toLowerCase();
-    //     console.log('*******image extension', imageExtension)
-    //     if (!validExtensions.includes(imageExtension)) {
-    //       errorObject.images = "Image URL must end with .png, .jpg, or .jpeg";
-    //     }
-    //   }
-
-    // })
-
-
-    //   if (image.url.length < 1) {
-    //     errorObject.images = "image is required";
-    //   }
-
-
-    // setValidationObject(errorObject)
-
-
-    // const hasValidationErrors = Object.values(validationObject)
-
-    // console.log('##validationObject not in create###', hasValidationErrors)
     //////////////////////////////////
     if (spot) { spot = { ...spot, country, address, city, state, lat: lat, lng: lng, description, name, price } }
     // console.log("898988988999888", spot)
@@ -388,10 +312,10 @@ export default function SpotForm({ spot, formType }) {
   // useEffect(() => {
   //   const errorObject = {}
 
-  //   // if (description.length < 30) {
+    // if (description.length < 30) {
 
-  //   //   errorObject.description = "Description needs a minimum of 30 characters";
-  //   // }
+    //   errorObject.description = "Description needs a minimum of 30 characters";
+    // }
 
   //   setValidationObject(errorObject)
 
@@ -645,7 +569,8 @@ export default function SpotForm({ spot, formType }) {
           onClick = {() => setSubmit(true)}
         disabled={Object.values(validationObject).length > 0 }
         >
-          Create Spot
+          {formType === 'Update spot'? 'Update Spot' : 'Create Spot'}
+
         </button>
 
 
