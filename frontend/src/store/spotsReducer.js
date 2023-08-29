@@ -39,15 +39,15 @@ export const addTheImage = (spotId, image) => ({
 
 // thunk action creator
 
-export const fetchSpots = () => async (dispatch) => {
+export const fetchSpots = (page) => async (dispatch) => {
 
-    const response = await fetch('api/spots')
+    const response = await fetch(`api/spots?page=${page}`)
 
     if (response.ok) {
         const spots = await response.json();
         dispatch(loadSpots(spots))
+        // console.log("*********", spots)
     }
-    // console.log("*********", spots)
 
 }
 

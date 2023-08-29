@@ -67,3 +67,30 @@ font-weight: bold;
 #address-rating {
     margin-left: 10px;
 }
+
+
+#pagination-container{
+    display: flex;
+    justify-content: center;
+    margin-bottom: 40px;
+    gap: 10px;
+}
+#pagination-container button{
+    border-radius: 10px;
+    border-width: 1px;
+    border-style: none;
+    padding-top: 14px;
+    padding-bottom: 14px;
+    padding-left: 24px;
+    padding-right: 24px;
+
+    /* border: none; */
+    background-color: #FF5A5F;
+    color: white;
+    font-weight: bold;
+}
+
+.disabled-button{
+    opacity: 50%;
+    cursor: not-allowed;
+}
