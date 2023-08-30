@@ -12,7 +12,7 @@ export default function AllSpots() {
   const reviews = useSelector((state) => state.reviewState.reviews.spot)
   const [currentPage, setCurrentPage] = useState(1)
   const [hasNextPageSpots,setHasNextPageSpots]= useState(false)
-  console.log("=======", Object.values(spots))
+  // console.log("=======", Object.values(spots))
 
   useEffect(() => {
     dispatch(fetchSpots(currentPage));

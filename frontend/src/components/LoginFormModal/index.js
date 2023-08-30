@@ -69,7 +69,7 @@ function LoginFormModal() {
 
   return (
     <div id="log-in-outer-container">
-      <h2>Log In</h2>
+      <h2 id="log-in-h2">Log In</h2>
       {errors.credential && (
           <p id="error-log-in">{errors.credential}</p>
         )}

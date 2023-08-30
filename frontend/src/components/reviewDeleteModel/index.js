@@ -6,7 +6,7 @@ import './reviewDeleteModel.css'
 import { deleteReview } from "../../store/reviewReducer";
 import { fetchSpotReviews } from "../../store/reviewReducer";
 import { fetchDetailedSpot } from "../../store/spotsReducer";
-
+import { fetchSpots } from "../../store/spotsReducer";
 function ReviewDeleteModel({ reviewId, spotId }) {
     const dispatch = useDispatch();
     const { closeModal } = useModal();
@@ -18,6 +18,7 @@ function ReviewDeleteModel({ reviewId, spotId }) {
         .then(() => {
           dispatch(fetchSpotReviews(spotId))
           dispatch(fetchDetailedSpot(spotId))
+          
             closeModal();
           })
           .catch((error) => {

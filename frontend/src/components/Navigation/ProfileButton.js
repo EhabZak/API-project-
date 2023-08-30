@@ -62,6 +62,11 @@ const closeMenu = () => {
           Manage Spots
           </Link>
           </li>
+        <li>
+          <Link to ={"/manage-reviews"} id="custom-link" onClick={closeMenu} >
+          Manage Reviews
+          </Link>
+          </li>
           </div>
           <li>________________</li>
         <li>
