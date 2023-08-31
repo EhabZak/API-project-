@@ -62,6 +62,9 @@ export default function SpotForm({ spot, formType }) {
       if (country.length < 1) {
         errorObject.country = "Country is required";
       }
+      else if (country.match(/\d/)) {
+        errorObject.country = "Country cannot contain numbers";
+      }
       if (country.length > 20) {
         errorObject.country = "Country must have fewer than 20 characters";
       }
@@ -74,11 +77,17 @@ export default function SpotForm({ spot, formType }) {
       if (city.length < 1) {
         errorObject.city = "City is required";
       }
+      else if (city.match(/\d/)) {
+        errorObject.city = "City cannot contain numbers";
+      }
       if (city.length > 20) {
         errorObject.city = "City must have fewer than 20 characters";
       }
       if (state.length < 1) {
         errorObject.state = "State is required";
+      }
+      else if (state.match(/\d/)) {
+        errorObject.state = "City cannot contain numbers";
       }
       if (state.length > 20) {
         errorObject.state = "State must have fewer than 20 characters";
@@ -111,13 +120,13 @@ export default function SpotForm({ spot, formType }) {
         errorObject.description = "Description needs a minimum of 30 characters and not exceed 250 characters ";
       }
 
-      if (images[0].url > 0) {
+      if (images[0].url.length > 0) {
         const validExtensions = ["png", "jpg", "jpeg"];
         const imageUrl = images[0].url;
         const imageExtension = imageUrl.split('.').pop().toLowerCase();
         console.log('*******image extension', imageExtension)
         if (!validExtensions.includes(imageExtension)) {
-          errorObject.images[0] = "Image URL must end with .png, .jpg, or .jpeg";
+          errorObject.images = "Image URL must end with .png, .jpg, or .jpeg";
         }
 
       }
