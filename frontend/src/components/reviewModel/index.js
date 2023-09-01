@@ -3,11 +3,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useModal } from "../../context/Modal";
 import { useHistory } from 'react-router-dom';
 import "./CreateREviewModel.css";
-import { CreateReview } from "../../store/reviewReducer";
+import { CreateReview, fetchUserReviews, updateReview } from "../../store/reviewReducer";
 import { fetchSpotReviews } from "../../store/reviewReducer";
 import { fetchDetailedSpot } from "../../store/spotsReducer";
 
-function CreateReviewModel({ spotId, formType,currReview}) {
+function CreateReviewModel({ spotId, formType, currReview }) {
     const dispatch = useDispatch();
     const history = useHistory();;
     const { closeModal } = useModal();
@@ -19,24 +19,44 @@ function CreateReviewModel({ spotId, formType,currReview}) {
     const [message, setMessage] = useState('');
 
     /////////////////////////////////////////////////
-// console.log( '2222222 current review ' , currReview)
+    // console.log( '2222222 current review ' , currReview)
 
 
-    const handelCreateReview = (e) => {
+    const handelCreateReview = async (e) => {
         e.preventDefault();
         setErrors({});
         setMessage('');
 
+        if(currReview) {currReview = {...currReview, review, stars: rating}}
 
-        if (formType ==='Create review'){
+        if (formType === 'Create review') {
 
-        dispatch(CreateReview(spotId, review, rating))
-            .then(() => {
+            dispatch(CreateReview(spotId, review, rating))
+                .then(() => {
+                    dispatch(fetchSpotReviews(spotId))
+                    dispatch(fetchDetailedSpot(spotId))
+                    closeModal();
+                })
+                .catch(async (error) => {
+                    const data = await error.json();
+                    if (data && data.errors) {
+                        setErrors(data.errors);
+                    } else {
+                        setMessage(data.message);
+                    }
+                });
+
+
+
+
+        } else if (formType === 'update review' ){
+            dispatch(updateReview(currReview))
+            .then (() => {
                 dispatch(fetchSpotReviews(spotId))
                 dispatch(fetchDetailedSpot(spotId))
+                dispatch(fetchUserReviews())
                 closeModal();
-            })
-            .catch(async (error) => {
+            }).catch(async (error) => {
                 const data = await error.json();
                 if (data && data.errors) {
                     setErrors(data.errors);
@@ -47,7 +67,7 @@ function CreateReviewModel({ spotId, formType,currReview}) {
         }
 
     }
-console.log( '*****review****', review)
+    console.log('*****review****', review)
 
     //////////////////////////////////////////////////////////
 
@@ -57,7 +77,7 @@ console.log( '*****review****', review)
     //     setErrors({});
     //     setMessage('');
 
-        // history.push(`/spots/${spotId}`)
+    // history.push(`/spots/${spotId}`)
     // }
     //////////////////////////////////////////////////////////
 
@@ -109,7 +129,7 @@ console.log( '*****review****', review)
                     // onClick={handelCreateReview}
                     disabled={submitButtonDisabled}
                 >
-                    Submit your Review
+                   {formType === 'update review'? 'Update your review': 'Submit your Review'}
                 </button>
             </form>
         </div>

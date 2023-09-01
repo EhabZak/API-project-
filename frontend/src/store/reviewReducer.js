@@ -5,6 +5,7 @@ import { csrfFetch } from "./csrf";
 export const RECEIVE_SPOT_REVIEWS = 'spots/RECEIVE_SPOT_REVIEWS'
 export const REMOVE_REVIEW = 'spots/REMOVE-REVIEW'
 export const RECEIVE_USER_REVIEWS = 'reviews/RECEIVE_USER_REVIEWS'
+export const UPDATE_REVIEW = 'reviews/UPDATE-REVIEW'
 
 //Action creator
 
@@ -18,9 +19,14 @@ export const removeReview = (reviewId) => ({
     reviewId
 })
 
-export const receiveUserReviews =(userReviews) => ({
+export const receiveUserReviews = (userReviews) => ({
     type: RECEIVE_USER_REVIEWS,
     userReviews
+})
+
+export const editReview = (review) => ({
+    type: UPDATE_REVIEW,
+    review
 })
 
 //thunks
@@ -32,7 +38,7 @@ export const fetchSpotReviews = (spotId) => async (dispatch) => {
     if (res.ok) {
         const spotReviews = await res.json();
 
-        console.log( "^^^fetch spot reviews^^^^^^^^", spotReviews)
+        // console.log("^^^fetch spot reviews^^^^^^^^", spotReviews)
         dispatch(receiveSpotReviews(spotReviews))
     } else {
         const errors = await res.json();
@@ -41,15 +47,15 @@ export const fetchSpotReviews = (spotId) => async (dispatch) => {
 
 }
 
-export const CreateReview =(reviewId, review, rating) => async(dispatch)=> {
+export const CreateReview = (reviewId, review, rating) => async (dispatch) => {
 
     try {
 
         const res = await csrfFetch(`/api/spots/${reviewId}/reviews`, {
-          method: 'POST',
-          body: JSON.stringify({
-              "review": review,
-              "stars": rating
+            method: 'POST',
+            body: JSON.stringify({
+                "review": review,
+                "stars": rating
             })
         });
 
@@ -63,10 +69,10 @@ export const CreateReview =(reviewId, review, rating) => async(dispatch)=> {
         // console.log('WWWWWWW', reviewDetails)
         return reviewDetails;
 
-      } catch (error) {
-// console.log("8888888888", error)
+    } catch (error) {
+        // console.log("8888888888", error)
         throw error;
-      }
+    }
 
 
 }
@@ -87,19 +93,39 @@ export const deleteReview = (reviewId) => async (dispatch) => {
 
 export const fetchUserReviews = () => async (dispatch) => {
 
-const res= await csrfFetch(`/api/reviews/current`)
-if (res.ok) {
-    const currentUserReviews = await res.json()
-    dispatch(receiveUserReviews(currentUserReviews))
-    // console.log('*****current user reviews',currentUserReviews)
-}else {
-    const errors = await res.json();
-    return errors;
-}
+    const res = await csrfFetch(`/api/reviews/current`)
+    if (res.ok) {
+        const currentUserReviews = await res.json()
+        dispatch(receiveUserReviews(currentUserReviews))
+        // console.log('*****current user reviews',currentUserReviews)
+    } else {
+        const errors = await res.json();
+        return errors;
+    }
 
 
 }
 
+export const updateReview = (review) => async (dispatch) => {
+    const res = await csrfFetch(`/api/reviews/${review.reviewId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(review)
+    })
+
+    console.log('%%%%% update reviews res', res)
+    if (res.ok) {
+        const updatedReview = await res.json();
+        console.log('this is the review in thunk======', review)
+        console.log('xxx updatedReview xxxxx ====', updatedReview)
+        dispatch(editReview(updatedReview))
+    } else {
+        const errors = await res.json();
+        return errors;
+    }
+
+
+}
 
 /// reducer
 
@@ -126,37 +152,50 @@ const reviewReducer = (state = initialState, action) => {
                 return newState
             }
 
-            case RECEIVE_USER_REVIEWS:
-                const newUserState = {...state,reviews:{...state.reviews, user:{}}}
+        case RECEIVE_USER_REVIEWS:
+            const newUserState = { ...state, reviews: { ...state.reviews, user: {} } }
 
-                if (Object.values(action.userReviews).length > 0) {
-                    action.userReviews.Reviews.forEach((review) =>
-                    ( newUserState.reviews.user[review.id] = review))
-                    return newUserState
-                }else {
+            if (Object.values(action.userReviews).length > 0) {
+                action.userReviews.Reviews.forEach((review) =>
+                    (newUserState.reviews.user[review.id] = review))
+                return newUserState
+            } else {
 
-                    return newUserState
+                return newUserState
+            }
+
+
+        case REMOVE_REVIEW:
+
+            const newReviews = { ...state.reviews.spot }
+            const newReviewsUser = { ...state.reviews.user };
+
+            // console.log('!!!!!new reviews!!!', newReviews)
+            delete newReviews[action.reviewId]
+            delete newReviewsUser[action.reviewId];
+
+            return {
+                ...state,
+                reviews: {
+                    ...state.reviews,
+                    spot: newReviews,
+                    user: newReviewsUser
                 }
+            };
 
 
-case REMOVE_REVIEW:
 
-const newReviews = {...state.reviews.spot}
-const newReviewsUser = { ...state.reviews.user};
-
-// console.log('!!!!!new reviews!!!', newReviews)
-delete newReviews[action.reviewId]
-delete newReviewsUser[action.reviewId];
-
-return {
-    ...state,
-    reviews: {
-        ...state.reviews,
-        spot: newReviews,
-        user: newReviewsUser
+case UPDATE_REVIEW:
+    return {
+        ...state,
+        reviews:{
+            ...state.reviews,
+            spot:{
+                ...state.reviews.spot,
+                [action.review.id]: action.review
+            }
+        }
     }
-};
-
 
         default:
             return state;
