@@ -4,3 +4,7 @@
 box-shadow: 2px 2px black;
 color: white;
 }
+#review-edit-buttons{
+    display: flex;
+    gap: 10px;
+}

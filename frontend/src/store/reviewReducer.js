@@ -32,7 +32,7 @@ export const fetchSpotReviews = (spotId) => async (dispatch) => {
     if (res.ok) {
         const spotReviews = await res.json();
 
-        console.log( "^^^^^^^^^^^", spotReviews)
+        console.log( "^^^fetch spot reviews^^^^^^^^", spotReviews)
         dispatch(receiveSpotReviews(spotReviews))
     } else {
         const errors = await res.json();
@@ -91,7 +91,7 @@ const res= await csrfFetch(`/api/reviews/current`)
 if (res.ok) {
     const currentUserReviews = await res.json()
     dispatch(receiveUserReviews(currentUserReviews))
-    console.log('*****current user reviews',currentUserReviews)
+    // console.log('*****current user reviews',currentUserReviews)
 }else {
     const errors = await res.json();
     return errors;

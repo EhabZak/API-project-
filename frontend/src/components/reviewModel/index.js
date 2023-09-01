@@ -7,25 +7,28 @@ import { CreateReview } from "../../store/reviewReducer";
 import { fetchSpotReviews } from "../../store/reviewReducer";
 import { fetchDetailedSpot } from "../../store/spotsReducer";
 
-function CreateReviewModel({ spotId }) {
+function CreateReviewModel({ spotId, formType,currReview}) {
     const dispatch = useDispatch();
     const history = useHistory();;
     const { closeModal } = useModal();
-    const [rating, setRating] = useState(0);
-    const [review, setReview] = useState('');
+    const [rating, setRating] = useState(currReview?.star);
+    const [review, setReview] = useState(currReview?.review);
 
     const [submitButtonDisabled, setSubmitButtonDisabled] = useState(true);
     const [errors, setErrors] = useState({});
     const [message, setMessage] = useState('');
 
     /////////////////////////////////////////////////
-
+// console.log( '2222222 current review ' , currReview)
 
 
     const handelCreateReview = (e) => {
         e.preventDefault();
         setErrors({});
         setMessage('');
+
+
+        if (formType ==='Create review'){
 
         dispatch(CreateReview(spotId, review, rating))
             .then(() => {
@@ -41,6 +44,7 @@ function CreateReviewModel({ spotId }) {
                     setMessage(data.message);
                 }
             });
+        }
 
     }
 console.log( '*****review****', review)

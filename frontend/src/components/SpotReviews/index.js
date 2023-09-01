@@ -13,6 +13,7 @@ import CreateReviewModel from '../reviewModel';
 import OpenModalButton from "../OpenModalButton";
 import ReviewDeleteModel from '../reviewDeleteModel';
 import './spotReviews.css'
+import CreateReviewForm from '../createReviewForm';
 
 export default function SpotReviews({ spotId }) {
     const dispatch = useDispatch();
@@ -51,7 +52,7 @@ export default function SpotReviews({ spotId }) {
                     <div>
                         <OpenModalButton
                             buttonText="Post Your Review"
-                            modalComponent={<CreateReviewModel spotId={spot.id} />}
+                            modalComponent={<CreateReviewForm spotId={spot.id} />}
                         />
                     </div>
                 </div>

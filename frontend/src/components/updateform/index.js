@@ -9,33 +9,33 @@ import SpotForm from '../spotForm';
 import { fetchDetailedSpot } from '../../store/spotsReducer';
 import './updateForm.css'
 
-const UpdateSpotForm =() => {
+const UpdateSpotForm = () => {
+  const dispatch = useDispatch();
+  const { spotId } = useParams()
 
-const {spotId} = useParams()
-// console.log( 'spotId' , spotId)
-const spot= useSelector ((state) => state.spotState.singleSpot[spotId] );
-// console.log('SPOT', spot)
-const dispatch = useDispatch();
+  // console.log( 'spotId' , spotId)
+  const spot = useSelector((state) => state.spotState.singleSpot[spotId]);
+  // console.log('SPOT', spot)
 
-useEffect(() => {
+  useEffect(() => {
     dispatch(fetchDetailedSpot(spotId))
 
 
-}, [dispatch,spotId])
+  }, [dispatch, spotId])
 
-if (!spot) return (<></>);
+  if (!spot) return (<></>);
 
-// console.log('777777777777777777', Object.keys(spot).length)
-// console.log('*****************', spot)
+  // console.log('777777777777777777', Object.keys(spot).length)
+  // console.log('*****************', spot)
 
-return (
+  return (
 
 
     Object.keys(spot).length > 1 && (
       <>
-      <div>
-      <h1 class='header'>Update your spot</h1>
-      </div>
+        <div>
+          <h1 class='header'>Update your spot</h1>
+        </div>
         <SpotForm
           spot={spot}
           formType="Update spot"

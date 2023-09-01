@@ -7,6 +7,7 @@ import OpenModalButton from "../OpenModalButton";
 import ReviewDeleteModel from '../reviewDeleteModel';
 import { fetchSpots } from '../../store/spotsReducer';
 import './manage-reviews.css'
+import UpdateReviewForm from '../updateReviewForm';
 
 
 
@@ -52,16 +53,19 @@ function ManageReviews() {
                     {Object.values(userReviews).map((review) => (
                         <li key={review.id} id='manage-review-container'>
 
-<h3> {Object.values(spots).find((spot)=> spot.id === review.spotId)?.name || ''}</h3>
+                            <h3> {Object.values(spots).find((spot) => spot.id === review.spotId)?.name || ''}</h3>
                             <p id='review-date'>{formatDate(review.createdAt)}</p>
                             <p>{review.review}</p>
 
 
                             <div id='review-edit-buttons'>
-                                {/* <Link to={`/spots/${spot.id}/edit`} >
-                                <button>Update</button>
-                            </Link> */}
 
+                                <div>
+                                    <OpenModalButton
+                                        buttonText="Update"
+                                        modalComponent={<UpdateReviewForm reviewId={review.id} spotId={review.spotId} />}
+                                    />
+                                </div>
 
                                 <div ><OpenModalButton
                                     buttonText="Delete"
