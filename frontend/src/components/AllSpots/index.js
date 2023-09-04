@@ -49,7 +49,8 @@ export default function AllSpots() {
 
 
             <Link to={`spots/${spot.id}`}>
-              <img id='img' src={spot.previewImage} alt="Spot Preview" />
+              <img id='img' src={spot.previewImage} alt="Spot Preview"  title={spot.name}/>
+
             </Link>
 
 
