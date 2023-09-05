@@ -60,6 +60,13 @@ margin-right: 25px;
 height: 30px;
 color: white;
 }
+
+#sign-up-container button:disabled{
+    background-color: gray;
+    border: black solid 1px;
+    box-shadow: none;
+cursor: not-allowed;
+}
 .signup-label-container input {
     width: 250px;
     margin-left: 10px ;
